@@ -1,0 +1,34 @@
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    opacity: 70%;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 #000;
+    display: flex;
+}
+
+.progress-bar {
+    background-color: #eee;
+    flex-grow: 1;
+    position: relative;
+    text-align: center;
+}
+
+.progress {
+    background-color: greenyellow;
+    height: 100%;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.progress-text {
+    position: absolute;
+}
+
+textarea {
+    width: 100%;
+}
