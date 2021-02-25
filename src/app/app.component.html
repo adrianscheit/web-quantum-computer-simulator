@@ -27,9 +27,9 @@
                 </th>
             </tr>
             <tr *ngFor="let step of program; let i=index ">
-                <td>{{i}}</td>
+                <td>#{{i}}</td>
                 <td *ngFor="let gateName of step; let j=index" [colspan]=1>
-                    <app-gate [gateName]="gateName" (selectGateName)=" selectGate($event, i, j) "></app-gate>
+                    <app-gate [gateName]="gateName" (selectGateName)="selectGate($event, i, j)"></app-gate>
                 </td>
                 <td><button (click)="deleteStep(i) ">Delete step</button></td>
             </tr>
@@ -40,6 +40,9 @@
             </tr>
         </tbody>
     </table>
+
+    <button (click)="null">Clean-up!</button>
+    <button (click)="null">Complementary the program</button>
 </section>
 
 <section>

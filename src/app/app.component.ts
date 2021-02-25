@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
             this.parseJson();
             this.cookiesEnabled = true;
         }
+        this.updateJson();
 
         console.log(Gates.gatesMap, Gates.gates);
     }
@@ -74,7 +75,7 @@ export class AppComponent implements OnInit {
     addQubit(): void {
         this.qubitsIndexes.push(this.qubitsIndexes.length);
         for (const step of this.program) {
-            step.push(null);
+            step.push('');
         }
         this.updateJson();
     }
@@ -90,7 +91,7 @@ export class AppComponent implements OnInit {
     addStep(): void {
         const gates = [];
         for (const i of this.qubitsIndexes) {
-            gates.push(null)
+            gates.push('')
         }
         this.program.push(gates);
         this.updateJson();

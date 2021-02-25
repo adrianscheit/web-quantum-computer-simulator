@@ -1,6 +1,6 @@
 import { Complex } from "./complex";
 
-export type GateName = null | 'H' | 'X' | 'SWAP';
+export type GateName = '' | 'H' | 'X' | 'SWAP';
 
 export interface Gate {
     matrix: Complex[],
@@ -16,7 +16,7 @@ export class Gates {
     }
 
     static gatesMap = new Map<GateName, Gate>([
-        Gates.gateEntry(null, [new Complex(1), new Complex(0), new Complex(0), new Complex(1)]),
+        Gates.gateEntry('', [new Complex(1), new Complex(0), new Complex(0), new Complex(1)]),
         Gates.gateEntry('X', [new Complex(0), new Complex(1), new Complex(1), new Complex(0)]),
         Gates.gateEntry('H', [new Complex(0), new Complex(1), new Complex(1), new Complex(0)]),
         Gates.gateEntry('SWAP', [

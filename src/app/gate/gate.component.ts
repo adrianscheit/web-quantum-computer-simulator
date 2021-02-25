@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { GateName, Gates } from '../lib/gates';
 
 @Component({
@@ -10,4 +10,9 @@ export class GateComponent {
     @Input() gateName: GateName;
     @Output() selectGateName = new EventEmitter<GateName>();
     gates = Gates.gates;
+    opened = false;
+    @HostListener('click')
+    click(): void {
+        this.opened = true;
+    }
 }
