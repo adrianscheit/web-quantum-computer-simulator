@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Gate } from '../app.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { GateName, Gates } from '../lib/gates';
 
 @Component({
     selector: 'app-gate',
@@ -7,7 +7,7 @@ import { Gate } from '../app.component';
     styleUrls: ['./gate.component.css']
 })
 export class GateComponent {
-
-    @Input() gate: Gate;
-
+    @Input() gateName: GateName;
+    @Output() selectGateName = new EventEmitter<GateName>();
+    gates = Gates.gates;
 }

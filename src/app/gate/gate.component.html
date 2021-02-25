@@ -1,4 +1,3 @@
-<select>
-    <option>-</option>
-    <option>H</option>
+<select (change)="selectGateName.emit($event.target.value)">
+    <option *ngFor="let gate of gates" [value]="gate.name" [selected]="gate.name==gateName">{{gate.desc}}</option>
 </select>

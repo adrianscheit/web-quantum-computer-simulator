@@ -1,29 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Gate, GateName, Gates } from './lib/gates';
 
-export interface Gate {
-    colspan: number
-}
-
-export interface Step {
-    gates: Gate[]
-}
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     cookiesEnabled = false;
     progress = 0.118964561534;
     prod = environment.production;
-    qubitsQuantity = 5;
+    qubitsIndexes: number[] = [0, 1, 2, 3, 4];
 
-    program: Step[] = [{ gates: [] }, { gates: [] }, { gates: [] }];
+    program: GateName[][] = [['H', 'H', 'H', 'H', 'H']];
+    programJson: string;
+
+    ngOnInit() {
+        this.programJson = localStorage.getItem('program');
+        if (this.programJson) {
+            this.parseJson();
+            this.cookiesEnabled = true;
+        }
+
+        console.log(Gates.gatesMap, Gates.gates);
+    }
+
+    @HostListener('window:beforeunload')
+    beforeClose() {
+        if (this.cookiesEnabled) {
+            localStorage.setItem('program', this.programJson);
+        }
+    }
 
     enableCookies(): void {
         this.cookiesEnabled = true;
+        this.beforeClose();
     }
 
     disableCookies(): void {
@@ -35,35 +48,62 @@ export class AppComponent {
         return this.progress * 100;
     }
 
-    addQubit(): void {
-        for (const step of this.program) {
-            step.gates.push({ colspan: 1 });
+    updateJson(): void {
+        this.programJson = JSON.stringify(this.program);
+    }
+
+    parseJson(): void {
+        this.program = JSON.parse(this.programJson);
+        this.qubitsIndexes = [];
+        for (let i = 0; i < this.program[0]?.length; ++i) {
+            this.qubitsIndexes.push(i);
         }
+    }
+
+    getGates(gateNames: GateName[]): Gate[] {
+        const result: Gate[] = [];
+        for (let i = 0; i < gateNames.length; ++i) {
+            const gate = Gates.gatesMap.get(gateNames[i]);
+            console.log(gate);
+            result.push(gate);
+            i += gate.colspan - 1;
+        }
+        return result;
+    }
+
+    addQubit(): void {
+        this.qubitsIndexes.push(this.qubitsIndexes.length);
+        for (const step of this.program) {
+            step.push(null);
+        }
+        this.updateJson();
     }
 
     deleteQubit(i: number): void {
+        this.qubitsIndexes.pop();
         for (const step of this.program) {
-            step.gates.splice(i, 1);
+            step.splice(i, 1);
         }
-    }
-
-    getProgram(): string {
-        return JSON.stringify(this.program);
-    }
-
-    setProgram(json: string): void {
-        this.program = JSON.parse(json);
+        this.updateJson();
     }
 
     addStep(): void {
         const gates = [];
-        for(let i=0; i<this.qubitsQuantity; ++i){
-            gates.push()
+        for (const i of this.qubitsIndexes) {
+            gates.push(null)
         }
-        this.program.push();
+        this.program.push(gates);
+        this.updateJson();
     }
 
     deleteStep(i: number): void {
         this.program.splice(i, 1);
+        this.updateJson();
+    }
+
+    selectGate(gateName: GateName, stepIndex: number, gateIndex: number) {
+        console.log(gateName, stepIndex, gateIndex);
+        this.program[stepIndex][gateIndex] = gateName;
+        this.updateJson();
     }
 }

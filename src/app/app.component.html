@@ -1,4 +1,4 @@
-<section *ngIf="prod" style="position:fixed;top:0;right:0;bottom:0;left:0;background-color: #000;">
+<section *ngIf="prod" style="position:fixed;top:0;right:0;bottom:0;left:0;background-color: #FFF;">
     <h1>Page under development</h1>
 </section>
 
@@ -21,26 +21,30 @@
         <tbody>
             <tr>
                 <th>Step#</th>
-                <th *ngFor="let qubit of program[0].gates; let i=index">Q{{i}}<button (click)="deleteQubit(i)">Delete</button></th>
+                <th *ngFor="let i of qubitsIndexes">Q{{i}}<button (click)="deleteQubit(i)">Delete</button></th>
                 <th>
                     <button (click)="addQubit()">Add qubit</button>
                 </th>
             </tr>
             <tr *ngFor="let step of program; let i=index ">
                 <td>{{i}}</td>
-                <td *ngFor="let gate of step.gates; let i=index " [colspan]=gate.colspan>
-                    <app-gate [gate]=step.gates[i]></app-gate>
+                <td *ngFor="let gateName of step; let j=index" [colspan]=1>
+                    <app-gate [gateName]="gateName" (selectGateName)=" selectGate($event, i, j) "></app-gate>
                 </td>
-                <td><button (click)="deleteStep(i)">Delete step</button></td>
+                <td><button (click)="deleteStep(i) ">Delete step</button></td>
             </tr>
-            <tr><button (click)="addStep()">Add step</button></tr>
+            <tr>
+                <td [colSpan]="qubitsIndexes.length+2 ">
+                    <button style="width: 100%; " (click)=" addStep() ">Add step</button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </section>
 
 <section>
     <h2>Here is your quantum program in JSON:</h2>
-    <textarea>{{getProgram()}}</textarea>
+    <textarea>{{programJson}}</textarea>
 </section>
 
 
