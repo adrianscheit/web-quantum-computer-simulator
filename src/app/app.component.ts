@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Gate, GateName, Gates } from './lib/gates';
+import { G } from './lib/g';
+import { GateName, Gates } from './lib/gates';
 
 
 @Component({
@@ -61,8 +62,8 @@ export class AppComponent implements OnInit {
         }
     }
 
-    getGates(gateNames: GateName[]): Gate[] {
-        const result: Gate[] = [];
+    getGates(gateNames: GateName[]): G[] {
+        const result: G[] = [];
         for (let i = 0; i < gateNames.length; ++i) {
             const gate = Gates.gatesMap.get(gateNames[i]);
             console.log(gate);
