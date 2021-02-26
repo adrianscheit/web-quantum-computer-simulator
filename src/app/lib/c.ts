@@ -21,4 +21,12 @@ export class C {
         this.re = r;
         return this;
     }
+
+    private static toDecimal(v: number): string {
+        return `${Math.round(v * 1000) / 1000}`;
+    }
+
+    toString(): string {
+        return `${C.toDecimal(this.re)}${this.im === 0 ? '' : this.im === 1 ? '+i' : this.im === -1 ? '-i' : `${this.im > 0 ? '+':''}${C.toDecimal(this.im)}i`}`;
+    }
 }

@@ -17,6 +17,14 @@
 
 <section>
     <h2>Here is your program in GUI:</h2>
+
+    <ul>
+        <li>Initally all qubits are |0)</li>
+        <li>The simulation uses ??? model</li>
+        <li>The simulation uses ??? model</li>
+    </ul>
+    Default gate: <app-gate [gateName]="defaultGateName" (selectGateName)="defaultGateName=$event"></app-gate>
+
     <table>
         <tbody>
             <tr>
@@ -48,6 +56,11 @@
 <section>
     <h2>Here is your quantum program in JSON:</h2>
     <textarea>{{programJson}}</textarea>
+</section>
+
+<section>
+    <h2>All avaliable gates:</h2>
+    <app-gate-view *ngFor="let gate of gates" [gate]="gate"></app-gate-view>
 </section>
 
 

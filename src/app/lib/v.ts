@@ -1,5 +1,10 @@
 import { C } from "./c";
 
+export interface Result {
+    propability: number;
+    state: boolean[];
+}
+
 export class V {
     readonly qubits: number;
 
@@ -23,5 +28,21 @@ export class V {
             result = nextResult;
         }
         return new V(result);
+    }
+
+    getState(stateIndex: number): boolean[] {
+        const result: boolean[] = [];
+        for (let i = 0; i < this.qubits; ++i) {
+            result.push(!!(stateIndex & 1));
+            stateIndex >>= 1;
+        }
+        return result;
+    }
+
+    calcResults(): Result[] {
+        return this.state
+            .map((c: C, i: number) => <Result>{ propability: c.absSqer(), state: this.getState(i) })
+            .filter((result: Result) => result.propability > 0)
+            .sort((a, b) => a[0] - b[0]);
     }
 }

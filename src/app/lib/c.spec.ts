@@ -21,4 +21,13 @@ describe('Complex tests', () => {
         expect(new C(1).mul(new C(1))).toEqual(new C(1));
         expect(new C(1, 1).mul(new C(0, 3))).toEqual(new C(-3, 3));
     });
+
+    it('toString', () => {
+        expect(new C().toString()).toEqual('0');
+        expect(new C(1).toString()).toEqual('1');
+        expect(new C(1, 1).toString()).toEqual('1+i');
+        expect(new C(1, -1).toString()).toEqual('1-i');
+        expect(new C(0.1, -0.1).toString()).toEqual('0.1-0.1i');
+        expect(new C(0.1, 0.1).toString()).toEqual('0.1+0.1i');
+    });
 });

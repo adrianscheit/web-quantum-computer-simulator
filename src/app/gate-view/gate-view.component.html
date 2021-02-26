@@ -1,0 +1,7 @@
+<section>
+    <h4>{{gate.desc}}</h4>
+    <p>Name: {{gate.name}}</p>
+    <div class="grid" style.grid-template-columns="repeat({{gate.widthOrHeight}},auto)">
+        <div *ngFor="let c of gate.matrix">{{c.toString()}}</div>
+    </div>
+</section>

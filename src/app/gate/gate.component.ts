@@ -10,9 +10,14 @@ export class GateComponent {
     @Input() gateName: GateName;
     @Output() selectGateName = new EventEmitter<GateName>();
     gates = Gates.gates;
-    opened = false;
+
     @HostListener('click')
     click(): void {
-        this.opened = true;
+        const newName: GateName = prompt('New gateName:', '') as any;
+        if (newName !== null) {
+            if (Gates.gatesMap.has(newName)) {
+                this.selectGateName.emit(newName);
+            }
+        }
     }
 }

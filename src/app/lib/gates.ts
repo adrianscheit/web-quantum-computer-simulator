@@ -34,7 +34,7 @@ export class Gates {
             new C(), new C(), new C(1), new C(),
             new C(), new C(1), new C(), new C(),
             new C(), new C(), new C(), new C(1),
-        ]), Gates.gateEntry('SWAP', [
+        ]), Gates.gateEntry('CCNOT', [
             new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C(),
             new C(), new C(1), new C(), new C(), new C(), new C(), new C(), new C(),
             new C(), new C(), new C(1), new C(), new C(), new C(), new C(), new C(),

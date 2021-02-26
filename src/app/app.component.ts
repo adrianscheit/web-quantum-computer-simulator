@@ -17,6 +17,8 @@ export class AppComponent implements OnInit {
 
     program: GateName[][] = [['H', 'H', 'H', 'H', 'H']];
     programJson: string;
+    defaultGateName: GateName = '';
+    gates = Gates.gates;
 
     ngOnInit() {
         this.programJson = localStorage.getItem('program');
@@ -76,7 +78,7 @@ export class AppComponent implements OnInit {
     addQubit(): void {
         this.qubitsIndexes.push(this.qubitsIndexes.length);
         for (const step of this.program) {
-            step.push('');
+            step.push(this.defaultGateName);
         }
         this.updateJson();
     }
@@ -92,7 +94,7 @@ export class AppComponent implements OnInit {
     addStep(): void {
         const gates = [];
         for (const i of this.qubitsIndexes) {
-            gates.push('')
+            gates.push(this.defaultGateName)
         }
         this.program.push(gates);
         this.updateJson();

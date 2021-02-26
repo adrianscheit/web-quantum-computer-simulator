@@ -1,0 +1,10 @@
+.grid{
+    display: inline-grid;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+.grid>div{
+
+    padding: 2px 6px;
+    text-align: center;
+}
