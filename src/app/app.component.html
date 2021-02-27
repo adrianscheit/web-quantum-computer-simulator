@@ -69,7 +69,7 @@
 <section>
     <h2>Results:</h2>
     <section *ngFor="let result of results">
-        <h3>Sumulation #{{result.id}}</h3>
+        <h3>Sumulation #{{result.id+1}}</h3>
         <ul>
             <li>Simulation started {{result.startTime | date}}</li>
             <li>Number of Qubits: {{result.qubitsQuantity}}</li>

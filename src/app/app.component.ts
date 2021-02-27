@@ -80,7 +80,6 @@ export class AppComponent implements OnInit {
     }
 
     jsonChange(event) {
-        console.log(event);
         this.programJson = event;
         this.parseJson();
     }
@@ -112,7 +111,6 @@ export class AppComponent implements OnInit {
         this.program = program;
         this.guiProgram = [];
         this.addStep(0);
-        console.log(this.programJson, this.qubitsQuantity);
         for (const step of this.program) {
             for (const index of step.qi) {
                 if (this.guiProgram[this.guiProgram.length - 1][index].o.gateName) {
