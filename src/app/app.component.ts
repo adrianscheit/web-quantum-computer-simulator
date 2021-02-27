@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { G } from './lib/g';
 import { GateName, Gates } from './lib/gates';
+import { Result, StepperData, V } from './lib/v';
 
 
 @Component({
@@ -15,10 +16,13 @@ export class AppComponent implements OnInit {
     prod = environment.production;
     qubitsIndexes: number[] = [0, 1, 2, 3, 4];
 
-    program: GateName[][] = [['H', 'H', 'H', 'H', 'H']];
+    programGUI: GateName[][] = [['H', 'H', 'H', 'H', 'H']];
     programJson: string;
     defaultGateName: GateName = '';
-    gates = Gates.gates;
+
+    results: StepperData[] = [];
+    readonly gates = Gates.gates;
+    worker: Worker = new Worker('./stepper.worker', { type: 'module' });;
 
     ngOnInit() {
         this.programJson = localStorage.getItem('program');
@@ -53,13 +57,13 @@ export class AppComponent implements OnInit {
     }
 
     updateJson(): void {
-        this.programJson = JSON.stringify(this.program);
+        this.programJson = JSON.stringify(this.programGUI);
     }
 
     parseJson(): void {
-        this.program = JSON.parse(this.programJson);
+        this.programGUI = JSON.parse(this.programJson);
         this.qubitsIndexes = [];
-        for (let i = 0; i < this.program[0]?.length; ++i) {
+        for (let i = 0; i < this.programGUI[0]?.length; ++i) {
             this.qubitsIndexes.push(i);
         }
     }
@@ -77,7 +81,7 @@ export class AppComponent implements OnInit {
 
     addQubit(): void {
         this.qubitsIndexes.push(this.qubitsIndexes.length);
-        for (const step of this.program) {
+        for (const step of this.programGUI) {
             step.push(this.defaultGateName);
         }
         this.updateJson();
@@ -85,7 +89,7 @@ export class AppComponent implements OnInit {
 
     deleteQubit(i: number): void {
         this.qubitsIndexes.pop();
-        for (const step of this.program) {
+        for (const step of this.programGUI) {
             step.splice(i, 1);
         }
         this.updateJson();
@@ -96,18 +100,31 @@ export class AppComponent implements OnInit {
         for (const i of this.qubitsIndexes) {
             gates.push(this.defaultGateName)
         }
-        this.program.push(gates);
+        this.programGUI.push(gates);
         this.updateJson();
     }
 
     deleteStep(i: number): void {
-        this.program.splice(i, 1);
+        this.programGUI.splice(i, 1);
         this.updateJson();
     }
 
     selectGate(gateName: GateName, stepIndex: number, gateIndex: number) {
         console.log(gateName, stepIndex, gateIndex);
-        this.program[stepIndex][gateIndex] = gateName;
+        this.programGUI[stepIndex][gateIndex] = gateName;
         this.updateJson();
+    }
+
+    simulate(): void {
+        const stepperData: StepperData = { initQubits: this.qubitsIndexes.map(() => new V()), operations: [] };
+        this.worker.postMessage(stepperData);
+        this.results.push(stepperData);
+    }
+
+    cancel(): void {
+        if (this.worker) {
+            this.worker.terminate();
+            this.worker = null;
+        }
     }
 }

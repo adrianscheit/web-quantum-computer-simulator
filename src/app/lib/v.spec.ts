@@ -1,4 +1,5 @@
 import { C } from './c';
+import { Gates } from './gates';
 import { Result, V } from './v';
 
 describe('Vector tests', () => {
@@ -39,5 +40,28 @@ describe('Vector tests', () => {
             { propability: 0.25, state: [true, false] },
             { propability: 0.25, state: [true, true] },
         ]));
+    });
+
+    it('take bits', () => {
+        expect(V.takeBits(0, [8, 5])).toEqual(0);
+        expect(V.takeBits(0, [1])).toEqual(0);
+
+        expect(V.takeBits(1, [0])).toEqual(1);
+        expect(V.takeBits(1, [1])).toEqual(0);
+        expect(V.takeBits(1, [0, 1])).toEqual(2);
+        expect(V.takeBits(1, [1, 0])).toEqual(1);
+
+        expect(V.takeBits(2, [0])).toEqual(0);
+        expect(V.takeBits(2, [1])).toEqual(1);
+        expect(V.takeBits(2, [0, 1])).toEqual(1);
+        expect(V.takeBits(2, [1, 0])).toEqual(2);
+    });
+
+    it('step simple', () => {
+        expect(new V([new C(1), new C(0)]).step({ gate: Gates.gatesMap.get(''), qi: [0] })).toEqual({ 0: new C(1), 1: new C(0) });
+        expect(new V([new C(0), new C(1)]).step({ gate: Gates.gatesMap.get(''), qi: [0] })).toEqual({ 0: new C(0), 1: new C(1) });
+
+        expect(new V([new C(1), new C(0)]).step({ gate: Gates.gatesMap.get('X'), qi: [0] })).toEqual({ 0: new C(0), 1: new C(1) });
+        expect(new V([new C(0), new C(1)]).step({ gate: Gates.gatesMap.get('X'), qi: [0] })).toEqual({ 0: new C(1), 1: new C(0) });
     });
 });

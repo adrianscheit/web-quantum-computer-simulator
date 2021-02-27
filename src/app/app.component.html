@@ -21,7 +21,8 @@
     <ul>
         <li>Initally all qubits are |0)</li>
         <li>The simulation uses ??? model</li>
-        <li>The simulation uses ??? model</li>
+        <li>Your program is not send to the server - it is all local</li>
+        <li>???</li>
     </ul>
     Default gate: <app-gate [gateName]="defaultGateName" (selectGateName)="defaultGateName=$event"></app-gate>
 
@@ -34,7 +35,7 @@
                     <button (click)="addQubit()">Add qubit</button>
                 </th>
             </tr>
-            <tr *ngFor="let step of program; let i=index ">
+            <tr *ngFor="let step of programGUI; let i=index ">
                 <td>#{{i}}</td>
                 <td *ngFor="let gateName of step; let j=index" [colspan]=1>
                     <app-gate [gateName]="gateName" (selectGateName)="selectGate($event, i, j)"></app-gate>
@@ -59,8 +60,37 @@
 </section>
 
 <section>
+    <h2>Results:</h2>
+    <section *ngFor="let result of results">
+        <h3>Simulation started {{result.startTime}}, end time: {{result.endTime}}</h3>
+        <div class="progress-bar">
+            <div class="progress absolute" [style.width]="result.progress*100 + '%' "></div>
+            <span *ngIf=progress class="progress-text ">Progress: {{result.progress*100|number:'.1-1'}}%</span>
+        </div>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        Propabilities:
+                    </th>
+                    <th [colSpan]="result.qubitsQuantity">
+                        Results:
+                    </th>
+                </tr>
+                <tr *ngFor="let r of result.results">
+                    <td>{{r.propability * 100 | number:'.0-1'}}%</td>
+                    <td *ngFor="let qv of r.state">{{qv?1:0}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</section>
+
+<section>
     <h2>All avaliable gates:</h2>
-    <app-gate-view *ngFor="let gate of gates" [gate]="gate"></app-gate-view>
+    <div class="flex">
+        <app-gate-view *ngFor="let gate of gates" [gate]="gate"></app-gate-view>
+    </div>
 </section>
 
 
@@ -71,9 +101,6 @@
 </section>
 
 <section class="fixed-bottom ">
-    <div class="progress-bar ">
-        <div class="progress absolute " [style.width]="getProgess()+ '%' "></div>
-        <span *ngIf=progress class="progress-text ">Progress: {{getProgess()|number:'.1-1'}}%</span>
-    </div>
-    <button>Simulate (shortcut TBD)</button>
+
+    <button (click)="simulate()">Simulate (shortcut TBD)</button>
 </section>
