@@ -63,19 +63,16 @@
     <h2>Results:</h2>
     <section *ngFor="let result of results">
         <h3>Simulation started {{result.startTime}}, end time: {{result.endTime}}</h3>
+        <p>Number of Qubits: {{result.qubitsQuantity}}</p>
         <div class="progress-bar">
-            <div class="progress absolute" [style.width]="result.progress*100 + '%' "></div>
-            <span *ngIf=progress class="progress-text ">Progress: {{result.progress*100|number:'.1-1'}}%</span>
+            <div class="progress" [style.width]="result.progress*100+'%'"></div>
+            <span class="progress-text ">Progress: {{result.progress*100|number:'.1-1'}}%</span>
         </div>
-        <table>
+        <table *ngIf="result.results">
             <tbody>
                 <tr>
-                    <th>
-                        Propabilities:
-                    </th>
-                    <th [colSpan]="result.qubitsQuantity">
-                        Results:
-                    </th>
+                    <th>Propabilities:</th>
+                    <th *ngFor="let i of getIndexes(result.qubitsQuantity)">Q{{i}}</th>
                 </tr>
                 <tr *ngFor="let r of result.results">
                     <td>{{r.propability * 100 | number:'.0-1'}}%</td>

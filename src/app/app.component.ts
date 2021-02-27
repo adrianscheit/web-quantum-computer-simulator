@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { G } from './lib/g';
 import { GateName, Gates } from './lib/gates';
-import { Result, StepperData, V } from './lib/v';
+import { Operation, Result, StepperData, V } from './lib/v';
 
 
 @Component({
@@ -12,7 +12,6 @@ import { Result, StepperData, V } from './lib/v';
 })
 export class AppComponent implements OnInit {
     cookiesEnabled = false;
-    progress = 0.118964561534;
     prod = environment.production;
     qubitsIndexes: number[] = [0, 1, 2, 3, 4];
 
@@ -32,7 +31,15 @@ export class AppComponent implements OnInit {
         }
         this.updateJson();
 
-        console.log(Gates.gatesMap, Gates.gates);
+        this.worker.addEventListener('message', ({ data }) => {
+            console.log('Got worker updates');
+            const stepperData: StepperData = data;
+            this.results[stepperData.id] = stepperData;
+        });
+    }
+
+    getIndexes(length: number): number[] {
+        return Array(length).fill(0).map((v, i) => i);
     }
 
     @HostListener('window:beforeunload')
@@ -50,10 +57,6 @@ export class AppComponent implements OnInit {
     disableCookies(): void {
         this.cookiesEnabled = false;
         localStorage.clear();
-    }
-
-    getProgess(): number {
-        return this.progress * 100;
     }
 
     updateJson(): void {
@@ -116,9 +119,12 @@ export class AppComponent implements OnInit {
     }
 
     simulate(): void {
-        const stepperData: StepperData = { initQubits: this.qubitsIndexes.map(() => new V()), operations: [] };
+        const stepperData: StepperData = {
+            initQubits: this.qubitsIndexes.map(() => new V()), operations:
+                Array(55).fill({ gateName: 'X', qi: [0] } as Operation)
+            , id: this.results.length
+        };
         this.worker.postMessage(stepperData);
-        this.results.push(stepperData);
     }
 
     cancel(): void {

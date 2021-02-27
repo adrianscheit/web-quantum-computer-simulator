@@ -10,6 +10,9 @@
 }
 
 .progress-bar {
+    display: block;
+    height: 24px;
+    position: relative;
     background-color: #eee;
     flex-grow: 1;
     position: relative;
@@ -17,12 +20,9 @@
 }
 
 .progress {
+    position: absolute;
     background-color: greenyellow;
     height: 100%;
-}
-
-.absolute {
-    position: absolute;
 }
 
 .progress-text {

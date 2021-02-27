@@ -58,10 +58,10 @@ describe('Vector tests', () => {
     });
 
     it('step simple', () => {
-        expect(new V([new C(1), new C(0)]).step({ gate: Gates.gatesMap.get(''), qi: [0] })).toEqual({ 0: new C(1), 1: new C(0) });
-        expect(new V([new C(0), new C(1)]).step({ gate: Gates.gatesMap.get(''), qi: [0] })).toEqual({ 0: new C(0), 1: new C(1) });
+        expect(new V([new C(1), new C(0)]).step(Gates.gatesMap.get(''), [0])).toEqual([new C(1), new C(0)]);
+        expect(new V([new C(0), new C(1)]).step(Gates.gatesMap.get(''), [0])).toEqual([new C(0), new C(1)]);
 
-        expect(new V([new C(1), new C(0)]).step({ gate: Gates.gatesMap.get('X'), qi: [0] })).toEqual({ 0: new C(0), 1: new C(1) });
-        expect(new V([new C(0), new C(1)]).step({ gate: Gates.gatesMap.get('X'), qi: [0] })).toEqual({ 0: new C(1), 1: new C(0) });
+        expect(new V([new C(1), new C(0)]).step(Gates.gatesMap.get('X'), [0])).toEqual([new C(0), new C(1)]);
+        expect(new V([new C(0), new C(1)]).step(Gates.gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
     });
 });

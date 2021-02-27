@@ -5,15 +5,15 @@ import { AppModule } from './app.module';
 describe('AppComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                AppModule
-            ],
+            imports: [AppModule],
         }).compileComponents();
     });
 
-    it('should create the app', () => {
+    it('getIndexes', () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
-        expect(app).toBeTruthy();
+        expect(app.getIndexes(0)).toEqual([]);
+        expect(app.getIndexes(1)).toEqual([0]);
+        expect(app.getIndexes(5)).toEqual([0, 1, 2, 3, 4]);
     });
 });

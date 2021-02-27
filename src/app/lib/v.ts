@@ -1,5 +1,6 @@
 import { C } from "./c";
 import { G } from "./g";
+import { GateName } from "./gates";
 
 export interface Result {
     propability: number;
@@ -7,13 +8,15 @@ export interface Result {
 }
 
 export interface Operation {
-    gate: G,
+    gateName: GateName,
+    gate?: G,
     qi: number[]
 }
 
 export interface StepperData {
     initQubits: V[];
     operations: Operation[],
+    id: number;
     qubitsQuantity?: number;
     progress?: number,
     results?: Result[],
@@ -71,18 +74,19 @@ export class V {
         return result;
     }
 
-    step(o: Operation): { [index: number]: C } {
-        const result: { [index: number]: C } = {};
-        const mask = o.qi.map(i => 1 << i).reduce((p, c) => p | c, 0);
+    step(g: G, qi: number[]): C[] {
+        const result: C[] = [];
+        const mask = qi.map(i => 1 << i).reduce((p, c) => p | c, 0);
         const nMask = ~mask;
 
         for (let i = 0; i < this.state.length; ++i) {
+            const sum = new C();
             for (let j = 0; j < this.state.length; ++j) {
                 if ((i & nMask) === (j & nMask)) {
-                    const r = this.state[i].new().mul(o.gate.get(V.takeBits(i, o.qi), V.takeBits(j, o.qi)));
-                    result[j] = result[j] ? result[j].plus(r) : r;
+                    sum.plus(this.state[j].new().mul(g.get(V.takeBits(i, qi), V.takeBits(j, qi))));
                 }
             }
+            result.push(sum);
         }
         return result;
     }
