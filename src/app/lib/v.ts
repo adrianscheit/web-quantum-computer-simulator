@@ -9,25 +9,25 @@ export interface Result {
 
 export interface Operation {
     gateName: GateName,
-    gate?: G,
     qi: number[]
 }
 
 export interface StepperData {
-    initQubits: V[];
+    /// Input:
+    qubitsQuantity: number;
     operations: Operation[],
     id: number;
-    qubitsQuantity?: number;
+    /// Output:
+    startTime?: Date,
     progress?: number,
     results?: Result[],
-    startTime?: Date,
     endTime?: Date
 }
 
 export class V {
     readonly qubits: number;
 
-    constructor(public readonly state: C[] = [new C(1), new C()]) {
+    constructor(public state: C[] = [new C(1), new C()]) {
         this.qubits = Math.log2(state.length);
     }
 

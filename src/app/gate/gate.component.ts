@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { GUIGate } from '../app.component';
 import { GateName, Gates } from '../lib/gates';
 
 @Component({
@@ -7,7 +8,7 @@ import { GateName, Gates } from '../lib/gates';
     styleUrls: ['./gate.component.css']
 })
 export class GateComponent {
-    @Input() gateName: GateName;
+    @Input() gate: GUIGate;
     @Output() selectGateName = new EventEmitter<GateName>();
     gates = Gates.gates;
 

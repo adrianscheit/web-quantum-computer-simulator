@@ -9,26 +9,6 @@
     display: flex;
 }
 
-.progress-bar {
-    display: block;
-    height: 24px;
-    position: relative;
-    background-color: #eee;
-    flex-grow: 1;
-    position: relative;
-    text-align: center;
-}
-
-.progress {
-    position: absolute;
-    background-color: greenyellow;
-    height: 100%;
-}
-
-.progress-text {
-    position: absolute;
-}
-
 textarea {
     width: 100%;
 }

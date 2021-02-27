@@ -4,7 +4,14 @@
 
 <section>
     <h1>Quantum Computer Simulator in Your browser!</h1>
-    Quantum computer simultor implementation, free for use for everyone.
+    <ul>
+        <li>Quantum computer simultor implementation, free for use for everyone.</li>
+        <li>Initally all qubits are |0)</li>
+        <li>The simulation uses Gates ??? model</li>
+        <li>Your program is not send to the server - it is all local</li>
+        <li>Clear UI</li>
+    </ul>
+
     <div [hidden]="cookiesEnabled">
         To save your program in your browser you have to accept cookies:
         <button (click)="enableCookies()">Agree</button>
@@ -17,57 +24,58 @@
 
 <section>
     <h2>Here is your program in GUI:</h2>
-
-    <ul>
-        <li>Initally all qubits are |0)</li>
-        <li>The simulation uses ??? model</li>
-        <li>Your program is not send to the server - it is all local</li>
-        <li>???</li>
-    </ul>
-    Default gate: <app-gate [gateName]="defaultGateName" (selectGateName)="defaultGateName=$event"></app-gate>
-
     <table>
         <tbody>
             <tr>
                 <th>Step#</th>
-                <th *ngFor="let i of qubitsIndexes">Q{{i}}<button (click)="deleteQubit(i)">Delete</button></th>
+                <th *ngFor="let i of getIndexes(qubitsQuantity)">
+                    Q{{i}}
+                    <button (click)="deleteQubit(i)">Delete</button>
+                    <button (click)="addQubit(qubitsQuantity)">Add qubit</button>
+                </th>
                 <th>
-                    <button (click)="addQubit()">Add qubit</button>
+                    <button (click)="addQubit(qubitsQuantity)">Add qubit</button>
                 </th>
             </tr>
-            <tr *ngFor="let step of programGUI; let i=index ">
+            <tr *ngFor="let step of guiProgram; let i=index ">
                 <td>#{{i}}</td>
-                <td *ngFor="let gateName of step; let j=index" [colspan]=1>
-                    <app-gate [gateName]="gateName" (selectGateName)="selectGate($event, i, j)"></app-gate>
+                <td *ngFor="let guiGate of step; let j=index" [colspan]=1>
+                    <app-gate [gate]="guiGate" (selectGateName)="selectGate($event, i, j)"></app-gate>
                 </td>
-                <td><button (click)="deleteStep(i) ">Delete step</button></td>
+                <td>
+                    <button (click)="deleteStep(i) ">Delete step</button>
+                    <button (click)="addStep(j)">Add step before</button>
+                </td>
             </tr>
             <tr>
-                <td [colSpan]="qubitsIndexes.length+2 ">
-                    <button style="width: 100%; " (click)=" addStep() ">Add step</button>
+                <td [colSpan]="qubitsQuantity+2 ">
+                    <button style="width: 100%" (click)="addStep(guiProgram.length)">Add step</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <button (click)="null">Clean-up!</button>
-    <button (click)="null">Complementary the program</button>
+    <button (click)="cleanUp()">Clean-up!</button>
+    <button (click)="complem()">Complementary the program</button>
+    <button (click)="simulate()">Simulate</button>
 </section>
 
 <section>
     <h2>Here is your quantum program in JSON:</h2>
-    <textarea>{{programJson}}</textarea>
+    <textarea (change)="jsonChange($event.target.value)" [value]="programJson"></textarea>
+    <button (click)="simulate()">Simulate)</button>
 </section>
 
 <section>
     <h2>Results:</h2>
     <section *ngFor="let result of results">
-        <h3>Simulation started {{result.startTime}}, end time: {{result.endTime}}</h3>
-        <p>Number of Qubits: {{result.qubitsQuantity}}</p>
-        <div class="progress-bar">
-            <div class="progress" [style.width]="result.progress*100+'%'"></div>
-            <span class="progress-text ">Progress: {{result.progress*100|number:'.1-1'}}%</span>
-        </div>
+        <h3>Sumulation #{{result.id}}</h3>
+        <ul>
+            <li>Simulation started {{result.startTime | date}}</li>
+            <li>Number of Qubits: {{result.qubitsQuantity}}</li>
+            <li>Progress: {{result.progress*100 | number:'.1-1'}}%</li>
+            <li *ngIf="result.results">End time: {{result.endTime | date}}</li>
+        </ul>
         <table *ngIf="result.results">
             <tbody>
                 <tr>
@@ -90,14 +98,8 @@
     </div>
 </section>
 
-
 <section>
     <h2>Feedback</h2>
     <textarea></textarea>
     <button>Submit!</button>
-</section>
-
-<section class="fixed-bottom ">
-
-    <button (click)="simulate()">Simulate (shortcut TBD)</button>
 </section>
