@@ -153,7 +153,7 @@ export class AppComponent implements OnInit {
         for (let i = 0; i < this.program.length; ++i) {
             for (let j = 0; j < this.program[i].qi.length; ++j) {
                 if (this.program[i].qi[j] === index) {
-                    this.program.splice(i, 0);
+                    this.program.splice(i, 1);
                     --i;
                     break;
                 } else if (this.program[i].qi[j] > index) {
