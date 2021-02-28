@@ -1,13 +1,8 @@
-<section *ngIf="prod" style="position:fixed;top:0;right:0;bottom:0;left:0;background-color: #FFF;">
-    <h1>Page under development</h1>
-</section>
-
 <section>
     <h1>Quantum Computer Simulator in Your browser!</h1>
     <ul>
         <li>Quantum computer simultor implementation, free for use for everyone.</li>
         <li>Initally all qubits are |0)</li>
-        <li>The simulation uses Gates ??? model</li>
         <li>Your program is not send to the server - it is all local</li>
         <li>Clear UI</li>
     </ul>
@@ -80,9 +75,9 @@
 </section>
 
 <section>
-    <h2>Here is your quantum program in JSON:</h2>
+    <h2>Program in JSON:</h2>
     <textarea (change)="jsonChange($event.target.value)" [value]="programJson"></textarea>
-    <button (click)="simulate()">Simulate)</button>
+    <button (click)="simulate()">Simulate</button>
 </section>
 
 <section>
@@ -117,10 +112,10 @@
     </div>
 </section>
 
-<section>
+<!-- <section>
     <h2>Feedback</h2>
     <textarea></textarea>
     <button>Submit!</button>
-</section>
+</section> -->
 
 <app-operation [operation]="currentOperation" (exit)="exitOperation()"></app-operation>

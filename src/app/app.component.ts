@@ -16,7 +16,6 @@ export interface GateGUI {
 })
 export class AppComponent implements OnInit {
     cookiesEnabled = false;
-    prod = environment.production;
     qubitsQuantity: number = 10;
 
     program: Operation[] = [];
@@ -221,7 +220,7 @@ export class AppComponent implements OnInit {
     }
 
     complem(): void {
-
+        console.warn('TBD');
     }
 
     getOperationQubitIndexes(operation: Operation): string {
