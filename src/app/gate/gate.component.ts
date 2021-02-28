@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { GUIGate } from '../app.component';
+import { GateGUI } from '../app.component';
 import { Gates } from '../lib/gates';
 
 @Component({
@@ -8,7 +8,7 @@ import { Gates } from '../lib/gates';
     styleUrls: ['./gate.component.css']
 })
 export class GateComponent {
-    @Input() gate: GUIGate;
+    @Input() gate: GateGUI;
     @HostBinding('style.background-color')
     get color(): string {
         if (!this.gate.o) {

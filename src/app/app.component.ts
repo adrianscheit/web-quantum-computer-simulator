@@ -3,10 +3,10 @@ import { environment } from 'src/environments/environment';
 import { Gates } from './lib/gates';
 import { Operation, StepperData } from './lib/v';
 
-export interface GUIGate {
+export interface GateGUI {
     o?: Operation;
     oi: number;
-    ii: number;
+    ii?: number;
 }
 
 @Component({
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     qubitsQuantity: number = 10;
 
     program: Operation[] = [];
-    programGUI: GUIGate[][] = [];
+    programGUI: GateGUI[][] = [];
     programJson: string;
 
     currentOperation: Operation;
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
         this.programJson = JSON.stringify(this.program);
         // Update GUI:
         this.programGUI = [];
-        const newProgramGUIRow = new Map<number, GUIGate>();
+        const newProgramGUIRow = new Map<number, GateGUI>();
         for (let i = 0; i < this.program.length; ++i) {
             const step = this.program[i];
             for (let j = 0; j < step.qi.length; ++j) {
@@ -127,15 +127,15 @@ export class AppComponent implements OnInit {
         console.log(this.programJson, this.program, '=>', this.programGUI, this.qubitsQuantity);
     }
 
-    addRowToProgramGUI(gates: Map<number, GUIGate>): void {
-        const row: GUIGate[] = [];
+    addRowToProgramGUI(gates: Map<number, GateGUI>): void {
+        const row: GateGUI[] = [];
         let oi = Math.min(this.program.length, ...[...gates.values()].map(g => g.oi));
         for (let i = 0; i <= this.qubitsQuantity; ++i) {
             if (gates.has(i)) {
                 row.push(gates.get(i));
                 oi = Math.max(gates.get(i).oi + 1, oi);
             } else {
-                row.push({ oi: oi, ii: 0 });
+                row.push({ oi: oi });
             }
         }
         this.programGUI.push(row);
@@ -149,11 +149,23 @@ export class AppComponent implements OnInit {
 
     /// GUI's operations ----------------------------------------------------
 
-    deleteQubit(i: number): void {
-        for (const operation of this.program) {
-            operation
+    deleteQubit(index: number): void {
+        for (let i = 0; i < this.program.length; ++i) {
+            for (let j = 0; j < this.program[i].qi.length; ++j) {
+                if (this.program[i].qi[j] === index) {
+                    this.program.splice(i, 0);
+                    --i;
+                    break;
+                } else if (this.program[i].qi[j] > index) {
+                    this.program[i].qi[j]--;
+                }
+            }
         }
         this.parseProgram();
+    }
+
+    addStep(i: number): void {
+        this.programGUI.splice(i, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[i][0].oi } as GateGUI)));
     }
 
     deleteStep(i: number): void {
@@ -182,7 +194,7 @@ export class AppComponent implements OnInit {
         this.parseProgram();
     }
 
-    changeOperation(guiGate: GUIGate, i: number, j: number): void {
+    changeOperation(guiGate: GateGUI, i: number, j: number): void {
         if (guiGate.o) {
             this.currentOperation = guiGate.o;
         } else {
