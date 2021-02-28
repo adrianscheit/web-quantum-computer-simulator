@@ -1,1 +1,2 @@
-{{gate.o.gateName}}:{{gate.o.qi[gate.ii]}}:{{gate.ii}}
+<span *ngIf="gate.o">{{gate.oi}}:{{gate.o?.gateName}}:{{gate.o?.qi[gate.ii]}}:{{gate.ii}}</span>
+<span *ngIf="!gate.o">|</span>

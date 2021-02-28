@@ -1,0 +1,9 @@
+<div class="host" *ngIf="operation" (click)="exit.emit()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+        <button type="button" *ngFor="let gate of gates" [class.selected]="gate.name===operation.gateName"
+            (click)="changeGate(gate.name)">{{gate.name?gate.name:'|'}}</button>
+        <input type="number" step="1" min="0" *ngFor="let i of operation.qi; let ii=index" [value]="i"
+            (change)="operation.qi[ii]=+$event.target.value" />
+        <button type="button" (click)="exit.emit()">OK / Close</button>
+    </div>
+</div>

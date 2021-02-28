@@ -23,7 +23,35 @@
 </section>
 
 <section>
-    <h2>Here is your program in GUI:</h2>
+    <h2>Program in list of quantum operations:</h2>
+    <table>
+        <tbody>
+            <tr>
+                <th>Operation#</th>
+                <th>Gate type</th>
+                <th>Connected Qubits</th>
+            </tr>
+            <tr *ngFor="let operation of program; let i=index">
+                <td>#{{i}}</td>
+                <td>{{operation.gateName}}</td>
+                <td>{{getOperationQubitIndexes(operation)}}</td>
+                <td>
+                    <button (click)="addOperation(i,0)">Add before</button>
+                    <button (click)="editOperation(operation)">Edit</button>
+                    <button (click)="deleteOperation(i)">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button (click)="addOperation(program.length,0)">Add new operation</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Program in 2D representation:</h2>
     <table>
         <tbody>
             <tr>
@@ -31,25 +59,16 @@
                 <th *ngFor="let i of getIndexes(qubitsQuantity)">
                     Q{{i}}
                     <button (click)="deleteQubit(i)">Delete</button>
-                    <button (click)="addQubit(qubitsQuantity)">Add qubit</button>
-                </th>
-                <th>
-                    <button (click)="addQubit(qubitsQuantity)">Add qubit</button>
                 </th>
             </tr>
-            <tr *ngFor="let step of guiProgram; let i=index ">
+            <tr *ngFor="let step of programGUI; let i=index ">
                 <td>#{{i}}</td>
                 <td *ngFor="let guiGate of step; let j=index" [colspan]=1>
-                    <app-gate [gate]="guiGate" (selectGateName)="selectGate($event, i, j)"></app-gate>
+                    <app-gate [gate]="guiGate" (click)="changeOperation(guiGate, i,j)"></app-gate>
                 </td>
                 <td>
+                    <button (click)="addStep(i)">Add step before</button>
                     <button (click)="deleteStep(i) ">Delete step</button>
-                    <button (click)="addStep(j)">Add step before</button>
-                </td>
-            </tr>
-            <tr>
-                <td [colSpan]="qubitsQuantity+2 ">
-                    <button style="width: 100%" (click)="addStep(guiProgram.length)">Add step</button>
                 </td>
             </tr>
         </tbody>
@@ -73,7 +92,7 @@
         <ul>
             <li>Simulation started {{result.startTime | date}}</li>
             <li>Number of Qubits: {{result.qubitsQuantity}}</li>
-            <li>Progress: {{result.progress*100 | number:'.1-1'}}%</li>
+            <li>Progress: {{result.progress*100 | number:'.1-2'}}%</li>
             <li *ngIf="result.results">End time: {{result.endTime | date}}</li>
         </ul>
         <table *ngIf="result.results">
@@ -103,3 +122,5 @@
     <textarea></textarea>
     <button>Submit!</button>
 </section>
+
+<app-operation [operation]="currentOperation" (exit)="exitOperation()"></app-operation>

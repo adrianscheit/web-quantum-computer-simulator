@@ -2,7 +2,6 @@
     display: block;
     background-color: yellow;
     padding: 4px;
-    max-width: 100px;
-    min-height: 16px;
+    min-width: 40px;
     text-align: center;
 }

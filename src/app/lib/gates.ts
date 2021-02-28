@@ -23,7 +23,8 @@ export class Gates {
             new C(), new C(1), new C(), new C(),
             new C(), new C(), new C(), new C(1),
             new C(), new C(), new C(1), new C(),
-        ]), Gates.gateEntry('CZ', [
+        ]),
+        Gates.gateEntry('CZ', [
             new C(1), new C(), new C(), new C(),
             new C(), new C(1), new C(), new C(),
             new C(), new C(), new C(1), new C(),
@@ -34,7 +35,8 @@ export class Gates {
             new C(), new C(), new C(1), new C(),
             new C(), new C(1), new C(), new C(),
             new C(), new C(), new C(), new C(1),
-        ]), Gates.gateEntry('CCNOT', [
+        ]),
+        Gates.gateEntry('CCNOT', [
             new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C(),
             new C(), new C(1), new C(), new C(), new C(), new C(), new C(), new C(),
             new C(), new C(), new C(1), new C(), new C(), new C(), new C(), new C(),
@@ -44,7 +46,6 @@ export class Gates {
             new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1),
             new C(), new C(), new C(), new C(), new C(), new C(), new C(1), new C(),
         ]),
-
     ]);
-    static gates = [...Gates.gatesMap.values()];
+    static gates: G[] = [...Gates.gatesMap.values()];
 }

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { GUIGate } from '../app.component';
-import { GateName, Gates } from '../lib/gates';
+import { Gates } from '../lib/gates';
 
 @Component({
     selector: 'app-gate',
@@ -9,16 +9,11 @@ import { GateName, Gates } from '../lib/gates';
 })
 export class GateComponent {
     @Input() gate: GUIGate;
-    @Output() selectGateName = new EventEmitter<GateName>();
-    gates = Gates.gates;
-
-    @HostListener('click')
-    click(): void {
-        const newName: GateName = prompt('New gateName:', '') as any;
-        if (newName !== null) {
-            if (Gates.gatesMap.has(newName)) {
-                this.selectGateName.emit(newName);
-            }
+    @HostBinding('style.background-color')
+    get color(): string {
+        if (!this.gate.o) {
+            return '#af8';
         }
+        return Gates.gatesMap.get(this.gate.o.gateName).color;
     }
 }
