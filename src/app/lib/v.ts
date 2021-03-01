@@ -18,6 +18,7 @@ export interface StepperData {
     operations: Operation[],
     id: number;
     /// Output:
+    operationsQuantity?: number;
     startTime?: Date,
     progress?: number,
     results?: Result[],

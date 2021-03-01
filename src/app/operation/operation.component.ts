@@ -10,7 +10,8 @@ import { Operation } from '../lib/v';
 })
 export class OperationComponent {
     @Input() operation: Operation;
-    @Output() exit = new EventEmitter<void>();
+    @Input() index: number;
+    @Output() exit = new EventEmitter<number>();
     readonly gates: G[] = Gates.gates;
 
     changeGate(gateName: GateName): void {

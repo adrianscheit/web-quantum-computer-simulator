@@ -8,7 +8,7 @@ import { Gates } from '../lib/gates';
     styleUrls: ['./gate.component.css']
 })
 export class GateComponent {
-    @Input() gate: GateGUI;
+    @Input() gate: GateGUI = { oi: 0 };
     @HostBinding('style.background-color')
     get color(): string {
         if (!this.gate.o) {

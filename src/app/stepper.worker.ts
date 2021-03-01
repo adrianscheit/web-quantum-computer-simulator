@@ -11,6 +11,7 @@ addEventListener('message', ({ data }) => {
 
     const operations = stepperData.operations;
     stepperData.operations = undefined;
+    stepperData.operationsQuantity = operations.length;
     const gates = operations.map((o: Operation) => Gates.gatesMap.get(o.gateName));
 
     stepperData.startTime = new Date();

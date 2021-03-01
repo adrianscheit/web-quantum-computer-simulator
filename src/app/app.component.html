@@ -1,20 +1,25 @@
+<div [hidden]="cookiesEnabled">
+    This page does not uses any cookies now. To save your program in your browser for your further visits, you have to
+    accept cookies:
+    <button (click)="enableCookies()">Agree</button>
+</div>
+<div [hidden]="!cookiesEnabled">
+    You agreed in the past, that this page is using cookies! If you want to revoke it:
+    <button (click)="disableCookies()">Revoke cookies</button>
+</div>
 <section>
     <h1>Quantum Computer Simulator in Your browser!</h1>
     <ul>
         <li>Quantum computer simultor implementation, free for use for everyone.</li>
-        <li>Initally all qubits are |0)</li>
-        <li>Your program is not send to the server - it is all local</li>
-        <li>Clear UI</li>
+        <li>Initally all qubits are |0></li>
+        <li>The computer scale-up automatically as you add new operations</li>
+        <li>For simulation time issues, try to keep the quantity of qubits low
+            (more then 10 qubits requires some noticable amount of time to simulate)</li>
+        <li>Your program is not send to the server - it is runing in your web-browser</li>
+        <li>Clear UI produces great UX</li>
+        <li>This application is mobile friendly (regarding the UI, because regarding the CPU usage during the sumulation
+            it is far away to be mobile-friendly)</li>
     </ul>
-
-    <div [hidden]="cookiesEnabled">
-        To save your program in your browser you have to accept cookies:
-        <button (click)="enableCookies()">Agree</button>
-    </div>
-    <div [hidden]="!cookiesEnabled">
-        You agreed that this page is using cookies! If you want to revoke it:
-        <button (click)="disableCookies()">Revoke cookies</button>
-    </div>
 </section>
 
 <section>
@@ -32,7 +37,7 @@
                 <td>{{getOperationQubitIndexes(operation)}}</td>
                 <td>
                     <button (click)="addOperation(i,0)">Add before</button>
-                    <button (click)="editOperation(operation)">Edit</button>
+                    <button (click)="editOperation(i)">Edit</button>
                     <button (click)="deleteOperation(i)">Delete</button>
                 </td>
             </tr>
@@ -46,7 +51,7 @@
 </section>
 
 <section>
-    <h2>Program in 2D representation:</h2>
+    <h2>Program in 2D gates table representation</h2>
     <table>
         <tbody>
             <tr>
@@ -62,8 +67,10 @@
                     <app-gate [gate]="guiGate" (click)="changeOperation(guiGate, i,j)"></app-gate>
                 </td>
                 <td>
-                    <button (click)="addStep(i)">Add step before</button>
-                    <button (click)="deleteStep(i) ">Delete step</button>
+                    <div style="display: flex;">
+                        <button (click)="addStep(i)">Add step before</button>
+                        <button (click)="deleteStep(i) ">Delete step</button>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -75,25 +82,33 @@
 </section>
 
 <section>
-    <h2>Program in JSON:</h2>
+    <h2>Program represents the operations in JSON</h2>
     <textarea (change)="jsonChange($event.target.value)" [value]="programJson"></textarea>
     <button (click)="simulate()">Simulate</button>
+    <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
+    <ul>
+        <li>
+            <pre>[]</pre>
+        </li>
+    </ul>
 </section>
 
 <section>
-    <h2>Results:</h2>
+    <h2>Results</h2>
     <section *ngFor="let result of results">
         <h3>Sumulation #{{result.id+1}}</h3>
         <ul>
-            <li>Simulation started {{result.startTime | date}}</li>
-            <li>Number of Qubits: {{result.qubitsQuantity}}</li>
+            <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
+            <li>Number of qubits: {{result.qubitsQuantity}}</li>
+            <li>Number of operations: {{result.operationsQuantity}}</li>
             <li>Progress: {{result.progress*100 | number:'.1-2'}}%</li>
-            <li *ngIf="result.results">End time: {{result.endTime | date}}</li>
+            <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
+                {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
         </ul>
         <table *ngIf="result.results">
             <tbody>
                 <tr>
-                    <th>Propabilities:</th>
+                    <th>Propabilities</th>
                     <th *ngFor="let i of getIndexes(result.qubitsQuantity)">Q{{i}}</th>
                 </tr>
                 <tr *ngFor="let r of result.results">
@@ -112,10 +127,40 @@
     </div>
 </section>
 
+<section>
+    <h2>Legal</h2>
+    <section>
+        <h3>Cookies policy</h3>
+        <p>
+            This site uses cookies only when the user accept it.
+            This site uses cookies only to save the user program for the further usages.
+            There is one property in local storage used in case the user consent to cookies: program
+            - that contains the JSON representation of the user program.
+        </p>
+    </section>
+    <section>
+        <h3>Private policy</h3>
+        <p>
+            This site does not save any user datas. The optional cookies are not used to identify the user.
+            All calcualtion and data are performed and process in the user web-browser, thats rund this site.
+        </p>
+    </section>
+    <section>
+        <h3>Conditions & licence</h3>
+        <p>
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+            Disclaimer: Redistribution of this applcation is forbidden is forbidden.
+            Disclaimer: copying content of this site (exluding the user program).
+            <a href="/3rdpartylicenses.txt">This site uses 3rd party dependencies. To see its licences click here.</a>
+        </p>
+    </section>
+</section>
+
 <!-- <section>
     <h2>Feedback</h2>
     <textarea></textarea>
     <button>Submit!</button>
 </section> -->
 
-<app-operation [operation]="currentOperation" (exit)="exitOperation()"></app-operation>
+<app-operation [operation]="program[currentOperationIndex]" [index]="currentOperationIndex"
+    (exit)="exitOperation($event)"></app-operation>

@@ -22,11 +22,10 @@ export class AppComponent implements OnInit {
     programGUI: GateGUI[][] = [];
     programJson: string;
 
-    currentOperation: Operation;
+    currentOperationIndex: number;
 
     results: StepperData[] = [];
     readonly gates = Gates.gates;
-    worker: Worker = new Worker('./stepper.worker', { type: 'module' });;
 
     ngOnInit() {
         this.programJson = localStorage.getItem('program');
@@ -35,12 +34,6 @@ export class AppComponent implements OnInit {
             this.cookiesEnabled = true;
         }
         this.parseProgram();
-
-        this.worker.addEventListener('message', ({ data }) => {
-            console.log('Got worker updates');
-            const stepperData: StepperData = data;
-            this.results[stepperData.id] = stepperData;
-        });
     }
 
     getIndexes(length: number): number[] {
@@ -182,10 +175,11 @@ export class AppComponent implements OnInit {
     addOperation(index: number, qubitIndex: number): void {
         const newOperation: Operation = { gateName: '', qi: [qubitIndex] };
         this.program.splice(index, 0, newOperation);
-        this.currentOperation = newOperation;
+        this.currentOperationIndex = index;
     }
-    editOperation(operation: Operation): void {
-        this.currentOperation = operation;
+
+    editOperation(index: number): void {
+        this.currentOperationIndex = index;
     }
 
     deleteOperation(i: number): void {
@@ -195,14 +189,20 @@ export class AppComponent implements OnInit {
 
     changeOperation(guiGate: GateGUI, i: number, j: number): void {
         if (guiGate.o) {
-            this.currentOperation = guiGate.o;
+            this.editOperation(guiGate.oi);
         } else {
             this.addOperation(guiGate.oi, j);
         }
     }
 
-    exitOperation(): void {
-        this.currentOperation = undefined;
+    exitOperation(newIndex: number): void {
+        if (newIndex !== this.currentOperationIndex) {
+            newIndex = Math.min(newIndex, this.program.length);
+            newIndex = Math.max(newIndex, 0);
+            const operation: Operation = this.program.splice(this.currentOperationIndex, 1)[0];
+            this.program.splice(newIndex, 0, operation);
+        }
+        this.currentOperationIndex = undefined;
         this.parseProgram();
     }
 
@@ -212,7 +212,15 @@ export class AppComponent implements OnInit {
             operations: this.program,
             id: this.results.length
         };
-        this.worker.postMessage(stepperData);
+        const worker = new Worker('./stepper.worker', { type: 'module' });
+        worker.addEventListener('message', ({ data }) => {
+            const stepperData: StepperData = data;
+            this.results[stepperData.id] = stepperData;
+            if (stepperData.results) {
+                worker.terminate();
+            }
+        });
+        worker.postMessage(stepperData);
     }
 
     cleanUp(): void {
@@ -220,7 +228,11 @@ export class AppComponent implements OnInit {
     }
 
     complem(): void {
-        console.warn('TBD');
+        let length = this.program.length;
+        while (length) {
+            this.program.push(this.program[--length]);
+        }
+        this.parseProgram();
     }
 
     getOperationQubitIndexes(operation: Operation): string {
