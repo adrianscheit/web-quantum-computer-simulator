@@ -13,6 +13,7 @@ addEventListener('message', ({ data }) => {
     stepperData.operations = undefined;
     stepperData.operationsQuantity = operations.length;
     const gates = operations.map((o: Operation) => Gates.gatesMap.get(o.gateName));
+    let lastMessageTime = new Date();
 
     stepperData.startTime = new Date();
     if (stepperData.qubitsQuantity > 32) {
@@ -24,7 +25,10 @@ addEventListener('message', ({ data }) => {
     const state = V.newTensorProduct(Array(stepperData.qubitsQuantity).fill(new V()));
     for (let i = 0; i < operations.length; ++i) {
         stepperData.progress = i / operations.length;
-        postMessage(stepperData);
+        if (new Date().getTime() - lastMessageTime.getTime() > 400) {
+            postMessage(stepperData);
+            lastMessageTime = new Date();
+        }
         state.state = state.step(gates[i], operations[i].qi);
     }
     stepperData.results = state.calcResults();
