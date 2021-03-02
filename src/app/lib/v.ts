@@ -59,10 +59,10 @@ export class V {
         return result;
     }
 
-    calcResults(): Result[] {
+    calcResults(minPropability: number = 0.001): Result[] {
         return this.state
             .map((c: C, i: number) => <Result>{ propability: c.absSqer(), state: this.getState(i) })
-            .filter((result: Result) => result.propability > 0)
+            .filter((result: Result) => result.propability > minPropability)
             .sort((a, b) => a[0] - b[0]);
     }
 
@@ -75,6 +75,18 @@ export class V {
         return result;
     }
 
+    static setBits(source: number, qi: number[], oj: number): number {
+        let mask = 1;
+        for (let i = 0; i < qi.length; ++i, mask <<= 1) {
+            if (oj & mask) {
+                source |= 1 << qi[i];
+            } else {
+                source &= ~(1 << qi[i]);
+            }
+        }
+        return source;
+    }
+
     step(g: G, qi: number[]): C[] {
         const result: C[] = [];
         const mask = qi.map(i => 1 << i).reduce((p, c) => p | c, 0);
@@ -82,10 +94,10 @@ export class V {
 
         for (let i = 0; i < this.state.length; ++i) {
             const sum = new C();
-            for (let j = 0; j < this.state.length; ++j) {
-                if ((i & nMask) === (j & nMask)) {
-                    sum.plus(this.state[j].new().mul(g.get(V.takeBits(i, qi), V.takeBits(j, qi))));
-                }
+            const oi = V.takeBits(i, qi);
+            for (let oj = 0; oj < g.widthOrHeight; ++oj) {
+                const j = V.setBits(i, qi, oj);
+                sum.plus(this.state[j].new().mul(g.get(oi, oj)));
             }
             result.push(sum);
         }
