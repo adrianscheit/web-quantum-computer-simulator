@@ -8,9 +8,9 @@
     <button (click)="cookies=false">Revoke cookies</button>
 </div>
 <section>
-    <h1>Quantum Computer Simulator in your browser!</h1>
+    <h1>Online quantum computer simulator in your browser!</h1>
     <ul>
-        <li>Quantum computer simultor implementation, free for use for everyone.</li>
+        <li>Online quantum computer simultor implementation, free for use for everyone.</li>
         <li>Initally all qubits are |0></li>
         <li>The computer scale-up automatically as you add new operations</li>
         <li>For simulation time issue, try to keep the quantity of qubits low
@@ -56,6 +56,7 @@
 
 <section *ngIf="errorMap.size===0">
     <h2>Program in 2D gates table representation</h2>
+    The program is executed from top to bottom where next columns are next qubits in the virtual computer.
     <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target.value">
     </app-default-gate>
     <table>
@@ -89,13 +90,20 @@
 
 <section>
     <h2>Program represents the operations in JSON</h2>
-    <textarea (change)="setProgramJson($event.target.value)" [value]="programJson"
+    <textarea (input)="setProgramJson($event.target.value)" [value]="programJson"
         [class.invalid]="jsonError"></textarea>
     <button (click)="simulate()">Simulate</button>
     <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
     <ul>
         <li>
-            <pre>[]</pre>
+            Produce 2 entangled qubits:
+            <pre>{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</pre>
+        </li>
+        <li>
+            Teleport 0 on Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a traditional communication channel):
+            <pre>{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
+            Teleport 1 on Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a traditional communication channel):
+            <pre>{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
         </li>
     </ul>
 </section>
@@ -165,6 +173,7 @@
             Modifications to the software are not allowed.
             <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click
                 here.</a>
+            Copyright © All rights reserved
         </p>
     </section>
 </section>

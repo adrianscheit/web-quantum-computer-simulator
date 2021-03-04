@@ -14,3 +14,9 @@ table {
 th, td {
     border: 1px solid black;
 }
+
+pre {
+    width: 100%;
+    word-break: break-all;
+    word-wrap: break-word;
+}

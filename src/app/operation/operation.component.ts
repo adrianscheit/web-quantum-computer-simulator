@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
-import { gates, gatesMap } from '../lib/gates';
+import { gates, gatesMap, noGate } from '../lib/gates';
 import { Operation } from '../lib/v';
 
 @Component({
@@ -16,7 +16,11 @@ export class OperationComponent {
             this.newIndex = index;
             this.qi = [...this.program[index].qi];
             this.deletedQi = [];
-            this.setGate(gatesMap.get(this.program[index].gn));
+            if (gatesMap.has(this.program[index].gn)) {
+                this.setGate(gatesMap.get(this.program[index].gn));
+            } else {
+                this.gate = noGate;
+            }
         }
     }
     @Output() exit = new EventEmitter<void>();

@@ -1,7 +1,7 @@
 import { environment } from "src/environments/environment";
 import { C } from "./c";
 
-export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CZ' | 'SWAP' | 'CCX';
+export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' | 'SWAP' | 'CCX' | '√X' | '√SWAP' | 'CSWAP' | 'XY';
 
 export class G {
     readonly matrix: C[];
@@ -19,6 +19,7 @@ export class G {
             throw new Error(`The gate is invalid because the matrix size is: ${m.length}`);
         }
         const colors = {
+            0: '#ddd',
             1: '#afd',
             2: '#dfa',
             3: '#dfd',

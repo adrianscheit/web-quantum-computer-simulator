@@ -14,11 +14,17 @@ export const gates: G[] = [
         new C(), new C(), new C(), new C(1),
         new C(), new C(), new C(1), new C(),
     ], 'Controlled NOT'),
+    new G('CY', [
+        new C(1), new C(), new C(), new C(),
+        new C(), new C(1), new C(), new C(),
+        new C(), new C(), new C(), new C(1),
+        new C(), new C(), new C(1), new C(),
+    ], 'Controlled NOT'),
     new G('CZ', [
         new C(1), new C(), new C(), new C(),
         new C(), new C(1), new C(), new C(),
-        new C(), new C(), new C(1), new C(),
-        new C(), new C(), new C(), new C(-1),
+        new C(), new C(), new C(), new C(0, -1),
+        new C(), new C(), new C(0, 1), new C(),
     ], 'Controlled Z'),
     new G('SWAP', [
         new C(1), new C(), new C(), new C(),
@@ -36,7 +42,26 @@ export const gates: G[] = [
         new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1),
         new C(), new C(), new C(), new C(), new C(), new C(), new C(1), new C(),
     ], 'Toffoli (CCX, TOFF)'),
+    new G('√X', [new C(1, 1), new C(1, -1), new C(1, -1), new C(1, 1)].map(c => c.mul(new C(0.5))), 'Square root of Pauli-X'),
+    new G('√SWAP', [
+        new C(1), new C(), new C(), new C(),
+        new C(), new C(0.5, 0.5), new C(0.5, -0.5), new C(),
+        new C(), new C(0.5, -0.5), new C(0.5, 0.5), new C(),
+        new C(), new C(), new C(), new C(1),
+    ], 'Square root of SWAP'),
+    new G('CSWAP', [
+        new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C(),
+        new C(), new C(1), new C(), new C(), new C(), new C(), new C(), new C(),
+        new C(), new C(), new C(1), new C(), new C(), new C(), new C(), new C(),
+        new C(), new C(), new C(), new C(1), new C(), new C(), new C(), new C(),
+        new C(), new C(), new C(), new C(), new C(1), new C(), new C(), new C(),
+        new C(), new C(), new C(), new C(), new C(), new C(), new C(1), new C(),
+        new C(), new C(), new C(), new C(), new C(), new C(1), new C(), new C(),
+        new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1),
+    ], 'Toffoli (CCX, TOFF)'),
+    new G('XY', [new C(0, 1), new C(), new C(), new C(0, -1)], 'Serial connection of Pauli-X and Pauli-Y'),
 ];
 
 export const gatesMap = new Map<GateName, G>(gates.map(g => [g.name, g]));
 
+export const noGate = new G(null, [new C(1)]);

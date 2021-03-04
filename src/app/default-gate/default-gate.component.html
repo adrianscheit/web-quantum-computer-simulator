@@ -1,4 +1,6 @@
-Default gate:
-<select>
-    <option *ngFor="let g of gates" [value]="g.name" [selected]="defaultGateName===g.name">{{g.name}}</option>
-</select>
+<label>
+    Default gate:
+    <select>
+        <option *ngFor="let g of gates" [value]="g.name" [selected]="defaultGateName===g.name">{{g.name}}</option>
+    </select>
+</label>

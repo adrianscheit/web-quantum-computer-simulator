@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { GateName } from './lib/g';
-import { gates, gatesMap } from './lib/gates';
+import { gates, gatesMap, noGate } from './lib/gates';
 import { Operation, StepperData } from './lib/v';
 
 export interface GateGUI {
@@ -113,6 +113,7 @@ export class AppComponent implements OnInit {
 
         // Update JSON:
         this.programJson = JSON.stringify(this.program);
+        this.jsonError = undefined;
 
         // Update GUI:
         const newProgramGUIRow = new Map<number, GateGUI>();
@@ -140,7 +141,7 @@ export class AppComponent implements OnInit {
                 row.push(gates.get(i));
                 oi = Math.max(gates.get(i).oi + 1, oi);
             } else {
-                row.push({ oi: oi, color: '#ccc' });
+                row.push({ oi: oi, color: noGate.color });
             }
         }
         this.programGUI.push(row);
@@ -175,7 +176,7 @@ export class AppComponent implements OnInit {
     }
 
     addStep(index: number): void {
-        this.programGUI.splice(index, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[index][0].oi } as GateGUI)));
+        this.programGUI.splice(index, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[index][0].oi, color: noGate.color })));
     }
 
     deleteStep(index: number): void {
