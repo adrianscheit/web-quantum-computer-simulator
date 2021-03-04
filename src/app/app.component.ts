@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     jsonError: string = undefined;
 
     currentOperationIndex: number = undefined;
+    defaultGateName: GateName = 'H';
 
     results: StepperData[] = [];
     readonly gates = gates;
@@ -73,10 +74,10 @@ export class AppComponent implements OnInit {
         this.jsonError = undefined;
         try {
             this.program = JSON.parse(this.programJson);
+            this.parseProgram();
         } catch (e) {
             this.jsonError = e;
         }
-        this.parseProgram();
     }
 
     parseProgram(): void {
@@ -190,9 +191,13 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number): void {
-        const newOperation: Operation = { gn: '', qi: [qubitIndex] };
+        const newOperation: Operation = { gn: this.defaultGateName, qi: qubitIndex===undefined?[]:[qubitIndex] };
         this.program.splice(index, 0, newOperation);
-        this.currentOperationIndex = index;
+        if (gatesMap.get(this.defaultGateName).colspan !== 1 || qubitIndex === undefined) {
+            this.currentOperationIndex = index;
+        } else {
+            this.parseProgram();
+        }
     }
 
     editOperation(index: number): void {
@@ -212,11 +217,9 @@ export class AppComponent implements OnInit {
         }
     }
 
-    exitOperation(update: boolean): void {
+    exitOperation(): void {
         this.currentOperationIndex = undefined;
-        if (update) {
-            this.parseProgram();
-        }
+        this.parseProgram();
     }
 
     simulate(): void {
@@ -234,10 +237,6 @@ export class AppComponent implements OnInit {
             }
         });
         worker.postMessage(stepperData);
-    }
-
-    cleanUp(): void {
-        this.parseProgram();
     }
 
     complem(): void {

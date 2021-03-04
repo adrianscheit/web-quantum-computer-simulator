@@ -19,7 +19,7 @@ export class OperationComponent {
             this.setGate(gatesMap.get(this.program[index].gn));
         }
     }
-    @Output() exit = new EventEmitter<boolean>();
+    @Output() exit = new EventEmitter<void>();
 
     _index: number;
     private newIndex: number;
@@ -51,6 +51,11 @@ export class OperationComponent {
         this.valid = this.isValid();
     }
 
+    del(): void {
+        this.program.splice(this._index, 1);
+        this.exit.emit();
+    }
+
     private isValid(): boolean {
         if (!Number.isInteger(this.newIndex) || this.newIndex < 0 || this.newIndex >= this.program.length) {
             return false;
@@ -65,9 +70,7 @@ export class OperationComponent {
             if (this._index !== this.newIndex) {
                 this.program.splice(this.newIndex, 0, ...this.program.splice(this._index, 1));
             }
-            this.exit.emit(true);
-        } else {
-            this.exit.emit(false);
         }
+        this.exit.emit();
     }
 }

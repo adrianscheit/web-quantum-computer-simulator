@@ -1,7 +1,7 @@
 import { environment } from "src/environments/environment";
 import { C } from "./c";
 
-export type GateName = '' | 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CZ' | 'SWAP' | 'CCX';
+export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CZ' | 'SWAP' | 'CCX';
 
 export class G {
     readonly matrix: C[];

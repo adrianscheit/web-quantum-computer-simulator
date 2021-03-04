@@ -25,6 +25,8 @@
 
 <section>
     <h2>Program in list of quantum operations:</h2>
+    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target.value">
+    </app-default-gate>
     <table>
         <tbody>
             <tr>
@@ -37,7 +39,7 @@
                 <td>{{operation.gn}}</td>
                 <td>{{getOperationQubitIndexes(operation.qi)}}</td>
                 <td>
-                    <button (click)="addOperation(i,0)">Add before</button>
+                    <button (click)="addOperation(i,undefined)">Add before</button>
                     <button (click)="editOperation(i)">Edit</button>
                     <button (click)="deleteOperation(i)">Delete</button>
                 </td>
@@ -45,15 +47,17 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <button (click)="addOperation(program.length,0)">Add new operation</button>
+                    <button (click)="addOperation(program.length,undefined)">Add new operation</button>
                 </td>
             </tr>
         </tbody>
     </table>
 </section>
 
-<section>
+<section *ngIf="errorMap.size===0">
     <h2>Program in 2D gates table representation</h2>
+    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target.value">
+    </app-default-gate>
     <table>
         <tbody>
             <tr>
@@ -65,23 +69,20 @@
                         <button (click)="deleteQubit(i)">Delete</button>
                     </div>
                 </th>
+                <th>New qubit</th>
             </tr>
             <tr *ngFor="let step of programGUI; let i=index ">
                 <td>#{{i}}</td>
                 <td *ngFor="let guiGate of step; let j=index" [colspan]=1>
-                    <app-gate [gate]="guiGate" (click)="changeOperation(guiGate, i,j)"></app-gate>
+                    <app-gate [gate]="guiGate" (click)="changeOperation(guiGate,i,j)"></app-gate>
                 </td>
                 <td>
-                    <div style="display: flex;">
-                        <button (click)="addStep(i)">Add step before</button>
-                        <button (click)="deleteStep(i) ">Delete step</button>
-                    </div>
+                    <button (click)="addStep(i)">Add step before</button>
+                    <button (click)="deleteStep(i) ">Delete step</button>
                 </td>
             </tr>
         </tbody>
     </table>
-
-    <button (click)="cleanUp()">Clean-up!</button>
     <button (click)="complem()">Complementary the program</button>
     <button (click)="simulate()">Simulate</button>
 </section>
@@ -101,29 +102,34 @@
 
 <section>
     <h2>Results</h2>
-    <section *ngFor="let result of results">
-        <h3>Sumulation #{{result.id+1}}</h3>
-        <ul>
-            <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
-            <li>Number of qubits: {{result.qubitsQuantity}}</li>
-            <li>Number of operations: {{result.operationsQuantity}}</li>
-            <li>Progress: {{result.progress*100 | number:'.1-2'}}%</li>
-            <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
-                {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
-        </ul>
-        <table *ngIf="result.results">
-            <tbody>
-                <tr>
-                    <th>Propabilities</th>
-                    <th *ngFor="let i of getIndexes(result.qubitsQuantity)">Q{{i}}</th>
-                </tr>
-                <tr *ngFor="let r of result.results">
-                    <td>{{r.propability * 100 | number:'.0-1'}}%</td>
-                    <td *ngFor="let qv of r.values">{{qv?1:0}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+    <div class="flex">
+        <section *ngFor="let result of results">
+            <h3>Sumulation #{{result.id+1}}</h3>
+            <ul>
+                <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
+                <li>Number of qubits: {{result.qubitsQuantity}}</li>
+                <li>Number of operations: {{result.operationsQuantity}}</li>
+                <li>Progress: {{result.progress*100 | number:'.1-2'}}%</li>
+                <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
+                    {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
+            </ul>
+            <div *ngIf="result.results">
+                Results:
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Propabilities</th>
+                            <th *ngFor="let i of getIndexes(result.qubitsQuantity)">Q#{{i}}</th>
+                        </tr>
+                        <tr *ngFor="let r of result.results">
+                            <td>{{r.propability * 100 | number:'.0-1'}}%</td>
+                            <td *ngFor="let qv of r.values">{{qv?1:0}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 </section>
 
 <section>
@@ -169,4 +175,4 @@
     <button>Submit!</button>
 </section> -->
 
-<app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation($event)"></app-operation>
+<app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>

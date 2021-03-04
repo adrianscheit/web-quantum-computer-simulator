@@ -35,3 +35,7 @@ button {
 .invalid {
     background-color: #fdc;
 }
+
+.red {
+    background-color: #d33;
+}
