@@ -19,6 +19,19 @@
     padding: 16px;
 }
 
+input {
+    width: 64px;
+}
+
+button {
+    margin: 4px;
+    padding: 4px 8px;
+}
+
 .selected {
     background-color: chartreuse;
+}
+
+.invalid {
+    background-color: #fdc;
 }

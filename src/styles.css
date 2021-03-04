@@ -2,7 +2,8 @@
 
 textarea {
     width: 100%;
-    min-height: 64px;
+    min-height: 48px;
+    height: 64px;
 }
 
 table {

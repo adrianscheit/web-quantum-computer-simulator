@@ -1,14 +1,13 @@
 import { C } from "./c";
-import { G } from "./g";
-import { GateName } from "./gates";
+import { G, GateName } from "./g";
 
 export interface Result {
     propability: number;
-    state: boolean[];
+    values: boolean[];
 }
 
 export interface Operation {
-    gateName: GateName,
+    gn: GateName,
     qi: number[]
 }
 
@@ -50,6 +49,12 @@ export class V {
         return new V(result);
     }
 
+    static newStateVector(qubitsQuantity: number): V {
+        const result = Array(1 << qubitsQuantity).fill(new C());
+        result[0] = new C(1);
+        return new V(result);
+    }
+
     getState(stateIndex: number): boolean[] {
         const result: boolean[] = [];
         for (let i = 0; i < this.qubits; ++i) {
@@ -61,7 +66,7 @@ export class V {
 
     calcResults(minPropability: number = 0.001): Result[] {
         return this.state
-            .map((c: C, i: number) => <Result>{ propability: c.absSqer(), state: this.getState(i) })
+            .map((c: C, i: number) => <Result>{ propability: c.absSqer(), values: this.getState(i) })
             .filter((result: Result) => result.propability > minPropability)
             .sort((a, b) => a[0] - b[0]);
     }
@@ -70,15 +75,16 @@ export class V {
         let result = 0;
         for (const i of qi) {
             result <<= 1;
-            result |= (index & (1 << i)) ? 1 : 0
+            if (index & (1 << i)) {
+                result |= 1;
+            }
         }
         return result;
     }
 
     static setBits(source: number, qi: number[], oj: number): number {
-        let mask = 1;
-        for (let i = 0; i < qi.length; ++i, mask <<= 1) {
-            if (oj & mask) {
+        for (let i = qi.length - 1; i >= 0; --i, oj >>= 1) {
+            if (oj & 1) {
                 source |= 1 << qi[i];
             } else {
                 source &= ~(1 << qi[i]);
@@ -89,13 +95,11 @@ export class V {
 
     step(g: G, qi: number[]): C[] {
         const result: C[] = [];
-        const mask = qi.map(i => 1 << i).reduce((p, c) => p | c, 0);
-        const nMask = ~mask;
 
         for (let i = 0; i < this.state.length; ++i) {
             const sum = new C();
             const oi = V.takeBits(i, qi);
-            for (let oj = 0; oj < g.widthOrHeight; ++oj) {
+            for (let oj = 0; oj < g.widthAndHeight; ++oj) {
                 const j = V.setBits(i, qi, oj);
                 sum.plus(this.state[j].new().mul(g.get(oi, oj)));
             }

@@ -2,8 +2,8 @@ import { C } from './c';
 import { G } from './g'
 
 describe('Gate tests', () => {
-    const gate1 = new G('', [new C(1), new C(2), new C(3), new C(4)]);
-    const gate2 = new G('', [
+    const gate2x2 = new G('', [new C(1), new C(2), new C(3), new C(4)]);
+    const gate4x4 = new G('', [
         new C(1), new C(0), new C(0), new C(0),
         new C(0), new C(1), new C(0), new C(0),
         new C(0), new C(0), new C(0), new C(1),
@@ -11,18 +11,18 @@ describe('Gate tests', () => {
     ]);
 
     it('take an element with 2 indexes', () => {
-        expect(gate1.get(0, 0)).toEqual(new C(1));
-        expect(gate1.get(0, 1)).toEqual(new C(2));
-        expect(gate1.get(1, 0)).toEqual(new C(3));
-        expect(gate1.get(1, 1)).toEqual(new C(4));
+        expect(gate2x2.get(0, 0)).toEqual(new C(1));
+        expect(gate2x2.get(0, 1)).toEqual(new C(2));
+        expect(gate2x2.get(1, 0)).toEqual(new C(3));
+        expect(gate2x2.get(1, 1)).toEqual(new C(4));
     });
 
     it('calculate the colspan and widthOrHeight', () => {
-        expect(gate1.colspan).toEqual(1);
-        expect(gate1.widthOrHeight).toEqual(2);
+        expect(gate2x2.colspan).toEqual(1);
+        expect(gate2x2.widthAndHeight).toEqual(2);
 
-        expect(gate2.colspan).toEqual(2);
-        expect(gate2.widthOrHeight).toEqual(4);
+        expect(gate4x4.colspan).toEqual(2);
+        expect(gate4x4.widthAndHeight).toEqual(4);
     });
 
     it('throws exception if the calspan is invalid', () => {
@@ -32,5 +32,24 @@ describe('Gate tests', () => {
         } catch (e) {
             // ok
         }
+    });
+
+    it('validate qubit indexes', () => {
+        expect(gate2x2.getError([1])).toBeFalsy();
+
+        expect(gate4x4.getError([1, 0])).toBeFalsy();
+        expect(gate4x4.getError([2, 4])).toBeFalsy();
+
+        expect(gate2x2.getError([0.5])).toBeTruthy();
+        expect(gate2x2.getError([-1])).toBeTruthy();
+        expect(gate2x2.getError([60])).toBeTruthy();
+
+        expect(gate4x4.getError([2, 2])).toBeTruthy();
+        expect(gate4x4.getError([2, -1])).toBeTruthy();
+        expect(gate4x4.getError([-1, 2])).toBeTruthy();
+        expect(gate4x4.getError([2, 0.5])).toBeTruthy();
+        expect(gate4x4.getError([0.5, 5])).toBeTruthy();
+        expect(gate4x4.getError([60, 5])).toBeTruthy();
+        expect(gate4x4.getError([6, 60])).toBeTruthy();
     });
 });

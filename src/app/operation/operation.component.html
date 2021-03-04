@@ -1,18 +1,21 @@
-<div class="host" *ngIf="operation" (click)="exit.emit(index)">
+<div class="host" *ngIf="_index!==undefined" (click)="close()">
     <div class="dialog" (click)="$event.stopPropagation()">
         <label>
             Operation #
-            <input type="number" step="1" min="0" [value]="index" (change)="index=+$event.target.value" />
+            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="_index" (change)="setIndex(+$event.target.value)" />
+            of
+            {{program.length}}
         </label>
         <div>
-        <button type="button" *ngFor="let gate of gates" [class.selected]="gate.name===operation.gateName"
-            (click)="changeGate(gate.name)">{{gate.name?gate.name:'|'}}</button>
+            <button type="button" *ngFor="let g of gates" [class.selected]="g.name===gate.name"
+                (click)="setGate(g)">{{g.name?g.name:'|'}}</button>
         </div>
-        <label *ngFor="let i of operation.qi; let ii=index">
+        <label *ngFor="let i of qi; let ii=index">
             Input #{{ii}} is assigned to qubit #
-            <input type="number" step="1" min="0"  [value]="i"
-                (change)="operation.qi[ii]=+$event.target.value" />
+            <input type="number" [class.invalid]="!valid" required step="1" min="0" max="31" [value]="i"
+                (change)="setQubitIndex(ii, +$event.target.value)" />
         </label>
-        <button type="button" (click)="exit.emit(index)">OK / Close</button>
+        <p [hidden]="valid" class="invalid">This operation will not be saved if it is invalid</p>
+        <button type="button" [disabled]="!valid" (click)="close()">OK / Close</button>
     </div>
 </div>

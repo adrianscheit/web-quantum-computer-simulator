@@ -1,5 +1,5 @@
 import { C } from './c';
-import { Gates } from './gates';
+import { gatesMap } from './gates';
 import { Result, V } from './v';
 
 describe('Vector tests', () => {
@@ -20,6 +20,13 @@ describe('Vector tests', () => {
         expect(V.newTensorProduct([v3, v1, v1]).state).toEqual([new C(), new C(1), new C(), new C(), new C(), new C(), new C(), new C()]);
     });
 
+    it('inital state vector', () => {
+        expect(V.newStateVector(0).state).toEqual([new C(1)]);
+        expect(V.newStateVector(1).state).toEqual([new C(1), new C()]);
+        expect(V.newStateVector(2).state).toEqual([new C(1), new C(), new C(), new C()]);
+        expect(V.newStateVector(3).state).toEqual([new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C()]);
+    });
+
     it('calc state the same way how tensor product is calculated', () => {
         expect(v1.getState(0)).toEqual([false]);
         expect(v1.getState(1)).toEqual([true]);
@@ -32,13 +39,13 @@ describe('Vector tests', () => {
 
 
     it('calcResult', () => {
-        expect(v1.calcResults()).toEqual([{ propability: 1, state: [false] }]);
-        expect(v3.calcResults()).toEqual([{ propability: 1, state: [true] }]);
+        expect(v1.calcResults()).toEqual([{ propability: 1, values: [false] }]);
+        expect(v3.calcResults()).toEqual([{ propability: 1, values: [true] }]);
         expect(new Set<Result>(new V([new C(0.5), new C(0.5), new C(0.5), new C(0.5)]).calcResults())).toEqual(new Set<Result>([
-            { propability: 0.25, state: [false, false] },
-            { propability: 0.25, state: [false, true] },
-            { propability: 0.25, state: [true, false] },
-            { propability: 0.25, state: [true, true] },
+            { propability: 0.25, values: [false, false] },
+            { propability: 0.25, values: [false, true] },
+            { propability: 0.25, values: [true, false] },
+            { propability: 0.25, values: [true, true] },
         ]));
     });
 
@@ -55,13 +62,21 @@ describe('Vector tests', () => {
         expect(V.takeBits(2, [1])).toEqual(1);
         expect(V.takeBits(2, [0, 1])).toEqual(1);
         expect(V.takeBits(2, [1, 0])).toEqual(2);
+        expect(V.takeBits(64, [6, 5])).toEqual(2);
+    });
+
+    it('set bits', () => {
+        expect(V.setBits(64, [2, 0], 0)).toEqual(64);
+        expect(V.setBits(64, [2, 0], 1)).toEqual(65);
+        expect(V.setBits(64, [2, 0], 2)).toEqual(68);
+        expect(V.setBits(64, [2, 0], 3)).toEqual(69);
+
+        expect(V.setBits(14, [3, 2, 1], 8)).toEqual(0);
+        expect(V.setBits(16, [4, 3], 1)).toEqual(8);
     });
 
     it('step simple', () => {
-        expect(new V([new C(1), new C(0)]).step(Gates.gatesMap.get(''), [0])).toEqual([new C(1), new C(0)]);
-        expect(new V([new C(0), new C(1)]).step(Gates.gatesMap.get(''), [0])).toEqual([new C(0), new C(1)]);
-
-        expect(new V([new C(1), new C(0)]).step(Gates.gatesMap.get('X'), [0])).toEqual([new C(0), new C(1)]);
-        expect(new V([new C(0), new C(1)]).step(Gates.gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
+        expect(new V([new C(1), new C(0)]).step(gatesMap.get('X'), [0])).toEqual([new C(0), new C(1)]);
+        expect(new V([new C(0), new C(1)]).step(gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
     });
 });

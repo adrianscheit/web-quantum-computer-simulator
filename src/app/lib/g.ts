@@ -1,18 +1,20 @@
+import { environment } from "src/environments/environment";
 import { C } from "./c";
-import { GateName } from "./gates";
+
+export type GateName = '' | 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CZ' | 'SWAP' | 'CCX';
 
 export class G {
     readonly matrix: C[];
     readonly desc: string;
     readonly colspan: number;
-    readonly widthOrHeight: number;
+    readonly widthAndHeight: number;
     readonly color: string;
 
     constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
         this.desc = desc ? desc : name ? name : 'ID';
         this.matrix = m;
-        this.widthOrHeight = Math.sqrt(m.length);
-        this.colspan = Math.log2(this.widthOrHeight);
+        this.widthAndHeight = Math.sqrt(m.length);
+        this.colspan = Math.log2(this.widthAndHeight);
         if (this.colspan !== Math.round(this.colspan)) {
             throw new Error(`The gate is invalid because the matrix size is: ${m.length}`);
         }
@@ -25,15 +27,27 @@ export class G {
     }
 
     get(i: number, j: number): C {
-        return this.matrix[i * this.widthOrHeight + j];
+        return this.matrix[i * this.widthAndHeight + j];
     }
 
-    smul(s: number): G {
-        const sc = new C(s);
-        for (let i = 0; i < this.matrix.length; ++i) {
-            this.matrix[i].mul(sc);
+    getError(qi: number[]) {
+        if (qi.length !== this.colspan) {
+            return 'Incorrect number of qubits assigned to this gate';
         }
-        return this;
+        if (new Set<number>(qi).size !== qi.length) {
+            return 'The same Qubit is used multiple times for this gate';
+        }
+        for (const index of qi) {
+            if (!Number.isInteger(index)) {
+                return 'In qubit index is not an integer'
+            }
+            if (index < 0) {
+                return 'Ngative index of qubit'
+            }
+            if (index >= environment.maxQubitsQuantity) {
+                return `The simulated computer can not be so big: ${index + 1} qubits`
+            }
+        }
     }
 }
 

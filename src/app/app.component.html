@@ -1,22 +1,23 @@
-<div [hidden]="cookiesEnabled">
+<div [hidden]="cookies">
     This page does not uses any cookies now. To save your program in your browser for your further visits, you have to
     accept cookies:
-    <button (click)="enableCookies()">Agree</button>
+    <button (click)="cookies=true">Agree</button>
 </div>
-<div [hidden]="!cookiesEnabled">
+<div [hidden]="!cookies">
     You agreed in the past, that this page is using cookies! If you want to revoke it:
-    <button (click)="disableCookies()">Revoke cookies</button>
+    <button (click)="cookies=false">Revoke cookies</button>
 </div>
 <section>
-    <h1>Quantum Computer Simulator in Your browser!</h1>
+    <h1>Quantum Computer Simulator in your browser!</h1>
     <ul>
         <li>Quantum computer simultor implementation, free for use for everyone.</li>
         <li>Initally all qubits are |0></li>
         <li>The computer scale-up automatically as you add new operations</li>
-        <li>For simulation time issues, try to keep the quantity of qubits low
-            (more then 10 qubits requires some noticable amount of time to simulate)</li>
+        <li>For simulation time issue, try to keep the quantity of qubits low
+            (more then 10 qubits requires some noticable amount of time to simulate, every qubit more makes the
+            simulation about twice that slow)</li>
         <li>Your program is not send to the server - it is runing in your web-browser</li>
-        <li>Clear UI produces great UX</li>
+        <li>Clear UI - great UX</li>
         <li>This application is mobile friendly (regarding the UI, because regarding the CPU usage during the sumulation
             it is far away to be mobile-friendly)</li>
     </ul>
@@ -31,15 +32,16 @@
                 <th>Gate type</th>
                 <th>Connected Qubits</th>
             </tr>
-            <tr *ngFor="let operation of program; let i=index">
+            <tr *ngFor="let operation of program; let i=index" [class.invalid]="errorMap.has(i)">
                 <td>#{{i}}</td>
-                <td>{{operation.gateName}}</td>
-                <td>{{getOperationQubitIndexes(operation)}}</td>
+                <td>{{operation.gn}}</td>
+                <td>{{getOperationQubitIndexes(operation.qi)}}</td>
                 <td>
                     <button (click)="addOperation(i,0)">Add before</button>
                     <button (click)="editOperation(i)">Edit</button>
                     <button (click)="deleteOperation(i)">Delete</button>
                 </td>
+                <td>{{errorMap.get(i)}}</td>
             </tr>
             <tr>
                 <td colspan="3">
@@ -57,8 +59,11 @@
             <tr>
                 <th>Step#</th>
                 <th *ngFor="let i of getIndexes(qubitsQuantity)">
-                    Q{{i}}
-                    <button (click)="deleteQubit(i)">Delete</button>
+                    <div class="column">
+                        <button type="button" (click)="addQubitBefore(i)">Add qubit before</button>
+                        QuBit#{{i}}
+                        <button (click)="deleteQubit(i)">Delete</button>
+                    </div>
                 </th>
             </tr>
             <tr *ngFor="let step of programGUI; let i=index ">
@@ -83,7 +88,8 @@
 
 <section>
     <h2>Program represents the operations in JSON</h2>
-    <textarea (change)="jsonChange($event.target.value)" [value]="programJson"></textarea>
+    <textarea (change)="setProgramJson($event.target.value)" [value]="programJson"
+        [class.invalid]="jsonError"></textarea>
     <button (click)="simulate()">Simulate</button>
     <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
     <ul>
@@ -113,7 +119,7 @@
                 </tr>
                 <tr *ngFor="let r of result.results">
                     <td>{{r.propability * 100 | number:'.0-1'}}%</td>
-                    <td *ngFor="let qv of r.state">{{qv?1:0}}</td>
+                    <td *ngFor="let qv of r.values">{{qv?1:0}}</td>
                 </tr>
             </tbody>
         </table>
@@ -151,7 +157,8 @@
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
             The software is free to use, but not free to copy or modify.
             Modifications to the software are not allowed.
-            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here.</a>
+            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click
+                here.</a>
         </p>
     </section>
 </section>
@@ -162,5 +169,4 @@
     <button>Submit!</button>
 </section> -->
 
-<app-operation [operation]="program[currentOperationIndex]" [index]="currentOperationIndex"
-    (exit)="exitOperation($event)"></app-operation>
+<app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation($event)"></app-operation>

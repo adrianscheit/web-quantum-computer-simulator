@@ -1,12 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { Gates } from './lib/gates';
+import { GateName } from './lib/g';
+import { gates, gatesMap } from './lib/gates';
 import { Operation, StepperData } from './lib/v';
 
 export interface GateGUI {
     o?: Operation;
     oi: number;
     ii?: number;
+    color: string;
 }
 
 @Component({
@@ -15,93 +16,104 @@ export interface GateGUI {
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    cookiesEnabled = false;
     qubitsQuantity: number = 10;
 
     program: Operation[] = [];
     programGUI: GateGUI[][] = [];
     programJson: string;
+    errorMap = new Map<number, string>();
+    jsonError: string = undefined;
 
-    currentOperationIndex: number;
+    currentOperationIndex: number = undefined;
 
     results: StepperData[] = [];
-    readonly gates = Gates.gates;
+    readonly gates = gates;
 
     ngOnInit() {
         this.programJson = localStorage.getItem('program');
         if (this.programJson) {
             this.parseProgramJson();
-            this.cookiesEnabled = true;
+            this.cookies = true;
         }
         this.parseProgram();
     }
 
     getIndexes(length: number): number[] {
-        return Array(length).fill(0).map((v, i) => i);
-    }
-
-    @HostListener('window:beforeunload')
-    beforeClose() {
-        if (this.cookiesEnabled) {
-            localStorage.setItem('program', this.programJson);
-        }
+        return Array(length).fill(0).map((v, index) => index);
     }
 
     /// Cookies -------------------------------------------------------------------------------
 
-    enableCookies(): void {
-        this.cookiesEnabled = true;
+    set cookies(enabled: boolean) {
+        if (enabled) {
+            localStorage.setItem('program', this.programJson);
+        } else {
+            localStorage.clear();
+        }
+    }
+    get cookies(): boolean {
+        return !!localStorage.getItem('program');
     }
 
-    disableCookies(): void {
-        this.cookiesEnabled = false;
-        localStorage.clear();
+    @HostListener('window:beforeunload')
+    beforeClose() {
+        if (this.cookies) {
+            localStorage.setItem('program', this.programJson);
+        }
     }
 
     // Parsing ----------------------------------------------------------------------------
 
+    setProgramJson(event) {
+        this.programJson = event;
+        this.parseProgramJson();
+    }
+
     parseProgramJson(): void {
-        this.program = JSON.parse(this.programJson);
+        this.jsonError = undefined;
+        try {
+            this.program = JSON.parse(this.programJson);
+        } catch (e) {
+            this.jsonError = e;
+        }
         this.parseProgram();
     }
 
     parseProgram(): void {
+        // Reset:
+        this.qubitsQuantity = 0;
+        this.errorMap.clear();
+        this.programGUI = [];
+
         // Remove ID operations:
-        this.program = this.program.filter(step => step.gateName);
-        // Validation:
-        try {
-            this.qubitsQuantity = 0;
-            for (const operation of this.program) {
-                if (operation.qi.length !== Gates.gatesMap.get(operation.gateName).colspan) {
-                    console.error('Incorrect number of qubits put to operation: ', operation);
-                    throw new Error();
-                }
-                if (new Set<number>(operation.qi).size !== operation.qi.length) {
-                    console.error('The same Qubit used multiple times for one gate: ', operation);
-                    throw new Error();
-                }
-                for (const index of operation.qi) {
-                    if (Math.round(index) !== index) {
-                        console.error('In operation an index is not integer', operation, index);
-                        throw new Error();
-                    }
-                    if (index < 0) {
-                        console.error('negative index', operation, index);
-                        throw new Error();
-                    }
-                    if ((index + 1) > this.qubitsQuantity) {
-                        this.qubitsQuantity = index + 1;
-                    }
-                }
+        for (let i = 0; i < this.program.length; ++i) {
+            if (!this.program[i] || !this.program[i].gn) {
+                this.program.splice(i--, 1);
             }
-        } catch (e) {
-            console.error(e);
+        }
+
+        // Validation:
+        for (let i = 0; i < this.program.length; ++i) {
+            const step = this.program[i];
+            if (!gatesMap.has(step.gn)) {
+                this.errorMap.set(i, 'Gate name is not recognized');
+                continue;
+            }
+            const error = gatesMap.get(step.gn).getError(step.qi);
+            if (error) {
+                this.errorMap.set(i, error);
+                continue;
+            }
+            this.qubitsQuantity = Math.max(this.qubitsQuantity, Math.max(...step.qi) + 1);
+        }
+        if (this.errorMap.size > 0) {
             return;
         }
+
         // Update JSON:
         this.programJson = JSON.stringify(this.program);
+
         // Update GUI:
-        this.programGUI = [];
         const newProgramGUIRow = new Map<number, GateGUI>();
         for (let i = 0; i < this.program.length; ++i) {
             const step = this.program[i];
@@ -111,12 +123,12 @@ export class AppComponent implements OnInit {
                 }
             }
             for (let j = 0; j < step.qi.length; ++j) {
-                newProgramGUIRow.set(step.qi[j], { o: step, oi: i, ii: j });
+                newProgramGUIRow.set(step.qi[j], { o: step, oi: i, ii: j, color: gatesMap.get(step.gn).color });
             }
         }
         this.addRowToProgramGUI(newProgramGUIRow);
         this.addRowToProgramGUI(newProgramGUIRow);
-        console.log(this.programJson, this.program, '=>', this.programGUI, this.qubitsQuantity);
+        // console.log(this.programJson, this.program, '=>', this.programGUI, this.qubitsQuantity);
     }
 
     addRowToProgramGUI(gates: Map<number, GateGUI>): void {
@@ -127,41 +139,46 @@ export class AppComponent implements OnInit {
                 row.push(gates.get(i));
                 oi = Math.max(gates.get(i).oi + 1, oi);
             } else {
-                row.push({ oi: oi });
+                row.push({ oi: oi, color: '#ccc' });
             }
         }
         this.programGUI.push(row);
         gates.clear();
     }
 
-    jsonChange(event) {
-        this.programJson = event;
-        this.parseProgramJson();
-    }
-
     /// GUI's operations ----------------------------------------------------
 
-    deleteQubit(index: number): void {
+    addQubitBefore(index: number): void {
         for (let i = 0; i < this.program.length; ++i) {
             for (let j = 0; j < this.program[i].qi.length; ++j) {
-                if (this.program[i].qi[j] === index) {
-                    this.program.splice(i, 1);
-                    --i;
-                    break;
-                } else if (this.program[i].qi[j] > index) {
-                    this.program[i].qi[j]--;
+                if (this.program[i].qi[j] >= index) {
+                    ++(this.program[i].qi[j]);
                 }
             }
         }
         this.parseProgram();
     }
 
-    addStep(i: number): void {
-        this.programGUI.splice(i, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[i][0].oi } as GateGUI)));
+    deleteQubit(index: number): void {
+        for (let i = 0; i < this.program.length; ++i) {
+            for (let j = 0; j < this.program[i].qi.length; ++j) {
+                if (this.program[i].qi[j] === index) {
+                    this.program.splice(i--, 1);
+                    break;
+                } else if (this.program[i].qi[j] > index) {
+                    --(this.program[i].qi[j]);
+                }
+            }
+        }
+        this.parseProgram();
     }
 
-    deleteStep(i: number): void {
-        const indexes = new Set<number>(this.programGUI[i].filter(g => g.o).map(g => g.oi));
+    addStep(index: number): void {
+        this.programGUI.splice(index, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[index][0].oi } as GateGUI)));
+    }
+
+    deleteStep(index: number): void {
+        const indexes = new Set<number>(this.programGUI[index].filter(g => g.o).map(g => g.oi));
         if (indexes.size) {
             const min = Math.min(...indexes.values());
             const max = Math.max(...indexes.values());
@@ -173,7 +190,7 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number): void {
-        const newOperation: Operation = { gateName: '', qi: [qubitIndex] };
+        const newOperation: Operation = { gn: '', qi: [qubitIndex] };
         this.program.splice(index, 0, newOperation);
         this.currentOperationIndex = index;
     }
@@ -182,8 +199,8 @@ export class AppComponent implements OnInit {
         this.currentOperationIndex = index;
     }
 
-    deleteOperation(i: number): void {
-        this.program.splice(i, 1);
+    deleteOperation(index: number): void {
+        this.program.splice(index, 1);
         this.parseProgram();
     }
 
@@ -195,15 +212,11 @@ export class AppComponent implements OnInit {
         }
     }
 
-    exitOperation(newIndex: number): void {
-        if (newIndex !== this.currentOperationIndex) {
-            newIndex = Math.min(newIndex, this.program.length);
-            newIndex = Math.max(newIndex, 0);
-            const operation: Operation = this.program.splice(this.currentOperationIndex, 1)[0];
-            this.program.splice(newIndex, 0, operation);
-        }
+    exitOperation(update: boolean): void {
         this.currentOperationIndex = undefined;
-        this.parseProgram();
+        if (update) {
+            this.parseProgram();
+        }
     }
 
     simulate(): void {
@@ -235,8 +248,8 @@ export class AppComponent implements OnInit {
         this.parseProgram();
     }
 
-    getOperationQubitIndexes(operation: Operation): string {
-        return operation.qi.reduce((a, c) => a + ',' + c, '');
+    getOperationQubitIndexes(qi: number[]): string {
+        return qi.reduce((a, c) => a + ',' + c, '');
     }
 
 }

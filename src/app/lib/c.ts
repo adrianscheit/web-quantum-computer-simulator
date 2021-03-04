@@ -1,24 +1,24 @@
 export class C {
-    constructor(public re: number = 0, public im: number = 0) { }
+    constructor(public r: number = 0, public i: number = 0) { }
 
     new(): C {
-        return new C(this.re, this.im);
+        return new C(this.r, this.i);
     }
 
     plus(c: C): C {
-        this.re += c.re;
-        this.im += c.im;
+        this.r += c.r;
+        this.i += c.i;
         return this;
     }
 
     absSqer(): number {
-        return this.re * this.re + this.im * this.im;
+        return this.r * this.r + this.i * this.i;
     }
 
     mul(c: C): C {
-        const r = this.re * c.re - this.im * c.im;
-        this.im = this.re * c.im + this.im * c.re;
-        this.re = r;
+        const r = this.r * c.r - this.i * c.i;
+        this.i = this.r * c.i + this.i * c.r;
+        this.r = r;
         return this;
     }
 
@@ -26,7 +26,20 @@ export class C {
         return `${Math.round(v * 1000) / 1000}`;
     }
 
+    private iToString(): string {
+        return `${this.i === 1 ? '' : this.i === -1 ? '-' : C.toDecimal(this.i)}i`;
+    }
+
     toString(): string {
-        return `${C.toDecimal(this.re)}${this.im === 0 ? '' : this.im === 1 ? '+i' : this.im === -1 ? '-i' : `${this.im > 0 ? '+':''}${C.toDecimal(this.im)}i`}`;
+        if (this.r === 0 && this.i === 0) {
+            return '0';
+        }
+        if (this.i === 0) {
+            return C.toDecimal(this.r);
+        }
+        if (this.r === 0) {
+            return this.iToString();
+        }
+        return `${C.toDecimal(this.r)}${this.i > 0 ? '+' : ''}${this.iToString()}`
     }
 }
