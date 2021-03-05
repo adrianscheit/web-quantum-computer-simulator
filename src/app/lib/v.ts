@@ -68,7 +68,7 @@ export class V {
         return this.state
             .map((c: C, i: number) => <Result>{ propability: c.absSqer(), values: this.getState(i) })
             .filter((result: Result) => result.propability > minPropability)
-            .sort((a: Result, b: Result) => b.propability - a.propability);
+            .sort((a: Result, b: Result) => a.propability - b.propability);
     }
 
     static takeBits(index: number, qi: number[]): number {
