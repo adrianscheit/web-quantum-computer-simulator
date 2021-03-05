@@ -64,11 +64,11 @@ export class V {
         return result;
     }
 
-    calcResults(minPropability: number = 0.001): Result[] {
+    calcResults(minPropability: number = 0.004): Result[] {
         return this.state
             .map((c: C, i: number) => <Result>{ propability: c.absSqer(), values: this.getState(i) })
             .filter((result: Result) => result.propability > minPropability)
-            .sort((a, b) => a[0] - b[0]);
+            .sort((a: Result, b: Result) => b.propability - a.propability);
     }
 
     static takeBits(index: number, qi: number[]): number {

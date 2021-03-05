@@ -56,7 +56,7 @@
 
 <section *ngIf="errorMap.size===0">
     <h2>Program in 2D gates table representation</h2>
-    The program is executed from top to bottom where next columns are next qubits in the virtual computer.
+    <p>The program is executed from top to bottom where next columns are next qubits in the virtual computer.</p>
     <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target.value">
     </app-default-gate>
     <table>
@@ -100,9 +100,11 @@
             <pre>{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</pre>
         </li>
         <li>
-            Teleport 0 on Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a traditional communication channel):
+            Teleport 0 from Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a
+            traditional communication channel):
             <pre>{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
-            Teleport 1 on Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a traditional communication channel):
+            Teleport 1 from Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a
+            traditional communication channel):
             <pre>{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
         </li>
     </ul>
@@ -117,7 +119,7 @@
                 <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
                 <li>Number of qubits: {{result.qubitsQuantity}}</li>
                 <li>Number of operations: {{result.operationsQuantity}}</li>
-                <li>Progress: {{result.progress*100 | number:'.1-2'}}%</li>
+                <li [hidden]="result.results">Progress: {{result.progress*100 | number:'.1-2'}}%</li>
                 <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
                     {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
             </ul>

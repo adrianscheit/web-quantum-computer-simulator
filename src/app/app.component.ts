@@ -65,8 +65,8 @@ export class AppComponent implements OnInit {
 
     // Parsing ----------------------------------------------------------------------------
 
-    setProgramJson(event) {
-        this.programJson = event;
+    setProgramJson(programJson: string) {
+        this.programJson = programJson;
         this.parseProgramJson();
     }
 
