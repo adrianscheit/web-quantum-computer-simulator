@@ -80,4 +80,8 @@ describe('Vector tests', () => {
         expect(new V([new C(0), new C(1)]).step(gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
     });
 
+    it('step more complex', () => {
+        expect(new V([new C(), new C(1), new C(), new C()]).step(gatesMap.get('CX'), [0, 1])).toEqual([new C(), new C(), new C(), new C(1)]);
+        expect(new V([new C(), new C(), new C(1), new C()]).step(gatesMap.get('CX'), [0, 1])).toEqual([new C(), new C(), new C(1), new C()]);
+    });
 });
