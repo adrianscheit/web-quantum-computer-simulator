@@ -82,6 +82,14 @@
                     <button type="button" (click)="deleteStep(i) ">Delete step</button>
                 </td>
             </tr>
+            <tr *ngIf="quickResult">
+                <th>Prop.:</th>
+                <th [colSpan]="qubitsQuantity">Results:</th>
+            </tr>
+            <tr *ngFor="let r of quickResult">
+                <td>{{r.propability * 100 | number: '.0-1'}}%</td>
+                <td *ngFor="let i of r.values">{{i?1:0}}</td>
+            </tr>
         </tbody>
     </table>
     <button type="button" (click)="complem()">Complementary the program</button>

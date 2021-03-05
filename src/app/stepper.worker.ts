@@ -13,15 +13,16 @@ addEventListener('message', ({ data }) => {
     stepperData.operations = undefined;
     stepperData.operationsQuantity = operations.length;
     const gates = operations.map((o: Operation) => gatesMap.get(o.gn));
-    let lastMessageTime = new Date();
 
     stepperData.startTime = new Date();
     if (stepperData.qubitsQuantity > 32) {
         console.error(`Stepper worker can not work for such big data: ${stepperData.qubitsQuantity}`);
         return;
     }
-
+    let lastMessageTime = new Date();
     stepperData.progress = 0;
+    postMessage(stepperData);
+
     const state = V.newStateVector(stepperData.qubitsQuantity);
     for (let i = 0; i < operations.length; ++i) {
         stepperData.progress = i / operations.length;

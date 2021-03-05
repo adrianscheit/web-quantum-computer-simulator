@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { GateName } from './lib/g';
 import { gates, gatesMap, noGate } from './lib/gates';
-import { Operation, StepperData } from './lib/v';
+import { Operation, Result, StepperData } from './lib/v';
 
 export interface GateGUI {
     o?: Operation;
@@ -27,6 +27,8 @@ export class AppComponent implements OnInit {
     currentOperationIndex: number = undefined;
     defaultGateName: GateName = 'H';
 
+    waitAtResult = false;
+    quickResult: Result[] = undefined;
     results: StepperData[] = [];
     readonly gates = gates;
 
@@ -85,6 +87,8 @@ export class AppComponent implements OnInit {
         this.qubitsQuantity = 0;
         this.errorMap.clear();
         this.programGUI = [];
+        this.quickResult = undefined;
+        this.waitAtResult = false;
 
         // Remove ID operations:
         for (let i = 0; i < this.program.length; ++i) {
@@ -192,7 +196,7 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number): void {
-        const newOperation: Operation = { gn: this.defaultGateName, qi: qubitIndex===undefined?[]:[qubitIndex] };
+        const newOperation: Operation = { gn: this.defaultGateName, qi: qubitIndex === undefined ? [] : [qubitIndex] };
         this.program.splice(index, 0, newOperation);
         if (gatesMap.get(this.defaultGateName).colspan !== 1 || qubitIndex === undefined) {
             this.currentOperationIndex = index;
@@ -229,11 +233,15 @@ export class AppComponent implements OnInit {
             operations: this.program,
             id: this.results.length
         };
+        this.waitAtResult = true;
         const worker = new Worker('./stepper.worker', { type: 'module' });
         worker.addEventListener('message', ({ data }) => {
             const stepperData: StepperData = data;
             this.results[stepperData.id] = stepperData;
             if (stepperData.results) {
+                if (this.waitAtResult) {
+                    this.quickResult = stepperData.results;
+                }
                 worker.terminate();
             }
         });

@@ -79,4 +79,5 @@ describe('Vector tests', () => {
         expect(new V([new C(1), new C(0)]).step(gatesMap.get('X'), [0])).toEqual([new C(0), new C(1)]);
         expect(new V([new C(0), new C(1)]).step(gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
     });
+
 });
