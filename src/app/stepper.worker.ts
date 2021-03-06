@@ -25,7 +25,7 @@ addEventListener('message', ({ data }) => {
     postMessage(stepperData);
 
     const state = new V(V.newSimpleState(stepperData.qubitsQuantity));
-    let resultState: C[] = [];
+    let resultState: C[] = V.newSimpleState(stepperData.qubitsQuantity);
     for (let i = 0; i < operations.length; ++i) {
         stepperData.progress = i / operations.length;
         if (new Date().getTime() - lastMessageTime.getTime() > 300) {

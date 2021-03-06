@@ -32,9 +32,10 @@ export class V {
     }
     readonly qubits: number;
 
+    /* tslint:disable:no-bitwise */
     static newSimpleState(qubitsQuantity: number, initialState: number = 0): C[] {
         const result: C[] = [];
-        const stateLength = 2 ** qubitsQuantity;
+        const stateLength = 1 << qubitsQuantity;
         for (let i = 0; i < stateLength; ++i) {
             result.push(new C());
         }
@@ -72,17 +73,11 @@ export class V {
         }
         return result;
     }
-
-    calcResults(minPropability: number = 0.004): Result[] {
-        return this.state
-            .map((c: C, i: number) => ({ propability: c.absSqer(), values: this.getQubitsValues(i) } as Result))
-            .filter((result: Result) => result.propability > minPropability)
-            .sort((a: Result, b: Result) => b.propability - a.propability);
-    }
+    /* tslint:enable:no-bitwise */
 
     step(g: G, qi: number[], resultState: C[] = []): C[] {
         if (!resultState.length) {
-            resultState = V.newSimpleState(this.state.length);
+            resultState = V.newSimpleState(this.qubits);
         }
         for (let i = 0; i < this.state.length; ++i) {
             resultState[i].r = 0;
@@ -94,5 +89,12 @@ export class V {
             }
         }
         return resultState;
+    }
+
+    calcResults(minPropability: number = 0.004): Result[] {
+        return this.state
+            .map((c: C, i: number) => ({ propability: c.absSqer(), values: this.getQubitsValues(i) } as Result))
+            .filter((result: Result) => result.propability > minPropability)
+            .sort((a: Result, b: Result) => b.propability - a.propability);
     }
 }
