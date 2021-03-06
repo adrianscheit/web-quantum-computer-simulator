@@ -1,5 +1,5 @@
 <div [hidden]="cookies">
-    This page does not uses any cookies now. To save your program in your browser for your further visits, you have to
+    This page does not use any cookies now. To save your program in your browser for your further visits, you have to
     accept cookies:
     <button type="button" (click)="cookies=true">Agree</button>
 </div>
@@ -10,16 +10,22 @@
 <section>
     <h1>Online quantum computer simulator in your browser!</h1>
     <ul>
-        <li>Online quantum computer simultor implementation, free for use for everyone.</li>
-        <li>Initally all qubits are |0></li>
+        <li>Online quantum computer simulator implementation, free for use for everyone.</li>
+        <li>Initially all qubits are |0></li>
         <li>The computer scale-up automatically as you add new operations</li>
-        <li>For simulation time issue, try to keep the quantity of qubits low
-            (more then 10 qubits requires some noticable amount of time to simulate, every qubit more makes the
-            simulation about twice that slow)</li>
-        <li>Your program is not send to the server - it is runing in your web-browser</li>
+        <li>
+            For simulation time issue, try to keep the quantity of qubits low (more then 16 qubits requires some
+            noticeable amount of time to simulate, every qubit more makes the simulation about twice that slow)
+        </li>
+        <li>Your program is not send to the server - it is running in your web-browser</li>
         <li>Clear UI - hopefully great UX</li>
-        <li>This application is mobile friendly (regarding the UI, because regarding the CPU usage during the sumulation
-            it is far away to be mobile-friendly)</li>
+        <li>This application is mobile friendly (regarding the UI, because regarding the CPU usage during a big
+            simulation it is far away to be mobile-friendly)</li>
+        <li>
+            This article helped a lot to implement this tool:
+            <a
+                href="https://en.wikipedia.org/wiki/Quantum_logic_gate">https://en.wikipedia.org/wiki/Quantum_logic_gate</a>
+        </li>
     </ul>
 </section>
 
@@ -56,7 +62,11 @@
 
 <section *ngIf="errorMap.size===0">
     <h2>Program in 2D gates table representation</h2>
-    <p>The program is executed from top to bottom where next columns are next qubits in the virtual computer.</p>
+    <p>
+        The program is executed from top to bottom where next columns are next qubits in the virtual computer.
+        Click into the table on an empty field to a add new operation/gate.
+        Click into the table on an existing operation/gate to edit it.
+    </p>
     <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']">
     </app-default-gate>
     <table>
@@ -108,10 +118,10 @@
             <pre>{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</pre>
         </li>
         <li>
-            Teleport 0 from Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a
+            Teleport 0 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
             traditional communication channel):
             <pre>{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
-            Teleport 1 from Q#0 to Q#2 (in reality the last two conditional operations are beeing sent through a
+            Teleport 1 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
             traditional communication channel):
             <pre>{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]},{"gn":"H","qi":[1]}]'}}</pre>
         </li>
@@ -151,18 +161,24 @@
 </section>
 
 <section>
-    <h2>All avaliable gates:</h2>
+    <h2>All available gates:</h2>
     <div class="flex">
         <app-gate-view *ngFor="let gate of gates" [gate]="gate"></app-gate-view>
     </div>
 </section>
+
+<!-- <section>
+    <h2>Feedback</h2>
+    <textarea></textarea>
+    <button>Submit!</button>
+</section> -->
 
 <section>
     <h2>Legal</h2>
     <section>
         <h3>Cookies policy</h3>
         <p>
-            This site uses cookies only when the user accept it.
+            This site uses cookies only when the user accepts it.
             This site uses cookies only to save the user program for the further usages.
             There is one property in local storage used in case the user consent to cookies: program
             - that contains the JSON representation of the user program.
@@ -172,7 +188,12 @@
         <h3>Private policy</h3>
         <p>
             This site does not save any user datas. The optional cookies are not used to identify the user.
-            All calcualtion and data are performed and process in the user web-browser, thats rund this site.
+            All calculations and data are performed and processed in the user web-browser that runs this site.
+            Constructive feedback, bug reporting is very wellcome.
+        </p>
+        <p>
+            Constructive feedback and bug reporting are very welcome. Please do not send any personal sensitive data,
+            because this site does not process any personal sensitive data.
         </p>
     </section>
     <section>
@@ -181,16 +202,17 @@
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
             The software is free to use, but not free to copy or modify.
             Modifications to the software are not allowed.
-            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here.</a>
+            The software does not take any responsibility for external links.
+        <p>
+            Usage of this software for scientific purposes is fully allowed and welcomed, but for any scientific thesis
+            that uses this software, please refer to this software and to its author.
+        </p>
+        <p>
+            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click
+                here.</a>
             Copyright © All rights reserved
         </p>
     </section>
 </section>
-
-<!-- <section>
-    <h2>Feedback</h2>
-    <textarea></textarea>
-    <button>Submit!</button>
-</section> -->
 
 <app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>
