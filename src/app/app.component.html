@@ -69,47 +69,51 @@
     </p>
     <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']">
     </app-default-gate>
-    <table>
-        <tbody>
-            <tr>
-                <th>Step#</th>
-                <th *ngFor="let i of getIndexes(qubitsQuantity)">
-                    <div class="column">
-                        <button type="button" type="button" (click)="addQubitBefore(i)">Add qubit before</button>
-                        QuBit#{{i}}
-                        <button type="button" (click)="deleteQubit(i)">Delete</button>
-                    </div>
-                </th>
-                <th>New qubit</th>
-            </tr>
-            <tr *ngFor="let step of programGUI; let i=index ">
-                <td>#{{i}}</td>
-                <td *ngFor="let guiGate of step; let j=index">
-                    <app-gate [gate]="guiGate" (click)="changeOperation(guiGate,i,j)"></app-gate>
-                </td>
-                <td>
-                    <button type="button" (click)="addStep(i)">Add step before</button>
-                    <button type="button" (click)="deleteStep(i) ">Delete step</button>
-                </td>
-            </tr>
-            <tr *ngIf="quickResult">
-                <th>Prop.:</th>
-                <th [colSpan]="qubitsQuantity">Results:</th>
-            </tr>
-            <tr *ngFor="let r of quickResult">
-                <td>{{r.propability * 100 | number: '.0-1'}}%</td>
-                <td *ngFor="let i of r.values">{{i?1:0}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div style="display: block; overflow-x: auto;">
+        <table style="width: auto;">
+            <tbody>
+                <tr>
+                    <th>Step#</th>
+                    <th *ngFor="let i of getIndexes(qubitsQuantity)" style="min-width: 88px;">
+                        <div class="column">
+                            <button type="button" type="button" (click)="addQubitBefore(i)">Add before</button>
+                            QuBit#{{i}}
+                            <button type="button" (click)="deleteQubit(i)">Delete</button>
+                        </div>
+                    </th>
+                    <th>New qubit</th>
+                </tr>
+                <tr *ngFor="let step of programGUI; let i=index ">
+                    <td>#{{i}}</td>
+                    <td *ngFor="let guiGate of step; let j=index">
+                        <app-gate [gate]="guiGate" (click)="changeOperation(guiGate,i,j)"></app-gate>
+                    </td>
+                    <td style="min-width: 240px;">
+                        <button type="button" (click)="addStep(i)">Add step before</button>
+                        <button type="button" (click)="deleteStep(i) ">Delete step</button>
+                    </td>
+                </tr>
+                <tr *ngIf="quickResult">
+                    <th>Prop.:</th>
+                    <th [colSpan]="qubitsQuantity">Results:</th>
+                </tr>
+                <tr *ngFor="let r of quickResult">
+                    <td>{{r.propability * 100 | number: '.0-1'}}%</td>
+                    <td *ngFor="let i of r.values">{{i?1:0}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <button type="button" (click)="complem()">Complementary the program</button>
     <button type="button" (click)="simulate()">Simulate</button>
 </section>
 
 <section>
-    <h2>Program represents the operations in JSON</h2>
-    <textarea (input)="setProgramJson($event.target['value'])" [value]="programJson"
-        [class.invalid]="jsonError"></textarea>
+    <label>
+        <h2>Program represents the operations in JSON</h2>
+        <textarea (input)="setProgramJson($event.target['value'])" [value]="programJson"
+            [class.invalid]="jsonError"></textarea>
+    </label>
     <button type="button" (click)="simulate()">Simulate</button>
     <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
     <ul>
@@ -134,7 +138,8 @@
         <section *ngFor="let result of results; let i=index">
             <h3>
                 Sumulation #{{result.id+1}}
-                <button type="button" *ngIf="!result.canceled && !result.results" (click)="cancelSimulation(i)">Cancel</button>
+                <button type="button" *ngIf="!result.canceled && !result.results"
+                    (click)="cancelSimulation(i)">Cancel</button>
                 <span *ngIf="result.canceled">(canceled)</span>
             </h3>
             <ul>
