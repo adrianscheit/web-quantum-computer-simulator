@@ -16,6 +16,7 @@ export interface StepperData {
     qubitsQuantity: number;
     operations: Operation[],
     id: number;
+    canceled?: true;
     /// Output:
     operationsQuantity?: number;
     startTime?: Date,
@@ -35,22 +36,25 @@ export class V {
         return new V(this.state.map(c => c.new()));
     }
 
-    static newTensorProduct(vectors: V[]): V {
-        let result = [new C(1)];
-        for (const v of vectors) {
-            const nextResult = [];
-            for (const vc of v.state) {
-                for (const rc of result) {
-                    nextResult.push(rc.new().mul(vc));
-                }
-            }
-            result = nextResult;
-        }
-        return new V(result);
-    }
+    // static newTensorProduct(vectors: V[]): V {
+    //     let result = [new C(1)];
+    //     for (const v of vectors) {
+    //         const nextResult = [];
+    //         for (const vc of v.state) {
+    //             for (const rc of result) {
+    //                 nextResult.push(rc.new().mul(vc));
+    //             }
+    //         }
+    //         result = nextResult;
+    //     }
+    //     return new V(result);
+    // }
 
     static newStateVector(qubitsQuantity: number): V {
-        const result = Array(1 << qubitsQuantity).fill(new C());
+        const result: C[] = [];
+        for(let i=0; i< 1<<qubitsQuantity; ++i){
+            result.push(new C());
+        }
         result[0] = new C(1);
         return new V(result);
     }
@@ -93,18 +97,20 @@ export class V {
         return source;
     }
 
-    step(g: G, qi: number[]): C[] {
-        const result: C[] = [];
-
+    step(g: G, qi: number[], resultState: C[] = []): C[] {
         for (let i = 0; i < this.state.length; ++i) {
-            const sum = new C();
+            if (!resultState[i]) {
+                resultState.push(new C());
+            } else {
+                resultState[i].r = 0;
+                resultState[i].i = 0;
+            }
             const oi = V.takeBits(i, qi);
             for (let oj = 0; oj < g.widthAndHeight; ++oj) {
                 const j = V.setBits(i, qi, oj);
-                sum.plus(this.state[j].new().mul(g.get(oi, oj)));
+                resultState[i].plusProductOf(this.state[j], g.get(oi, oj));
             }
-            result.push(sum);
         }
-        return result;
+        return resultState;
     }
 }

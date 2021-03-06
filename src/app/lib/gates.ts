@@ -5,7 +5,7 @@ export const gates: G[] = [
     new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X'),
     new G('Y', [new C(), new C(0, -1), new C(0, 1), new C()], 'Pauli-Y'),
     new G('Z', [new C(1), new C(), new C(), new C(-1)], 'Pauli-Z'),
-    new G('H', [new C(1), new C(1), new C(1), new C(-1)].map(c => c.mul(new C(Math.SQRT1_2))), 'Hadamard'),
+    new G('H', [new C(1), new C(1), new C(1), new C(-1)].map(c => c.muls(Math.SQRT1_2)), 'Hadamard'),
     new G('SP', [new C(1), new C(), new C(), new C(0, 1)], 'Phase'),
     new G('T', [new C(1), new C(), new C(), new C(Math.SQRT1_2, Math.SQRT1_2)], 'PI/8'),
     new G('CX', [
@@ -42,7 +42,7 @@ export const gates: G[] = [
         new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1),
         new C(), new C(), new C(), new C(), new C(), new C(), new C(1), new C(),
     ], 'Toffoli (CCX, TOFF)'),
-    new G('√X', [new C(1, 1), new C(1, -1), new C(1, -1), new C(1, 1)].map(c => c.mul(new C(0.5))), 'Square root of Pauli-X'),
+    new G('√X', [new C(1, 1), new C(1, -1), new C(1, -1), new C(1, 1)].map(c => c.muls(0.5)), 'Square root of Pauli-X'),
     new G('√SWAP', [
         new C(1), new C(), new C(), new C(),
         new C(), new C(0.5, 0.5), new C(0.5, -0.5), new C(),

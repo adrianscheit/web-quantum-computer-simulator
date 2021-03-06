@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
     waitAtResult = false;
     quickResult: Result[] = undefined;
     results: StepperData[] = [];
+    workers: Worker[] = [];
+
     readonly gates = gates;
 
     ngOnInit() {
@@ -227,6 +229,8 @@ export class AppComponent implements OnInit {
         this.parseProgram();
     }
 
+    /// Simulation -------------------------------------------------------------------
+
     simulate(): void {
         const stepperData: StepperData = {
             qubitsQuantity: this.qubitsQuantity,
@@ -235,6 +239,7 @@ export class AppComponent implements OnInit {
         };
         this.waitAtResult = true;
         const worker = new Worker('./stepper.worker', { type: 'module' });
+        this.workers[stepperData.id] = worker;
         worker.addEventListener('message', ({ data }) => {
             const stepperData: StepperData = data;
             this.results[stepperData.id] = stepperData;
@@ -246,6 +251,11 @@ export class AppComponent implements OnInit {
             }
         });
         worker.postMessage(stepperData);
+    }
+
+    cancelSimulation(index: number): void {
+        this.workers[index].terminate();
+        this.results[index].canceled = true;
     }
 
     complem(): void {

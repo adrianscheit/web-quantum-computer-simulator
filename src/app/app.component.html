@@ -131,8 +131,12 @@
 <section>
     <h2>Results</h2>
     <div class="flex">
-        <section *ngFor="let result of results">
-            <h3>Sumulation #{{result.id+1}}</h3>
+        <section *ngFor="let result of results; let i=index">
+            <h3>
+                Sumulation #{{result.id+1}}
+                <button type="button" *ngIf="!result.canceled && !result.results" (click)="cancelSimulation(i)">Cancel</button>
+                <span *ngIf="result.canceled">(canceled)</span>
+            </h3>
             <ul>
                 <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
                 <li>Number of qubits: {{result.qubitsQuantity}}</li>
