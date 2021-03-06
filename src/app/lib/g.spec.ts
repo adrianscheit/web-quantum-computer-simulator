@@ -48,4 +48,8 @@ describe('Gate tests', () => {
         expect(gate4x4.getError([60, 5])).toBeTruthy();
         expect(gate4x4.getError([6, 60])).toBeTruthy();
     });
+
+    it('constructFromMultiplication', () => {
+        expect(G.gatesMultiplication(gate2x2, gate2x2)).toEqual([new C(7), new C(10), new C(15), new C(22)]);
+    });
 });

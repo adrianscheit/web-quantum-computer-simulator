@@ -1,14 +1,9 @@
 import { environment } from 'src/environments/environment';
 import { C } from './c';
 
-export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' | 'SWAP' | 'CCX' | '√X' | '√SWAP' | 'CSWAP' | 'XY';
+export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' | 'SWAP' | 'CCX' | '√X' | '√SWAP' | 'CSWAP' | 'XY' | 'XZ' | 'YZ';
 
 export class G {
-    readonly matrix: C[];
-    readonly desc: string;
-    readonly colspan: number;
-    readonly widthAndHeight: number;
-    readonly color: string;
 
     constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
         this.desc = desc ? desc : name ? name : 'ID';
@@ -25,6 +20,28 @@ export class G {
             3: '#dfd',
         };
         this.color = color ? color : colors[this.colspan] ? colors[this.colspan] : '#faa';
+    }
+    readonly matrix: C[];
+    readonly desc: string;
+    readonly colspan: number;
+    readonly widthAndHeight: number;
+    readonly color: string;
+
+    static gatesMultiplication(g0: G, g1: G): C[] {
+        if (g0.widthAndHeight !== g1.widthAndHeight) {
+            throw new Error('Different matrixes sizes to multiply');
+        }
+        const result: C[] = [];
+        for (let i = 0; i < g0.widthAndHeight; ++i) {
+            for (let j = 0; j < g1.widthAndHeight; ++j) {
+                const sum: C = new C();
+                for (let k = 0; k < g0.widthAndHeight; ++k) {
+                    sum.plusProductOf(g0.get(i, k), g1.get(k, j));
+                }
+                result.push(sum);
+            }
+        }
+        return result;
     }
 
     get(i: number, j: number): C {
