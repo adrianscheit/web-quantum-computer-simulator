@@ -1,5 +1,5 @@
-import { C } from "./c";
-import { G, GateName } from "./g";
+import { C } from './c';
+import { G, GateName } from './g';
 
 export const gates: G[] = [
     new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X'),

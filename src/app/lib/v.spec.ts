@@ -2,9 +2,21 @@ import { C } from './c';
 import { gatesMap } from './gates';
 import { Result, V } from './v';
 
+export const vectorsEquals = (a: C[], b: C[], maxError: number = 0.01): boolean => {
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (let i = a.length; i < a.length; ++i) {
+        if (Math.abs(a[i].r - b[i].r) > maxError || Math.abs(a[i].i - b[i].i) > maxError) {
+            return false;
+        }
+    }
+    return true;
+};
+
 describe('Vector tests', () => {
     const v1 = new V([new C(1), new C()]);
-    const v2 = new V([new C(1), new C(), new C(), new C(1),]);
+    const v2 = new V([new C(1), new C(), new C(), new C(1), ]);
     const v3 = new V([new C(), new C(1)]);
 
     it('calc the size the right way', () => {
@@ -13,28 +25,21 @@ describe('Vector tests', () => {
         expect(v3.qubits).toEqual(1);
     });
 
-    // it('tensor product', () => {
-    //     expect(V.newTensorProduct([v1, v1, v1]).state).toEqual([new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C()]);
-    //     expect(V.newTensorProduct([v3, v3, v3]).state).toEqual([new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1)]);
-    //     expect(V.newTensorProduct([v1, v1, v3]).state).toEqual([new C(), new C(), new C(), new C(), new C(1), new C(), new C(), new C()]);
-    //     expect(V.newTensorProduct([v3, v1, v1]).state).toEqual([new C(), new C(1), new C(), new C(), new C(), new C(), new C(), new C()]);
-    // });
-
     it('inital state vector', () => {
-        expect(V.newStateVector(0).state).toEqual([new C(1)]);
-        expect(V.newStateVector(1).state).toEqual([new C(1), new C()]);
-        expect(V.newStateVector(2).state).toEqual([new C(1), new C(), new C(), new C()]);
-        expect(V.newStateVector(3).state).toEqual([new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C()]);
+        expect(V.newSimpleState(0)).toEqual([new C(1)]);
+        expect(V.newSimpleState(1)).toEqual([new C(1), new C()]);
+        expect(V.newSimpleState(2)).toEqual([new C(1), new C(), new C(), new C()]);
+        expect(V.newSimpleState(3)).toEqual([new C(1), new C(), new C(), new C(), new C(), new C(), new C(), new C()]);
     });
 
     it('calc state the same way how tensor product is calculated', () => {
-        expect(v1.getState(0)).toEqual([false]);
-        expect(v1.getState(1)).toEqual([true]);
+        expect(v1.getQubitsValues(0)).toEqual([false]);
+        expect(v1.getQubitsValues(1)).toEqual([true]);
 
-        expect(v2.getState(0)).toEqual([false, false]);
-        expect(v2.getState(1)).toEqual([true, false]);
-        expect(v2.getState(2)).toEqual([false, true]);
-        expect(v2.getState(3)).toEqual([true, true]);
+        expect(v2.getQubitsValues(0)).toEqual([false, false]);
+        expect(v2.getQubitsValues(1)).toEqual([true, false]);
+        expect(v2.getQubitsValues(2)).toEqual([false, true]);
+        expect(v2.getQubitsValues(3)).toEqual([true, true]);
     });
 
 
@@ -81,7 +86,8 @@ describe('Vector tests', () => {
     });
 
     it('step more complex', () => {
-        expect(new V([new C(), new C(1), new C(), new C()]).step(gatesMap.get('CX'), [0, 1])).toEqual([new C(), new C(), new C(), new C(1)]);
-        expect(new V([new C(), new C(), new C(1), new C()]).step(gatesMap.get('CX'), [0, 1])).toEqual([new C(), new C(), new C(1), new C()]);
+        expect(new V(V.newSimpleState(2, 0)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 0));
+        expect(new V(V.newSimpleState(2, 1)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 3));
+        expect(new V(V.newSimpleState(2, 2)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 2));
     });
 });

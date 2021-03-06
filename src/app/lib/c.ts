@@ -1,6 +1,10 @@
 export class C {
     constructor(public r: number = 0, public i: number = 0) { }
 
+    private static toDecimal(v: number): string {
+        return `${Math.round(v * 1000) / 1000}`;
+    }
+
     new(): C {
         return new C(this.r, this.i);
     }
@@ -34,10 +38,6 @@ export class C {
         return this.r * this.r + this.i * this.i;
     }
 
-    private static toDecimal(v: number): string {
-        return `${Math.round(v * 1000) / 1000}`;
-    }
-
     private iToString(): string {
         return `${this.i === 1 ? '' : this.i === -1 ? '-' : C.toDecimal(this.i)}i`;
     }
@@ -52,6 +52,6 @@ export class C {
         if (this.r === 0) {
             return this.iToString();
         }
-        return `${C.toDecimal(this.r)}${this.i > 0 ? '+' : ''}${this.iToString()}`
+        return `${C.toDecimal(this.r)}${this.i > 0 ? '+' : ''}${this.iToString()}`;
     }
 }

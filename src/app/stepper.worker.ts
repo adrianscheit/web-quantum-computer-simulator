@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
-import { C } from "./lib/c";
-import { gatesMap } from "./lib/gates";
-import { Operation, StepperData, V } from "./lib/v";
+import { C } from './lib/c';
+import { gatesMap } from './lib/gates';
+import { Operation, StepperData, V } from './lib/v';
 
 
 addEventListener('message', ({ data }) => {
@@ -24,7 +24,7 @@ addEventListener('message', ({ data }) => {
     stepperData.progress = 0;
     postMessage(stepperData);
 
-    const state = V.newStateVector(stepperData.qubitsQuantity);
+    const state = new V(V.newSimpleState(stepperData.qubitsQuantity));
     let resultState: C[] = [];
     for (let i = 0; i < operations.length; ++i) {
         stepperData.progress = i / operations.length;

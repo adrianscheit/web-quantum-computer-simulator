@@ -16,12 +16,12 @@ export interface GateGUI {
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    qubitsQuantity: number = 10;
+    qubitsQuantity = 10;
 
     program: Operation[] = [];
     programGUI: GateGUI[][] = [];
     programJson: string;
-    errorMap = new Map<number, string>();
+    errorMap: Map<number, string> = new Map<number, string>();
     jsonError: string = undefined;
 
     currentOperationIndex: number = undefined;
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
 
     readonly gates = gates;
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.programJson = localStorage.getItem('program');
         if (this.programJson) {
             this.parseProgramJson();
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
     }
 
     getIndexes(length: number): number[] {
-        return Array(length).fill(0).map((v, index) => index);
+        return Array(length).fill(0).map((_, index) => index);
     }
 
     /// Cookies -------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
 
     @HostListener('window:beforeunload')
-    beforeClose() {
+    beforeClose(): void {
         if (this.cookies) {
             localStorage.setItem('program', this.programJson);
         }
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
 
     // Parsing ----------------------------------------------------------------------------
 
-    setProgramJson(programJson: string) {
+    setProgramJson(programJson: string): void {
         this.programJson = programJson;
         this.parseProgramJson();
     }
@@ -125,8 +125,8 @@ export class AppComponent implements OnInit {
         const newProgramGUIRow = new Map<number, GateGUI>();
         for (let i = 0; i < this.program.length; ++i) {
             const step = this.program[i];
-            for (let j = 0; j < step.qi.length; ++j) {
-                if (newProgramGUIRow.has(step.qi[j])) {
+            for (const qindex of step.qi) {
+                if (newProgramGUIRow.has(qindex)) {
                     this.addRowToProgramGUI(newProgramGUIRow);
                 }
             }
@@ -139,28 +139,28 @@ export class AppComponent implements OnInit {
         // console.log(this.programJson, this.program, '=>', this.programGUI, this.qubitsQuantity);
     }
 
-    addRowToProgramGUI(gates: Map<number, GateGUI>): void {
+    addRowToProgramGUI(rowDescription: Map<number, GateGUI>): void {
         const row: GateGUI[] = [];
-        let oi = Math.min(this.program.length, ...[...gates.values()].map(g => g.oi));
+        let oi = Math.min(this.program.length, ...[...rowDescription.values()].map(g => g.oi));
         for (let i = 0; i <= this.qubitsQuantity; ++i) {
-            if (gates.has(i)) {
-                row.push(gates.get(i));
-                oi = Math.max(gates.get(i).oi + 1, oi);
+            if (rowDescription.has(i)) {
+                row.push(rowDescription.get(i));
+                oi = Math.max(rowDescription.get(i).oi + 1, oi);
             } else {
-                row.push({ oi: oi, color: noGate.color });
+                row.push({ oi, color: noGate.color });
             }
         }
         this.programGUI.push(row);
-        gates.clear();
+        rowDescription.clear();
     }
 
     /// GUI's operations ----------------------------------------------------
 
     addQubitBefore(index: number): void {
-        for (let i = 0; i < this.program.length; ++i) {
-            for (let j = 0; j < this.program[i].qi.length; ++j) {
-                if (this.program[i].qi[j] >= index) {
-                    ++(this.program[i].qi[j]);
+        for (const step of this.program) {
+            for (let j = 0; j < step.qi.length; ++j) {
+                if (step.qi[j] >= index) {
+                    ++(step.qi[j]);
                 }
             }
         }
@@ -182,7 +182,11 @@ export class AppComponent implements OnInit {
     }
 
     addStep(index: number): void {
-        this.programGUI.splice(index, 0, this.getIndexes(this.qubitsQuantity + 1).map(_ => ({ oi: this.programGUI[index][0].oi, color: noGate.color })));
+        this.programGUI.splice(
+            index,
+            0,
+            Array(this.qubitsQuantity + 1).fill({ oi: this.programGUI[index][0].oi, color: noGate.color })
+        );
     }
 
     deleteStep(index: number): void {
@@ -232,7 +236,7 @@ export class AppComponent implements OnInit {
     /// Simulation -------------------------------------------------------------------
 
     simulate(): void {
-        const stepperData: StepperData = {
+        let stepperData: StepperData = {
             qubitsQuantity: this.qubitsQuantity,
             operations: this.program,
             id: this.results.length
@@ -241,7 +245,7 @@ export class AppComponent implements OnInit {
         const worker = new Worker('./stepper.worker', { type: 'module' });
         this.workers[stepperData.id] = worker;
         worker.addEventListener('message', ({ data }) => {
-            const stepperData: StepperData = data;
+            stepperData = data;
             this.results[stepperData.id] = stepperData;
             if (stepperData.results) {
                 if (this.waitAtResult) {

@@ -1,5 +1,6 @@
+import { throws } from 'assert';
 import { C } from './c';
-import { G } from './g'
+import { G } from './g';
 
 describe('Gate tests', () => {
     const gate2x2 = new G('X', [new C(1), new C(2), new C(3), new C(4)]);
@@ -26,12 +27,7 @@ describe('Gate tests', () => {
     });
 
     it('throws exception if the calspan is invalid', () => {
-        try {
-            new G('X', [new C(0), new C(0), new C(0)]);
-            expect('should not be executed').toBeFalsy();
-        } catch (e) {
-            // ok
-        }
+        throws(() => new G('X', [new C(0), new C(0), new C(0)]));
     });
 
     it('validate qubit indexes', () => {

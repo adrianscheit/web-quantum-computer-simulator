@@ -11,7 +11,7 @@ import { Operation } from '../lib/v';
 export class OperationComponent {
     @Input() program: Operation[];
     @Input() set index(index: number) {
-        this._index = index;
+        this.orginalIndexCopy = index;
         if (index !== undefined) {
             this.newIndex = index;
             this.qi = [...this.program[index].qi];
@@ -23,9 +23,13 @@ export class OperationComponent {
             }
         }
     }
+    get index(): number {
+        return this.orginalIndexCopy;
+    }
     @Output() exit = new EventEmitter<void>();
 
-    _index: number;
+    private orginalIndexCopy: number;
+
     private newIndex: number;
     qi: number[];
     private deletedQi: number[];
@@ -56,7 +60,7 @@ export class OperationComponent {
     }
 
     del(): void {
-        this.program.splice(this._index, 1);
+        this.program.splice(this.index, 1);
         this.exit.emit();
     }
 
@@ -69,10 +73,10 @@ export class OperationComponent {
 
     close(): void {
         if (this.valid) {
-            this.program[this._index].gn = this.gate.name;
-            this.program[this._index].qi = this.qi;
-            if (this._index !== this.newIndex) {
-                this.program.splice(this.newIndex, 0, ...this.program.splice(this._index, 1));
+            this.program[this.index].gn = this.gate.name;
+            this.program[this.index].qi = this.qi;
+            if (this.index !== this.newIndex) {
+                this.program.splice(this.newIndex, 0, ...this.program.splice(this.index, 1));
             }
         }
         this.exit.emit();

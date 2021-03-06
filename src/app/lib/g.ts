@@ -1,5 +1,5 @@
-import { environment } from "src/environments/environment";
-import { C } from "./c";
+import { environment } from 'src/environments/environment';
+import { C } from './c';
 
 export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' | 'SWAP' | 'CCX' | '√X' | '√SWAP' | 'CSWAP' | 'XY';
 
@@ -23,7 +23,7 @@ export class G {
             1: '#afd',
             2: '#dfa',
             3: '#dfd',
-        }
+        };
         this.color = color ? color : colors[this.colspan] ? colors[this.colspan] : '#faa';
     }
 
@@ -31,7 +31,7 @@ export class G {
         return this.matrix[i * this.widthAndHeight + j];
     }
 
-    getError(qi: number[]) {
+    getError(qi: number[]): string {
         if (qi.length !== this.colspan) {
             return 'Incorrect number of qubits assigned to this gate';
         }
@@ -40,13 +40,13 @@ export class G {
         }
         for (const index of qi) {
             if (!Number.isInteger(index)) {
-                return 'In qubit index is not an integer'
+                return 'In qubit index is not an integer';
             }
             if (index < 0) {
-                return 'Ngative index of qubit'
+                return 'Ngative index of qubit';
             }
             if (index >= environment.maxQubitsQuantity) {
-                return `The simulated computer can not be so big: ${index + 1} qubits`
+                return `The simulated computer can not be so big: ${index + 1} qubits`;
             }
         }
     }

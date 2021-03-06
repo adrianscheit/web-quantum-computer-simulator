@@ -1,8 +1,8 @@
-<div class="host" *ngIf="_index!==undefined" (click)="close()">
+<div class="host" *ngIf="index!==undefined" (click)="close()">
     <div class="dialog" (click)="$event.stopPropagation()">
         <label>
             Operation #
-            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="_index" (change)="setIndex(+$event.target['value'])" />
+            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="index" (change)="setIndex(+$event.target['value'])" />
             of
             {{program.length}}
         </label>

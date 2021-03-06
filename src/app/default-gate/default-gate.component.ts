@@ -9,6 +9,6 @@ import { gates } from '../lib/gates';
 export class DefaultGateComponent {
 
     @Input() defaultGateName: string;
-    gates = gates
+    gates = gates;
 
 }
