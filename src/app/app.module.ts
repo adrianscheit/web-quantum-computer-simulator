@@ -6,6 +6,7 @@ import { GateComponent } from './gate/gate.component';
 import { GateViewComponent } from './gate-view/gate-view.component';
 import { OperationComponent } from './operation/operation.component';
 import { DefaultGateComponent } from './default-gate/default-gate.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { DefaultGateComponent } from './default-gate/default-gate.component';
     DefaultGateComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

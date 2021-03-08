@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { GateName } from './lib/g';
 import { gates, gatesMap, noGate } from './lib/gates';
 import { Operation, Result, StepperData } from './lib/v';
@@ -33,6 +34,10 @@ export class AppComponent implements OnInit {
     workers: Worker[] = [];
 
     readonly gates = gates;
+    visits = 0;
+
+    constructor(private httpClient: HttpClient) {
+    }
 
     ngOnInit(): void {
         this.programJson = localStorage.getItem('program');
@@ -41,6 +46,8 @@ export class AppComponent implements OnInit {
             this.cookies = true;
         }
         this.parseProgram();
+
+        this.httpClient.get('/assets/visits.php?app=qcs').subscribe((value: any) => this.visits = value);
     }
 
     getIndexes(length: number): number[] {

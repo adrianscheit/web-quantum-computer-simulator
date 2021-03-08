@@ -176,11 +176,17 @@
     </div>
 </section>
 
-<!-- <section>
+<section>
     <h2>Feedback</h2>
-    <textarea></textarea>
-    <button>Submit!</button>
-</section> -->
+    <form method="POST" action="/asset/feedback.php?app=qcs" autocomplete="off" target="feedback-result">
+        <label>
+            Here you can enter you constructive feedback:
+            <textarea required minlength="2" maxLength="2000" name="feedback"></textarea>
+        </label>
+        <input type="submit">
+    </form>
+    <iframe name="feedback-result"></iframe>
+</section>
 
 <section>
     <h2>Legal</h2>
@@ -223,5 +229,7 @@
         </p>
     </section>
 </section>
+
+Visits: {{visits}}
 
 <app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>
