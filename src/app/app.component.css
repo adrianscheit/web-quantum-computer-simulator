@@ -11,3 +11,9 @@
 .invalid {
     background-color: #faa;
 }
+
+iframe {
+    height: 64px;
+    width: 100%;
+    border: none;
+}
