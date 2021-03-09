@@ -177,6 +177,16 @@
 </section>
 
 <section>
+    <h2>API</h2>
+    <p>
+        To run the calculations automatically, you can use the API of it.
+        Open the browser with a program parameter in the link:
+
+        Will be implemented soon!
+    </p>
+</section>
+
+<section>
     <h2>Feedback</h2>
     <form method="POST" action="/assets/feedback.php?app=qcs" autocomplete="off" target="feedback-result">
         <label>
@@ -185,7 +195,7 @@
         </label>
         <input type="submit">
     </form>
-    <iframe name="feedback-result" ></iframe>
+    <iframe name="feedback-result"></iframe>
 </section>
 
 <section>
@@ -202,25 +212,27 @@
     <section>
         <h3>Private policy</h3>
         <p>
-            This site does not save any user datas. The optional cookies are not used to identify the user.
+            This site does not save any sensitive data.
+            The optional cookies are not used to identify the user, but only to save the current users operations/gates
+            sequence for future usage.
             All calculations and data are performed and processed in the user web-browser that runs this site.
-            Constructive feedback, bug reporting is very wellcome, but providing sensitive data there is forbidden.
-            The software is saving the feedback together with the sending time and the user IP address,
-            to filter better SPAM, to protect against SPAMing robots.
-            This site calculates the number of visits only based on the number of page loding, does not save any user data for it.
+            The software is saving the submitted user feedback together with the sending time and the sender IP
+            address. 
+            Providing sensitive data in the feedback field is forbidden.This site calculates the number of visits only
+            based on the number of page loading, and does not save any user data for it, does not use cookies for it.
         </p>
         <p>
-            Constructive feedback and bug reporting are very welcome. Please do not send any personal sensitive data,
-            because this site does not process any personal sensitive data.
+            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data.
         </p>
     </section>
     <section>
         <h3>Conditions & licence</h3>
         <p>
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+            The software (nor its author) does not take responsibility for anything, including calculations results.
             The software is free to use, but not free to copy or modify.
             Modifications to the software are not allowed.
-            The software does not take any responsibility for external links.
+            The software (nor its author) does not take any responsibility for external links.
         <p>
             Usage of this software for scientific purposes is fully allowed and welcomed, but for any scientific thesis
             that uses this software, please refer to this software and to its author.
@@ -233,6 +245,6 @@
     </section>
 </section>
 
-Visits: {{visits}}
+<div>Visits: {{visits}}</div>
 
 <app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>

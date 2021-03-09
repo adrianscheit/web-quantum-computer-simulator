@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     workers: Worker[] = [];
 
     readonly gates = gates;
-    visits = 0;
+    visits: number = undefined;
 
     constructor(private httpClient: HttpClient) {
     }
