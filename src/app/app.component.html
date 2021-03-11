@@ -119,15 +119,15 @@
     <ul>
         <li>
             Produce 2 entangled qubits:
-            <pre>{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</pre>
+            <span class="code">{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</span>
         </li>
         <li>
             Teleport 0 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
             traditional communication channel):
-            <pre>{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</pre>
+            <span class="code">{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</span>
             Teleport 1 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
             traditional communication channel):
-            <pre>{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</pre>
+            <span class="code">{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</span>
         </li>
     </ul>
 </section>
@@ -179,8 +179,9 @@
 <section>
     <h2>API</h2>
     <p>
-        To run the calculations automatically, you can use the API of it.
-        Open the browser with a program parameter in the link:
+        To run the calculations automatically, you can use the API.
+        Simply open the browser with a program in JSON, as a parameter in the link:
+        <span class="code"></span>
 
         Will be implemented soon!
     </p>
