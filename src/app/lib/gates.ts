@@ -20,14 +20,15 @@ export const gates: G[] = [
     new G('CY', [
         new C(1), new C(), new C(), new C(),
         new C(), new C(1), new C(), new C(),
-        new C(), new C(), new C(), new C(1),
-        new C(), new C(), new C(1), new C(),
+        new C(), new C(), new C(), new C(0, -1),
+        new C(), new C(), new C(0, 1), new C(),
     ], 'Controlled NOT'),
     new G('CZ', [
         new C(1), new C(), new C(), new C(),
         new C(), new C(1), new C(), new C(),
-        new C(), new C(), new C(), new C(0, -1),
-        new C(), new C(), new C(0, 1), new C(),
+        new C(), new C(), new C(1), new C(),
+        new C(), new C(), new C(), new C(-1),
+
     ], 'Controlled Z'),
     new G('SWAP', [
         new C(1), new C(), new C(), new C(),

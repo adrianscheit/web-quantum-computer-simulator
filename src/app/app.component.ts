@@ -1,5 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { GateName } from './lib/g';
 import { gates, gatesMap, noGate } from './lib/gates';
 import { Operation, Result, StepperData } from './lib/v';
@@ -17,6 +17,8 @@ export interface GateGUI {
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+    selfLink = window.location.origin;
+
     qubitsQuantity = 10;
 
     program: Operation[] = [];
@@ -40,12 +42,20 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.programJson = localStorage.getItem('program');
-        if (this.programJson) {
-            this.parseProgramJson();
-            this.cookies = true;
+        console.log(window.location);
+        const hash = window.location.hash;
+        if (hash) {
+            const params = decodeURIComponent(hash).split('#');
+            this.setProgramJson(decodeURIComponent(params[1]));
+            this.simulate(params[2]);
+        } else {
+            this.programJson = localStorage.getItem('program');
+            if (this.programJson) {
+                this.parseProgramJson();
+                this.cookies = true;
+            }
+            this.parseProgram();
         }
-        this.parseProgram();
 
         this.httpClient.get('/assets/visits.php?app=qcs').subscribe((value: any) => this.visits = value);
     }
@@ -242,11 +252,12 @@ export class AppComponent implements OnInit {
 
     /// Simulation -------------------------------------------------------------------
 
-    simulate(): void {
+    simulate(callback?: string): void {
         let stepperData: StepperData = {
             qubitsQuantity: this.qubitsQuantity,
             operations: this.program,
-            id: this.results.length
+            id: this.results.length,
+            callback
         };
         this.waitAtResult = true;
         const worker = new Worker('./stepper.worker', { type: 'module' });
@@ -257,6 +268,10 @@ export class AppComponent implements OnInit {
             if (stepperData.results) {
                 if (this.waitAtResult) {
                     this.quickResult = stepperData.results;
+                }
+                if (stepperData.callback) {
+                    this.httpClient.get(stepperData.callback + encodeURIComponent(JSON.stringify(stepperData.results)))
+                        .subscribe(console.log, console.error);
                 }
                 worker.terminate();
             }

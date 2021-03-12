@@ -17,6 +17,7 @@ export interface StepperData {
     operations: Operation[];
     id: number;
     canceled?: true;
+    callback?: string;
     /// Output:
     operationsQuantity?: number;
     startTime?: Date;

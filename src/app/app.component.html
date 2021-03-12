@@ -30,7 +30,10 @@
 </section>
 
 <section>
-    <h2>Program in list of quantum operations:</h2>
+    <h2>Program in list of quantum operations</h2>
+    <p>
+        This is like an assembler representation of the current quantum program.
+    </p>
     <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']">
     </app-default-gate>
     <table>
@@ -63,6 +66,7 @@
 <section *ngIf="errorMap.size===0">
     <h2>Program in 2D gates table representation</h2>
     <p>
+        This representation shows what may be executed in parallel.
         The program is executed from top to bottom where next columns are next qubits in the virtual computer.
         Click into the table on an empty field to a add new operation/gate.
         Click into the table on an existing operation/gate to edit it.
@@ -122,12 +126,20 @@
             <span class="code">{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</span>
         </li>
         <li>
-            Teleport 0 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-            traditional communication channel):
-            <span class="code">{{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</span>
-            Teleport 1 from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-            traditional communication channel):
-            <span class="code">{{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}</span>
+            <p>
+                Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+                traditional communication channel):
+                <span class="code">
+                    {{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}
+                </span>
+            </p>
+            <p>
+                Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+                traditional communication channel):
+                <span class="code">
+                    {{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}
+                </span>
+            </p>
         </li>
     </ul>
 </section>
@@ -149,6 +161,7 @@
                 <li [hidden]="result.results">Progress: {{result.progress*100 | number:'.1-2'}}%</li>
                 <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
                     {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
+                <li *ngIf="result.callback">The result will be send to: {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
             </ul>
             <div *ngIf="result.results">
                 Results:
@@ -179,12 +192,19 @@
 <section>
     <h2>API</h2>
     <p>
-        To run the calculations automatically, you can use the API.
+        To run the calculations automatically, for example by a programs generator, you can use the API.
         Simply open the browser with a program in JSON, as a parameter in the link:
-        <span class="code"></span>
-
-        Will be implemented soon!
+        <span class="code">{{selfLink}}#{{programJson}}#http://localhost:8080/?results=</span>
     </p>
+    Parameters are hash character ("#") separated and they are like:
+    <ul>
+        <li>Program in JSON - list of operations/applied gates (required)</li>
+        <li>
+            Callback address to be called with the results at the end, encoded as JSON with URI encoding around.
+            Remember that your local server would allow the origin, otherwise there would be a CORS violation exception.
+            (optional)
+        </li>
+    </ul>
 </section>
 
 <section>
