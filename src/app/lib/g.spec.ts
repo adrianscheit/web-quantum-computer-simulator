@@ -1,4 +1,3 @@
-import { throws } from 'assert';
 import { C } from './c';
 import { G } from './g';
 
@@ -27,7 +26,7 @@ describe('Gate tests', () => {
     });
 
     it('throws exception if the calspan is invalid', () => {
-        throws(() => new G('X', [new C(0), new C(0), new C(0)]));
+        expect(() => new G('X', [new C(0), new C(0), new C(0)])).toThrow();
     });
 
     it('validate qubit indexes', () => {

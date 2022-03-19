@@ -18,24 +18,19 @@
             noticeable amount of time to simulate, every qubit more makes the simulation about twice that slow)
         </li>
         <li>Your program is not send to the server - it is running in your web-browser</li>
-        <li>Clear UI - hopefully great UX</li>
-        <li>This application is mobile friendly (regarding the UI, because regarding the CPU usage during a big
-            simulation it is far away to be mobile-friendly)</li>
+        <li>Simple UI - hopefully clear and good UX</li>
+        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU usage during a bigger simulation it is far away to be mobile-friendly)</li>
         <li>
             This article helped a lot to implement this tool:
-            <a
-                href="https://en.wikipedia.org/wiki/Quantum_logic_gate">https://en.wikipedia.org/wiki/Quantum_logic_gate</a>
+            <a href="https://en.wikipedia.org/wiki/Quantum_logic_gate">https://en.wikipedia.org/wiki/Quantum_logic_gate</a>
         </li>
     </ul>
 </section>
 
 <section>
     <h2>Program in list of quantum operations</h2>
-    <p>
-        This is like an assembler representation of the current quantum program.
-    </p>
-    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']">
-    </app-default-gate>
+    <p>This is like an assembler representation of the current quantum program.</p>
+    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']"></app-default-gate>
     <table>
         <tbody>
             <tr>
@@ -246,9 +241,7 @@
             that uses this software, please refer to this software and to its author.
         </p>
         <p>
-            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click
-                here.</a>
-            Copyright © All rights reserved
+            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here.</a>
         </p>
     </section>
 </section>
