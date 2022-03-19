@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  maxQubitsQuantity: 32
+  maxQubitsQuantity: 20
 };
 
 /*
