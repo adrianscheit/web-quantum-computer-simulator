@@ -56,8 +56,6 @@ export class AppComponent implements OnInit {
             }
             this.parseProgram();
         }
-
-        this.httpClient.get('/assets/visits.php?app=qcs').subscribe((value: any) => this.visits = value);
     }
 
     getIndexes(length: number): number[] {
