@@ -4,6 +4,8 @@ import { G, GateName } from './g';
 const x = new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X');
 const y = new G('Y', [new C(), new C(0, -1), new C(0, 1), new C()], 'Pauli-Y');
 const z = new G('Z', [new C(1), new C(), new C(), new C(-1)], 'Pauli-Z');
+
+/**Predefined quantum gates */
 export const gates: G[] = [
     x,
     y,
@@ -67,7 +69,7 @@ export const gates: G[] = [
     new G('XZ', G.gatesMultiplication(x, z), 'Serial connection of Pauli-Z and Pauli-X'),
     new G('YZ', G.gatesMultiplication(y, z), 'Serial connection of Pauli-Z and Pauli-Y'),
 ];
-
+/**quantum gate name -> G instance */
 export const gatesMap = new Map<GateName, G>(gates.map(g => [g.name, g]));
-
+/**TODO */
 export const noGate = new G(null, [new C(1)]);

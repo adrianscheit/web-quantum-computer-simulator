@@ -1,8 +1,10 @@
 import { environment } from '../../environments/environment';
 import { C } from './c';
 
+/**string limited only to implemented gate names */
 export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' | 'SWAP' | 'CCX' | '√X' | '√SWAP' | 'CSWAP' | 'XY' | 'XZ' | 'YZ';
 
+/**Quantum gate */
 export class G {
 
     constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {

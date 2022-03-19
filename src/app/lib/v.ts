@@ -26,6 +26,7 @@ export interface StepperData {
     endTime?: Date;
 }
 
+/**Vector of complex numbers */
 export class V {
 
     constructor(public state: C[] = [new C(1), new C()]) {
