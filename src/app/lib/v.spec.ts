@@ -1,6 +1,7 @@
+import { Result } from '../domain';
 import { C } from './c';
 import { gatesMap } from './gates';
-import { Result, V } from './v';
+import { V } from './v';
 
 export const vectorsEquals = (a: C[], b: C[], maxError: number = 0.01): boolean => {
     if (a.length !== b.length) {

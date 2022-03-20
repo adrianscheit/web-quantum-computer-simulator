@@ -1,4 +1,4 @@
-/**Complex number (its basic for quantum operations simulation) implementation */
+/** Complex number (its basic for quantum operations simulation) implementation */
 export class C {
     constructor(public r: number = 0, public i: number = 0) { }
 

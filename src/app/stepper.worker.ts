@@ -2,7 +2,8 @@
 
 import { C } from './lib/c';
 import { gatesMap } from './lib/gates';
-import { Operation, StepperData, V } from './lib/v';
+import { Operation, StepperData} from './domain';
+import { V } from './lib/v';
 
 
 addEventListener('message', ({ data }) => {

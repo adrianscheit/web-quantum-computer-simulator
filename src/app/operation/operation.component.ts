@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
 import { gates, gatesMap, noGate } from '../lib/gates';
-import { Operation } from '../lib/v';
+import { Operation } from '../domain';
 
 @Component({
     selector: 'app-operation',

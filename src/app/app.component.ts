@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { GateName } from './lib/g';
 import { gates, gatesMap, noGate } from './lib/gates';
-import { Operation, Result, StepperData } from './lib/v';
+import { Operation, Result, StepperData, GateName } from './domain';
 
 export interface GateGUI {
     o?: Operation;
@@ -269,7 +268,7 @@ export class AppComponent implements OnInit {
                 }
                 if (stepperData.callback) {
                     this.httpClient.get(stepperData.callback + encodeURIComponent(JSON.stringify(stepperData.results)))
-                        .subscribe(console.log, console.error);
+                        .subscribe({ next: console.log, error: console.error });
                 }
                 worker.terminate();
             }

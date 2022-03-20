@@ -1,32 +1,8 @@
+import { GateName, Result } from '../domain';
 import { C } from './c';
-import { G, GateName } from './g';
+import { G } from './g';
 
-export interface Result {
-    propability: number;
-    values: boolean[];
-}
-
-export interface Operation {
-    gn: GateName;
-    qi: number[];
-}
-
-export interface StepperData {
-    /// Input:
-    qubitsQuantity: number;
-    operations: Operation[];
-    id: number;
-    canceled?: true;
-    callback?: string;
-    /// Output:
-    operationsQuantity?: number;
-    startTime?: Date;
-    progress?: number;
-    results?: Result[];
-    endTime?: Date;
-}
-
-/**Vector of complex numbers */
+/** Vector of complex numbers */
 export class V {
 
     constructor(public state: C[] = [new C(1), new C()]) {
