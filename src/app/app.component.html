@@ -216,13 +216,9 @@
     <section>
         <h3>Private policy</h3>
         <p>
-            This site does not save any sensitive data.
-            The optional cookies are not used to identify the user, but only to save the current users operations/gates
-            sequence for future usage.
-            All calculations and data are performed and processed in the user web-browser that runs this site.
-            The software is saving the submitted user feedback together with the sending time. 
-            Providing sensitive data in the feedback field is forbidden.This site calculates the number of visits only
-            based on the number of page loading, and does not save any user data for it, does not use cookies for it.
+            This site may use one optional cookie, but it does not save any sensitive user data nor identifies the user.
+            The only optional cookie is only to save the current users operations/gates sequence for future usage.
+            All calculations and data are performed and processed in a web-browser that runs this site.
         </p>
         <p>
             Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data.
@@ -232,20 +228,17 @@
         <h3>Conditions & licence</h3>
         <p>
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
-            The software (nor its author) does not take responsibility for anything, including calculations results.
-            The software is free to use, but not free to copy or modify.
-            Modifications to the software are not allowed.
+            The software (nor its author) does not take responsibility for anything, including correctness of calculations results.
             The software (nor its author) does not take any responsibility for external links.
+            The software is free to use, but currently does not provide any more specific license, so rules for no license are valid.
         <p>
             Usage of this software for scientific purposes is fully allowed and welcomed, but for any scientific thesis
-            that uses this software, please refer to this software and to its author.
+            that uses this software, please refer to this software and to its author, and please inform the auther about his fact using GitHub
         </p>
         <p>
             <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here.</a>
         </p>
     </section>
 </section>
-
-<div>Visits: {{visits}}</div>
 
 <app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>

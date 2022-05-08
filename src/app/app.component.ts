@@ -257,7 +257,7 @@ export class AppComponent implements OnInit {
             callback
         };
         this.waitAtResult = true;
-        const worker = new Worker(new URL('./stepper.worker', import.meta.url));
+        const worker = new Worker(new URL('./stepper.worker', import .meta.url));
         this.workers[stepperData.id] = worker;
         worker.addEventListener('message', ({ data }) => {
             stepperData = data;
