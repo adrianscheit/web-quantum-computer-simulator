@@ -17,3 +17,12 @@ iframe {
     width: 100%;
     border: none;
 }
+
+.table-scroll {
+    display: block;
+    overflow-x: auto;
+}
+
+.table-scroll>table {
+    width: auto;
+}
