@@ -89,7 +89,7 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "webWorkerTsConfig": ["tsconfig.worker.json"]
           }
         },
         "e2e": {
@@ -106,6 +106,5 @@
         }
       }
     }
-  },
-  "defaultProject": "qcs"
+  }
 }
