@@ -21,7 +21,7 @@ describe('Gates tests', () => {
         const identMatrix: C[] = [];
         for (let i = 0; i < g.widthAndHeight; ++i) {
             for (let j = 0; j < g.widthAndHeight; ++j) {
-                identMatrix.push(new C(i === j ? 1 : 0))
+                identMatrix.push(new C(i === j ? 1 : 0));
             }
         }
 
