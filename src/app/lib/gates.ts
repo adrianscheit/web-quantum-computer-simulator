@@ -2,8 +2,8 @@ import { GateName } from 'src/app/domain';
 import { C } from './c';
 import { G } from './g';
 
-const x = new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X');
-const y = new G('Y', [new C(), new C(0, -1), new C(0, 1), new C()], 'Pauli-Y');
+export const x = new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X');
+export const y = new G('Y', [new C(), new C(0, -1), new C(0, 1), new C()], 'Pauli-Y');
 const z = new G('Z', [new C(1), new C(), new C(), new C(-1)], 'Pauli-Z');
 
 /** Predefined quantum gates */

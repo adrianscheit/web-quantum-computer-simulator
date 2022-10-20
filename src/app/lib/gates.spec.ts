@@ -1,3 +1,4 @@
+import { C } from './c';
 import { G } from './g';
 import { gates } from './gates';
 import { V } from './v';
@@ -14,5 +15,16 @@ describe('Gates tests', () => {
             const transformedReverse = startingVector.step(g, indexes.reverse());
             expect(vectorsEquals(startingVector.state, new V(transformedReverse).step(g, indexes.reverse()))).toBeTruthy();
         }
+    });
+
+    it.each(gates)('gatesMultiplication: %s square is an ident matrix', (g: G) => {
+        const identMatrix: C[] = [];
+        for (let i = 0; i < g.widthAndHeight; ++i) {
+            for (let j = 0; j < g.widthAndHeight; ++j) {
+                identMatrix.push(new C(i === j ? 1 : 0))
+            }
+        }
+
+        expect(G.gatesMultiplication(g, g)).toEqual(identMatrix);
     });
 });

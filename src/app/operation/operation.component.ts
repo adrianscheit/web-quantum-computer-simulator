@@ -68,7 +68,7 @@ export class OperationComponent {
         if (!Number.isInteger(this.newIndex) || this.newIndex < 0 || this.newIndex >= this.program.length) {
             return false;
         }
-        return !this.gate.getError(this.qi);
+        return !this.gate.validateQubitIndexes(this.qi);
     }
 
     close(): void {

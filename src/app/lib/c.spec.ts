@@ -1,10 +1,6 @@
 import { C } from './c';
 
 describe('Complex tests', () => {
-    beforeEach(() => {
-
-    });
-
     it('operator plus and minus', () => {
         expect(new C(2).plus(new C(3))).toEqual(new C(5));
         expect(new C(-2).plus(new C(3))).toEqual(new C(1));

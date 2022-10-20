@@ -4,6 +4,11 @@ import { C } from './c';
 
 /** Quantum gate */
 export class G {
+    readonly matrix: C[];
+    readonly desc: string;
+    readonly colspan: number;
+    readonly widthAndHeight: number;
+    readonly color: string;
 
     constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
         this.desc = desc ? desc : name ? name : 'ID';
@@ -21,11 +26,6 @@ export class G {
         };
         this.color = color ? color : colors[this.colspan] ? colors[this.colspan] : '#faa';
     }
-    readonly matrix: C[];
-    readonly desc: string;
-    readonly colspan: number;
-    readonly widthAndHeight: number;
-    readonly color: string;
 
     static gatesMultiplication(g0: G, g1: G): C[] {
         if (g0.widthAndHeight !== g1.widthAndHeight) {
@@ -48,7 +48,7 @@ export class G {
         return this.matrix[i * this.widthAndHeight + j];
     }
 
-    getError(qi: number[]): string {
+    validateQubitIndexes(qi: number[]): string | undefined {
         if (qi.length !== this.colspan) {
             return 'Incorrect number of qubits assigned to this gate';
         }

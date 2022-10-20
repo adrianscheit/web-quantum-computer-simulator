@@ -120,7 +120,7 @@ export class AppComponent implements OnInit {
                 this.errorMap.set(i, 'Gate name is not recognized');
                 continue;
             }
-            const error = gatesMap.get(step.gn).getError(step.qi);
+            const error = gatesMap.get(step.gn).validateQubitIndexes(step.qi);
             if (error) {
                 this.errorMap.set(i, error);
                 continue;
