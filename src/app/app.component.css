@@ -12,12 +12,6 @@
     background-color: #faa;
 }
 
-iframe {
-    height: 64px;
-    width: 100%;
-    border: none;
-}
-
 .table-scroll {
     display: block;
     overflow-x: auto;
