@@ -25,6 +25,6 @@ describe('Gates tests', () => {
             }
         }
 
-        expect(G.gatesMultiplication(g, g)).toEqual(identMatrix);
+        expect(vectorsEquals(G.gatesMultiplication(g, g), identMatrix)).toBeTruthy();
     });
 });

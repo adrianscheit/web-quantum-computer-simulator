@@ -66,9 +66,6 @@ export const gates: G[] = [
         new C(), new C(), new C(), new C(), new C(), new C(1), new C(), new C(),
         new C(), new C(), new C(), new C(), new C(), new C(), new C(), new C(1),
     ], 'Controlled SWAP'),
-    new G('XY', G.gatesMultiplication(x, y), 'Serial connection of Pauli-Y and Pauli-X'),
-    new G('XZ', G.gatesMultiplication(x, z), 'Serial connection of Pauli-Z and Pauli-X'),
-    new G('YZ', G.gatesMultiplication(y, z), 'Serial connection of Pauli-Z and Pauli-Y'),
 ];
 /** quantum gate name -> G instance */
 export const gatesMap = new Map<GateName, G>(gates.map(g => [g.name, g]));
