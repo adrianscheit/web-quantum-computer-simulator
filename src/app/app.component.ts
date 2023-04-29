@@ -284,7 +284,7 @@ export class AppComponent implements OnInit {
     complem(): void {
         let length = this.program.length;
         while (length) {
-            this.program.push(this.program[--length]);
+            this.program.push(JSON.parse(JSON.stringify(this.program[--length])));
         }
         this.parseProgram();
     }
