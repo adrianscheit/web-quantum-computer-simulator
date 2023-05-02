@@ -1,4 +1,4 @@
-import { GateName, Result } from '../domain';
+import { Result } from '../domain';
 import { C } from './c';
 import { G } from './g';
 
@@ -69,7 +69,7 @@ export class V {
         return resultState;
     }
 
-    calcResults(minPropability: number = 0.004): Result[] {
+    calcResults(minPropability = 0.004): Result[] {
         return this.state
             .map((c: C, i: number) => ({ propability: c.absSqer(), values: this.getQubitsValues(i) } as Result))
             .filter((result: Result) => result.propability > minPropability)

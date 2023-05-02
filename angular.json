@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -89,7 +92,9 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "webWorkerTsConfig": ["tsconfig.worker.json"]
+            "webWorkerTsConfig": [
+              "tsconfig.worker.json"
+            ]
           }
         },
         "e2e": {
@@ -102,6 +107,15 @@
             "production": {
               "devServerTarget": "qcs:serve:production"
             }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

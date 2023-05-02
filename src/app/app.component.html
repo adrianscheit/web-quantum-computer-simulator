@@ -41,7 +41,7 @@
             <tr *ngFor="let operation of program; let i=index" [class.invalid]="errorMap.has(i)">
                 <td>#{{i}}</td>
                 <td>{{operation.gn}}</td>
-                <td>{{getOperationQubitIndexes(operation.qi)}}</td>
+                <td><span *ngFor="let qi of operation.qi">{{qi}},</span></td>
                 <td>
                     <button type="button" (click)="addOperation(i,undefined)">Add before</button>
                     <button type="button" (click)="editOperation(i)">Edit</button>

@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(window.location);
         const hash = window.location.hash;
         if (hash) {
             const params = decodeURIComponent(hash).split('#');
@@ -282,15 +281,10 @@ export class AppComponent implements OnInit {
     }
 
     complem(): void {
-        let length = this.program.length;
-        while (length) {
-            this.program.push(JSON.parse(JSON.stringify(this.program[--length])));
+        for (let i = this.program.length - 1; i>=0; --i) {
+            this.program.push({gn: this.program[i].gn, qi: [...this.program[i].qi]});
         }
         this.parseProgram();
-    }
-
-    getOperationQubitIndexes(qi: number[]): string {
-        return qi.reduce((a, c) => a + ',' + c, '');
     }
 
 }
