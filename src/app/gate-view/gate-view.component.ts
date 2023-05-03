@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { G } from '../lib/g';
+import { noGate } from '../lib/gates';
 
 @Component({
     selector: 'app-gate-view',
@@ -7,5 +8,5 @@ import { G } from '../lib/g';
     styleUrls: ['./gate-view.component.css']
 })
 export class GateViewComponent {
-    @Input() gate: G;
+    @Input() gate: G = noGate;
 }

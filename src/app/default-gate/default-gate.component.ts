@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { gates } from '../lib/gates';
+import { GateName } from '../domain';
 
 @Component({
     selector: 'app-default-gate',
@@ -7,8 +8,7 @@ import { gates } from '../lib/gates';
     styleUrls: ['./default-gate.component.css']
 })
 export class DefaultGateComponent {
-
-    @Input() defaultGateName: string;
-    gates = gates;
-
+    @Input() gateName: GateName | undefined;
+    @Output() gateNameChange = new EventEmitter<GateName>();
+    readonly gates = gates;
 }

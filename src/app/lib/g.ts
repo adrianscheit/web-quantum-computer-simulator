@@ -10,7 +10,7 @@ export class G {
     readonly widthAndHeight: number;
     readonly color: string;
 
-    constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
+    constructor(public readonly name: GateName | undefined, m: C[], desc?: string, color?: string) {
         this.desc = desc ? desc : name ? name : 'ID';
         this.matrix = m;
         this.widthAndHeight = Math.sqrt(m.length);
@@ -18,12 +18,7 @@ export class G {
         if (this.colspan !== Math.round(this.colspan)) {
             throw new Error(`The gate is invalid because the matrix size is: ${m.length}`);
         }
-        const colors = {
-            0: '#ddd',
-            1: '#afd',
-            2: '#dfa',
-            3: '#dfd',
-        };
+        const colors = ['#ddd','#afd','#dfa','#dfd'];
         this.color = color ? color : colors[this.colspan] ? colors[this.colspan] : '#faa';
     }
 

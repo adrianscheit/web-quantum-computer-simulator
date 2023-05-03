@@ -5,7 +5,7 @@
 </div>
 <div [hidden]="!cookies">
     You agreed in the past, that this page is using cookies! If you want to revoke it:
-    <button type="button" (click)="cookies=false">Revoke cookies</button>
+    <button type="button" (click)="cookies=false">Revoke permisson and delete all cookies</button>
 </div>
 <section>
     <h1>Online quantum computer simulator in your browser!</h1>
@@ -15,14 +15,16 @@
         <li>The computer scale-up automatically as you add new operations</li>
         <li>
             For simulation time issue, try to keep the quantity of qubits low (more then 16 qubits requires some
-            noticeable amount of time to simulate, every qubit more makes the simulation about twice that slow)
+            noticeable amount of time to simulate, and every qubit more makes the simulation about twice that slow).
+            For time optimalization it is good to delete empty qubits before starting a simulation.
         </li>
         <li>Your program is not send to the server - it is running in your web-browser</li>
         <li>Simple UI - hopefully clear and good UX</li>
-        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU usage during a bigger simulation it is far away to be mobile-friendly)</li>
+        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)</li>
         <li>
-            This article helped a lot to implement this tool:
-            <a href="https://en.wikipedia.org/wiki/Quantum_logic_gate">https://en.wikipedia.org/wiki/Quantum_logic_gate</a>
+            KUDO to this article, that helped a lot to implement this tool:
+            <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate"></app-link>
+            It is also very helpful in case if someone does not understand quantum computing.
         </li>
     </ul>
 </section>
@@ -30,7 +32,7 @@
 <section>
     <h2>Program in list of quantum operations</h2>
     <p>This is like an assembler representation of the current quantum program.</p>
-    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']"></app-default-gate>
+    <app-default-gate [(gateName)]="defaultGateName"></app-default-gate>
     <table>
         <tbody>
             <tr>
@@ -66,8 +68,7 @@
         Click into the table on an empty field to a add new operation/gate.
         Click into the table on an existing operation/gate to edit it.
     </p>
-    <app-default-gate [defaultGateName]="defaultGateName" (change)="defaultGateName=$event.target['value']">
-    </app-default-gate>
+    <app-default-gate [(gateName)]="defaultGateName"></app-default-gate>
     <div class="table-scroll">
         <table>
             <tbody>
@@ -110,7 +111,7 @@
 <section>
     <label>
         <h2>Program represents the operations in JSON</h2>
-        <textarea (input)="setProgramJson($event.target['value'])" [value]="programJson"
+        <textarea (input)="setProgramJson(eventTargetValue($event))" [value]="programJson"
             [class.invalid]="jsonError"></textarea>
     </label>
     <button type="button" (click)="simulate()">Simulate</button>
@@ -150,12 +151,12 @@
                 <span *ngIf="result.canceled">(canceled)</span>
             </h3>
             <ul>
-                <li>Simulation started: {{result.startTime.toLocaleTimeString()}}</li>
+                <li>Simulation started: {{result.startTime?.toLocaleTimeString()}}</li>
                 <li>Number of qubits: {{result.qubitsQuantity}}</li>
                 <li>Number of operations: {{result.operationsQuantity}}</li>
-                <li [hidden]="result.results">Progress: {{result.progress*100 | number:'.1-2'}}%</li>
-                <li *ngIf="result.results">End time: {{result.endTime.toLocaleTimeString()}}; simulation time:
-                    {{result.endTime.getTime()-result.startTime.getTime()}}ms</li>
+                <li [hidden]="result.results">Progress: {{result.progress! * 100 | number:'.1-2'}}%</li>
+                <li *ngIf="result.results">End time: {{result.endTime!.toLocaleTimeString()}}; simulation time:
+                    {{result.endTime!.getTime()-result.startTime!.getTime()}}ms</li>
                 <li *ngIf="result.callback">The result will be send to: {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
             </ul>
             <div *ngIf="result.results">
@@ -217,11 +218,11 @@
         <h3>Private policy</h3>
         <p>
             This site may use one optional cookie, but it does not save any sensitive user data nor identifies the user.
-            The only optional cookie is only to save the current users operations/gates sequence for future usage.
-            All calculations and data are performed and processed in a web-browser that runs this site.
+            The only optional cookie is only to save the current users operations/gates sequence for a future usage.
+            All calculations and data are performed and processed in a user web-browser.
         </p>
         <p>
-            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data.
+            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data due to privacy legal issues.
         </p>
     </section>
     <section>
@@ -230,9 +231,9 @@
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
             The software (nor its author) does not take responsibility for anything, including correctness of calculations results.
             The software (nor its author) does not take any responsibility for external links.
-            The software is free to use, but currently does not provide any more specific license, so rules for no license are valid.
+            The software is free to use, but currently does not provide any more specific license, so rules for "no license" are valid.
         <p>
-            Usage of this software for scientific purposes is fully allowed and welcomed, but for any scientific thesis
+            Usage of this software for scientific purposes is fully allowed and appreciated, but for any scientific thesis
             that uses this software, please refer to this software and to its author, and please inform the auther about his fact using GitHub
         </p>
         <p>

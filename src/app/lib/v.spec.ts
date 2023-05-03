@@ -82,13 +82,13 @@ describe('Vector tests', () => {
     });
 
     it('step simple', () => {
-        expect(new V([new C(1), new C(0)]).step(gatesMap.get('X'), [0])).toEqual([new C(0), new C(1)]);
-        expect(new V([new C(0), new C(1)]).step(gatesMap.get('X'), [0])).toEqual([new C(1), new C(0)]);
+        expect(new V([new C(1), new C(0)]).step(gatesMap.get('X')!, [0])).toEqual([new C(0), new C(1)]);
+        expect(new V([new C(0), new C(1)]).step(gatesMap.get('X')!, [0])).toEqual([new C(1), new C(0)]);
     });
 
     it('step more complex', () => {
-        expect(new V(V.newSimpleState(2, 0)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 0));
-        expect(new V(V.newSimpleState(2, 1)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 3));
-        expect(new V(V.newSimpleState(2, 2)).step(gatesMap.get('CX'), [0, 1])).toEqual(V.newSimpleState(2, 2));
+        expect(new V(V.newSimpleState(2, 0)).step(gatesMap.get('CX')!, [0, 1])).toEqual(V.newSimpleState(2, 0));
+        expect(new V(V.newSimpleState(2, 1)).step(gatesMap.get('CX')!, [0, 1])).toEqual(V.newSimpleState(2, 3));
+        expect(new V(V.newSimpleState(2, 2)).step(gatesMap.get('CX')!, [0, 1])).toEqual(V.newSimpleState(2, 2));
     });
 });

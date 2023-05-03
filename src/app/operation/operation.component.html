@@ -2,7 +2,7 @@
     <div class="dialog" (click)="$event.stopPropagation()">
         <label>
             Operation #
-            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="index" (change)="setIndex(+$event.target['value'])" />
+            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="index" (change)="setIndex(+eventTargetValue($event))" />
             of
             {{program.length}}
         </label>
@@ -13,7 +13,7 @@
         <label *ngFor="let i of qi; let ii=index">
             Input #{{ii}} is assigned to qubit #
             <input type="number" [class.invalid]="!valid" required step="1" min="0" max="31" [value]="i"
-                (change)="setQubitIndex(ii, +$event.target['value'])" />
+                (change)="setQubitIndex(ii, +eventTargetValue($event))" />
         </label>
         <p [hidden]="valid" class="invalid">This operation will not be saved if it is invalid</p>
         <button type="button" [disabled]="!valid" (click)="close()">OK / Close</button>

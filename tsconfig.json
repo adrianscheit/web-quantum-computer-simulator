@@ -9,7 +9,7 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
+    "strict": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",

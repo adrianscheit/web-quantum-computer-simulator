@@ -9,7 +9,7 @@ export interface Result {
 
 /** Single quantum operation definition */
 export interface Operation {
-    gn: GateName;
+    gn: GateName | undefined;
     qi: number[];
 }
 
@@ -17,7 +17,7 @@ export interface Operation {
 export interface StepperData {
     /// Input:
     qubitsQuantity: number;
-    operations: Operation[];
+    operations?: Operation[];
     id: number;
     canceled?: true;
     callback?: string;

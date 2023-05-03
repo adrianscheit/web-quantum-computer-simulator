@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { gates, gatesMap, noGate } from './lib/gates';
 import { Operation, Result, StepperData, GateName } from './domain';
+import { G } from './lib/g';
+import { Utils } from './utils/utils';
 
 export interface GateGUI {
     o?: Operation;
@@ -22,20 +24,19 @@ export class AppComponent implements OnInit {
 
     program: Operation[] = [];
     programGUI: GateGUI[][] = [];
-    programJson: string;
+    programJson: string = '';
     errorMap: Map<number, string> = new Map<number, string>();
-    jsonError: string = undefined;
+    jsonError: string | undefined;
 
-    currentOperationIndex: number = undefined;
+    currentOperationIndex: number | undefined;
     defaultGateName: GateName = 'H';
 
     waitAtResult = false;
-    quickResult: Result[] = undefined;
+    quickResult: Result[] | undefined;
     results: StepperData[] = [];
     workers: Worker[] = [];
 
     readonly gates = gates;
-    visits: number = undefined;
 
     constructor(private httpClient: HttpClient) {
     }
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit {
             this.setProgramJson(decodeURIComponent(params[1]));
             this.simulate(params[2]);
         } else {
-            this.programJson = localStorage.getItem('program');
+            this.programJson = localStorage.getItem('program') || '';
             if (this.programJson) {
                 this.parseProgramJson();
                 this.cookies = true;
@@ -60,11 +61,13 @@ export class AppComponent implements OnInit {
         return Array(length).fill(0).map((_, index) => index);
     }
 
+    eventTargetValue = Utils.eventTargetValue;
+
     /// Cookies -------------------------------------------------------------------------------
 
     set cookies(enabled: boolean) {
         if (enabled) {
-            localStorage.setItem('program', this.programJson);
+            localStorage.setItem('program', this.programJson!);
         } else {
             localStorage.clear();
         }
@@ -92,8 +95,8 @@ export class AppComponent implements OnInit {
         try {
             this.program = JSON.parse(this.programJson);
             this.parseProgram();
-        } catch (e) {
-            this.jsonError = e;
+        } catch (e: any) {
+            this.jsonError = e.message;
         }
     }
 
@@ -115,11 +118,13 @@ export class AppComponent implements OnInit {
         // Validation:
         for (let i = 0; i < this.program.length; ++i) {
             const step = this.program[i];
-            if (!gatesMap.has(step.gn)) {
+            const gate: G | undefined = gatesMap.get(step.gn);
+
+            if (!gate) {
                 this.errorMap.set(i, 'Gate name is not recognized');
                 continue;
             }
-            const error = gatesMap.get(step.gn).validateQubitIndexes(step.qi);
+            const error = gate.validateQubitIndexes(step.qi);
             if (error) {
                 this.errorMap.set(i, error);
                 continue;
@@ -144,7 +149,7 @@ export class AppComponent implements OnInit {
                 }
             }
             for (let j = 0; j < step.qi.length; ++j) {
-                newProgramGUIRow.set(step.qi[j], { o: step, oi: i, ii: j, color: gatesMap.get(step.gn).color });
+                newProgramGUIRow.set(step.qi[j], { o: step, oi: i, ii: j, color: gatesMap.get(step.gn)!.color });
             }
         }
         this.addRowToProgramGUI(newProgramGUIRow);
@@ -157,8 +162,8 @@ export class AppComponent implements OnInit {
         let oi = Math.min(this.program.length, ...[...rowDescription.values()].map(g => g.oi));
         for (let i = 0; i <= this.qubitsQuantity; ++i) {
             if (rowDescription.has(i)) {
-                row.push(rowDescription.get(i));
-                oi = Math.max(rowDescription.get(i).oi + 1, oi);
+                row.push(rowDescription.get(i)!);
+                oi = Math.max(rowDescription.get(i)!.oi + 1, oi);
             } else {
                 row.push({ oi, color: noGate.color });
             }
@@ -214,10 +219,10 @@ export class AppComponent implements OnInit {
 
     /// Operation operations --------------------------------------------------------------
 
-    addOperation(index: number, qubitIndex: number): void {
+    addOperation(index: number, qubitIndex: number | undefined): void {
         const newOperation: Operation = { gn: this.defaultGateName, qi: qubitIndex === undefined ? [] : [qubitIndex] };
         this.program.splice(index, 0, newOperation);
-        if (gatesMap.get(this.defaultGateName).colspan !== 1 || qubitIndex === undefined) {
+        if (gatesMap.get(this.defaultGateName)!.colspan !== 1 || qubitIndex === undefined) {
             this.currentOperationIndex = index;
         } else {
             this.parseProgram();

@@ -11,8 +11,9 @@ addEventListener('message', ({ data }) => {
 
     const stepperData: StepperData = data;
 
-    const operations = stepperData.operations;
+    const operations: Operation[] = stepperData.operations!;
     stepperData.operations = undefined;
+
     stepperData.operationsQuantity = operations.length;
     const gates = operations.map((o: Operation) => gatesMap.get(o.gn));
 
@@ -34,7 +35,7 @@ addEventListener('message', ({ data }) => {
             lastMessageTime = new Date();
         }
         const temp = state.state;
-        state.step(gates[i], operations[i].qi, resultState);
+        state.step(gates[i]!, operations[i].qi, resultState);
         state.state = resultState;
         resultState = temp;
     }

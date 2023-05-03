@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
 import { gates, gatesMap, noGate } from '../lib/gates';
 import { Operation } from '../domain';
+import { Utils } from '../utils/utils';
 
 @Component({
     selector: 'app-operation',
@@ -9,31 +10,31 @@ import { Operation } from '../domain';
     styleUrls: ['./operation.component.css']
 })
 export class OperationComponent {
-    @Input() program: Operation[];
-    @Input() set index(index: number) {
-        this.orginalIndexCopy = index;
+    @Input() program: Operation[] = [];
+    @Input() set index(index: number | undefined) {
+        this._index = index;
         if (index !== undefined) {
             this.newIndex = index;
             this.qi = [...this.program[index].qi];
             this.deletedQi = [];
             if (gatesMap.has(this.program[index].gn)) {
-                this.setGate(gatesMap.get(this.program[index].gn));
+                this.setGate(gatesMap.get(this.program[index].gn)!);
             } else {
                 this.gate = noGate;
             }
         }
     }
-    get index(): number {
-        return this.orginalIndexCopy;
+    get index(): number | undefined {
+        return this._index;
     }
     @Output() exit = new EventEmitter<void>();
 
-    private orginalIndexCopy: number;
+    private _index: number | undefined;
 
-    private newIndex: number;
-    qi: number[];
-    private deletedQi: number[];
-    gate: G;
+    private newIndex: number = -1;
+    qi: number[] = [];
+    private deletedQi: number[] = [];
+    gate: G = noGate;
     readonly gates: G[] = gates;
     valid = true;
 
@@ -46,9 +47,9 @@ export class OperationComponent {
         this.gate = newGate;
         while (this.qi.length !== this.gate.colspan) {
             if (this.qi.length < this.gate.colspan) {
-                this.qi.push(this.deletedQi.length ? this.deletedQi.pop() : Math.max(-1, ...this.qi) + 1);
+                this.qi.push(this.deletedQi.length ? this.deletedQi.pop()! : Math.max(-1, ...this.qi) + 1);
             } else {
-                this.deletedQi.push(this.qi.pop());
+                this.deletedQi.push(this.qi.pop()!);
             }
         }
         this.valid = this.isValid();
@@ -60,7 +61,7 @@ export class OperationComponent {
     }
 
     del(): void {
-        this.program.splice(this.index, 1);
+        this.program.splice(this.index!, 1);
         this.exit.emit();
     }
 
@@ -73,12 +74,14 @@ export class OperationComponent {
 
     close(): void {
         if (this.valid) {
-            this.program[this.index].gn = this.gate.name;
-            this.program[this.index].qi = this.qi;
+            this.program[this.index!].gn = this.gate.name;
+            this.program[this.index!].qi = this.qi;
             if (this.index !== this.newIndex) {
-                this.program.splice(this.newIndex, 0, ...this.program.splice(this.index, 1));
+                this.program.splice(this.newIndex, 0, ...this.program.splice(this.index!, 1));
             }
         }
         this.exit.emit();
     }
+
+    eventTargetValue = Utils.eventTargetValue;
 }
