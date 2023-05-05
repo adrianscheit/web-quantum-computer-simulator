@@ -138,6 +138,7 @@ export class AppComponent implements OnInit {
         this.jsonError = undefined;
 
         // Update GUI:
+        this.programGUI.push(Array(this.qubitsQuantity + 1).fill({ oi: 0, color: noGate.color }));
         const newProgramGUIRow = new Map<number, GateGUI>();
         for (let i = 0; i < this.operationsService.operations.length; ++i) {
             const step = this.operationsService.operations[i];
@@ -192,24 +193,6 @@ export class AppComponent implements OnInit {
                     --(this.operationsService.operations[i].qi[j]);
                 }
             }
-        }
-        this.parseProgram();
-    }
-
-    addStep(index: number): void {
-        this.programGUI.splice(
-            index,
-            0,
-            Array(this.qubitsQuantity + 1).fill({ oi: this.programGUI[index][0].oi, color: noGate.color })
-        );
-    }
-
-    deleteStep(index: number): void {
-        const indexes = new Set<number>(this.programGUI[index].filter(g => g.o).map(g => g.oi));
-        if (indexes.size) {
-            const min = Math.min(...indexes.values());
-            const max = Math.max(...indexes.values());
-            this.operationsService.operations.splice(min, max - min + 1);
         }
         this.parseProgram();
     }
