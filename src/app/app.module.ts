@@ -9,6 +9,7 @@ import { DefaultGateComponent } from './gate-select/default-gate/default-gate.co
 import { HttpClientModule } from '@angular/common/http';
 import { LinkComponent } from './link/link.component';
 import { GateSelectComponent } from './gate-select/gate-select.component';
+import { SampleCodeComponent } from './sample-code/sample-code.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { GateSelectComponent } from './gate-select/gate-select.component';
     OperationComponent,
     DefaultGateComponent,
     LinkComponent,
-    GateSelectComponent
+    GateSelectComponent,
+    SampleCodeComponent
   ],
   imports: [
     BrowserModule,

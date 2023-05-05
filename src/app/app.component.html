@@ -112,26 +112,14 @@
     <button type="button" (click)="simulate()">Simulate</button>
     <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
     <ul>
-        <li>
-            Produce 2 entangled qubits:
-            <span class="code">{{'[{"gn":"H","qi":[0]},{"gn":"CX","qi":[0,1]}]'}}</span>
-        </li>
-        <li>
-            <p>
-                Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-                traditional communication channel):
-                <span class="code">
-                    {{'[{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}
-                </span>
-            </p>
-            <p>
-                Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-                traditional communication channel):
-                <span class="code">
-                    {{'[{"gn":"X","qi":[0]},{"gn":"H","qi":[1]},{"gn":"CX","qi":[1,2]},{"gn":"CX","qi":[0,1]},{"gn":"H","qi":[0]},{"gn":"CX","qi":[1,2]},{"gn":"CZ","qi":[0,2]}]'}}
-                </span>
-            </p>
-        </li>
+        <li><app-sample-code [code]="[{gn:'H',qi:[0]},{gn:'CX',qi:[0,1]}]">Produce 2 entangled qubits:</app-sample-code></li>
+        <li><app-sample-code [code]="[{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+            Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a traditional communication channel):
+        </app-sample-code></li>
+        <li><app-sample-code [code]="[{'gn':'X','qi':[0]},{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+            Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+            traditional communication channel):
+        </app-sample-code></li>
     </ul>
 </section>
 

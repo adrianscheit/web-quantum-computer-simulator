@@ -18,15 +18,3 @@ table {
 th, td {
     border: 1px solid #777;
 }
-
-.code {
-    word-break: break-all;
-    word-wrap: break-word;
-    border: 1px solid #444;
-    background-color: #eee;
-    padding: 4px;
-    box-sizing: border-box;
-    display: inline-block;
-    font-family: monospace;
-    margin: 8px;
-}
