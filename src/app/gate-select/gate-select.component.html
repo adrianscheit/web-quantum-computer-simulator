@@ -1,7 +1,7 @@
 <label>
     Gate:
     <select (change)="change(eventTargetValue($event))">
-        <option disabled></option>
+        <option disabled [selected]="!gate"></option>
         <option *ngFor="let g of gates" [value]="g.name" [selected]="gate===g">
             {{g.name}} - {{g.desc}}
         </option>

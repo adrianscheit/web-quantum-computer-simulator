@@ -17,30 +17,30 @@ export class OperationsService {
         for (let i = this.operations.length - 1; i >= 0; --i) {
             this.operations.push({ gn: this.operations[i].gn, qi: [...this.operations[i].qi] });
         }
-        this.update();
+        this.emitChange();
     }
 
     set(operations: Operation[]): void {
         this._operations = operations;
-        this.update();
+        this.emitChange();
     }
 
     add(index: number, operation: Operation): void {
         this._add(index, operation);
-        this.update();
+        this.emitChange();
     }
 
     move(oldIndex: number, newIndex: number): void {
         this._add(newIndex, this._remove(oldIndex));
-        this.update();
+        this.emitChange();
     }
 
     remove(index: number): void {
         this._remove(index);
-        this.update();
+        this.emitChange();
     }
 
-    update(): void {
+    emitChange(): void {
         this._operationsChange.next();
     }
 

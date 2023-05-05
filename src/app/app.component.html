@@ -20,10 +20,18 @@
         </li>
         <li>Your program is not send to the server - it is running in your web-browser</li>
         <li>Simple UI - hopefully clear and good UX</li>
-        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)</li>
+        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU
+            usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)
+        </li>
         <li>
             <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate">
-                KUDO to this article, that helped a lot to implement this tool. It is also very helpful in case if someone does not understand quantum computing:
+                KUDO to this article, that helped a lot to implement this tool. It is also very helpful in case if
+                someone does not understand quantum computing:
+            </app-link>
+        </li>
+        <li>
+            <app-link link="https://www.youtube.com/watch?v=F_Riqjdh2oM&ab_channel=MicrosoftResearch">
+                KUDO to this lecture, as it helped me to learn quantum computing:
             </app-link>
         </li>
     </ul>
@@ -43,13 +51,9 @@
             <tr>
                 <td colspan="3"><button type="button" (click)="addOperation(0,undefined)">+</button></td>
             </tr>
-            <tr
-                *ngFor="let operation of operationsService.operations; let i=index"
-                [style.background-color]="gatesMap.get(operation.gn)?.color"
-                class="cursor-pointer"
-                [class.invalid]="errorMap.has(i)"
-                (click)="editOperation(i)"
-            >
+            <tr *ngFor="let operation of operationsService.operations; let i=index"
+                [style.background-color]="gatesMap.get(operation.gn)?.color" class="cursor-pointer"
+                [class.invalid]="validatedOperationsService.errorMap.has(i)" (click)="editOperation(i)">
                 <td>#{{i}}</td>
                 <td>{{operation.gn}}</td>
                 <td><span *ngFor="let qi of operation.qi">{{qi}},</span></td>
@@ -57,13 +61,13 @@
                     <button type="button" (click)="operationsService.remove(i)">-</button>
                     <button type="button" (click)="addOperation(i+1,undefined)">+</button>
                 </td>
-                <td>{{errorMap.get(i)}}</td>
+                <td>{{validatedOperationsService.errorMap.get(i)}}</td>
             </tr>
         </tbody>
     </table>
 </section>
 
-<section *ngIf="errorMap.size===0">
+<section>
     <h2>Program in 2D gates table representation</h2>
     <p>
         This representation shows what may be executed in parallel.
@@ -77,11 +81,11 @@
             <tbody>
                 <tr>
                     <th></th>
-                    <th *ngFor="let i of getIndexes(qubitsQuantity)">
+                    <th *ngFor="let used of validatedOperationsService.usedQubit; let i=index">
                         <div class="column">
                             <button type="button" type="button" (click)="addQubitBefore(i)">Add before</button>
                             QuBit#{{i}}
-                            <button type="button" (click)="deleteQubit(i)">Delete</button>
+                            <button *ngIf="!used" type="button" (click)="deleteQubit(i)">Delete</button>
                         </div>
                     </th>
                     <th>New qubit</th>
@@ -94,7 +98,7 @@
                 </tr>
                 <tr *ngIf="quickResult">
                     <th>Prop.:</th>
-                    <th [colSpan]="qubitsQuantity">Results:</th>
+                    <th [colSpan]="validatedOperationsService.qubitsQuantity">Results:</th>
                 </tr>
                 <tr *ngFor="let r of quickResult">
                     <td>{{r.propability * 100 | number: '.0-1'}}%</td>
@@ -116,14 +120,18 @@
     <button type="button" (click)="simulate()">Simulate</button>
     <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
     <ul>
-        <li><app-sample-code [code]="[{gn:'H',qi:[0]},{gn:'CX',qi:[0,1]}]">Produce 2 entangled qubits:</app-sample-code></li>
-        <li><app-sample-code [code]="[{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
-            Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a traditional communication channel):
-        </app-sample-code></li>
-        <li><app-sample-code [code]="[{'gn':'X','qi':[0]},{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
-            Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-            traditional communication channel):
-        </app-sample-code></li>
+        <li><app-sample-code [code]="[{gn:'H',qi:[0]},{gn:'CX',qi:[0,1]}]">Produce 2 entangled qubits:</app-sample-code>
+        </li>
+        <li><app-sample-code
+                [code]="[{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+                Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+                traditional communication channel):
+            </app-sample-code></li>
+        <li><app-sample-code
+                [code]="[{'gn':'X','qi':[0]},{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+                Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+                traditional communication channel):
+            </app-sample-code></li>
     </ul>
 </section>
 
@@ -144,7 +152,8 @@
                 <li [hidden]="result.results">Progress: {{result.progress! * 100 | number:'.1-2'}}%</li>
                 <li *ngIf="result.results">End time: {{result.endTime!.toLocaleTimeString()}}; simulation time:
                     {{result.endTime!.getTime()-result.startTime!.getTime()}}ms</li>
-                <li *ngIf="result.callback">The result will be send to: {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
+                <li *ngIf="result.callback">The result will be send to:
+                    {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
             </ul>
             <div *ngIf="result.results">
                 Results:
@@ -209,24 +218,30 @@
             All calculations and data are performed and processed in a user web-browser.
         </p>
         <p>
-            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data due to privacy legal issues.
+            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data due to
+            privacy legal issues.
         </p>
     </section>
     <section>
         <h3>Conditions & licence</h3>
         <p>
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
-            The software (nor its author) does not take responsibility for anything, including correctness of calculations results.
+            The software (nor its author) does not take responsibility for anything, including correctness of
+            calculations results.
             The software (nor its author) does not take any responsibility for external links.
-            The software is free to use, but currently does not provide any more specific license, so rules for "no license" are valid.
+            The software is free to use, but currently does not provide any more specific license, so rules for "no
+            license" are valid.
         <p>
-            Usage of this software for scientific purposes is fully allowed and appreciated, but for any scientific thesis
-            that uses this software, please refer to this software and to its author, and please inform the auther about his fact using GitHub
+            Usage of this software for scientific purposes is fully allowed and appreciated, but for any scientific
+            thesis
+            that uses this software, please refer to this software and to its author, and please inform the auther about
+            his fact using GitHub
         </p>
         <p>
-            <app-link link="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here: </app-link>
+            <app-link link="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click
+                here: </app-link>
         </p>
     </section>
 </section>
 
-<app-operation [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>
+<app-operation [index]="operationIndex" (exit)="exitOperation()"></app-operation>
