@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { gatesMap } from '../lib/gates';
+import { x } from '../lib/gates';
 
 import { GateViewComponent } from './gate-view.component';
 
@@ -17,7 +17,7 @@ describe('GateViewComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(GateViewComponent);
         component = fixture.componentInstance;
-        component.gate = gatesMap.get('X');
+        component.gate = x;
         fixture.detectChanges();
     });
 

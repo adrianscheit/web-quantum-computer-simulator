@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
 
     set cookies(enabled: boolean) {
         if (enabled) {
-            localStorage.setItem('program', this.programJson!);
+            localStorage.setItem('program', this.programJson);
         } else {
             localStorage.clear();
         }
@@ -95,8 +95,8 @@ export class AppComponent implements OnInit {
         try {
             this.program = JSON.parse(this.programJson);
             this.parseProgram();
-        } catch (e: any) {
-            this.jsonError = e.message;
+        } catch (e) {
+            this.jsonError = (e as any).message;
         }
     }
 
@@ -285,7 +285,7 @@ export class AppComponent implements OnInit {
         this.results[index].canceled = true;
     }
 
-    complem(): void {
+    complement(): void {
         for (let i = this.program.length - 1; i>=0; --i) {
             this.program.push({gn: this.program[i].gn, qi: [...this.program[i].qi]});
         }
