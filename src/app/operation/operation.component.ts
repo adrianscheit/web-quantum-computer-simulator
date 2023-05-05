@@ -20,7 +20,7 @@ export class OperationComponent {
             if (gatesMap.has(this.program[index].gn)) {
                 this.setGate(gatesMap.get(this.program[index].gn)!);
             } else {
-                this.gate = noGate;
+                this.gate = undefined;
             }
         }
     }
@@ -34,7 +34,7 @@ export class OperationComponent {
     private newIndex: number = -1;
     qi: number[] = [];
     private deletedQi: number[] = [];
-    gate: G = noGate;
+    gate: G | undefined;
     readonly gates: G[] = gates;
     valid = true;
 
@@ -69,12 +69,12 @@ export class OperationComponent {
         if (!Number.isInteger(this.newIndex) || this.newIndex < 0 || this.newIndex >= this.program.length) {
             return false;
         }
-        return !this.gate.validateQubitIndexes(this.qi);
+        return this.gate !== undefined && !this.gate.validateQubitIndexes(this.qi);
     }
 
     close(): void {
         if (this.valid) {
-            this.program[this.index!].gn = this.gate.name;
+            this.program[this.index!].gn = this.gate!.name;
             this.program[this.index!].qi = this.qi;
             if (this.index !== this.newIndex) {
                 this.program.splice(this.newIndex, 0, ...this.program.splice(this.index!, 1));
