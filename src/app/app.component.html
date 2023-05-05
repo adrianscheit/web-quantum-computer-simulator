@@ -32,7 +32,7 @@
 <section>
     <h2>Program in list of quantum operations</h2>
     <p>This is like an assembler representation of the current quantum program.</p>
-    <app-default-gate [(gateName)]="defaultGateName"></app-default-gate>
+    <app-default-gate [(gate)]="defaultGate"></app-default-gate>
     <table>
         <tbody>
             <tr>
@@ -68,7 +68,7 @@
         Click into the table on an empty field to a add new operation/gate.
         Click into the table on an existing operation/gate to edit it.
     </p>
-    <app-default-gate [(gateName)]="defaultGateName"></app-default-gate>
+    <app-default-gate [(gate)]="defaultGate"></app-default-gate>
     <div class="table-scroll">
         <table>
             <tbody>

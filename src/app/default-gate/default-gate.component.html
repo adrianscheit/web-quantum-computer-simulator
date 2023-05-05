@@ -1,6 +1,0 @@
-<label>
-    Default gate:
-    <select>
-        <option *ngFor="let g of gates" [value]="g.name" [selected]="gateName===g.name" (click)="gateNameChange.emit(g.name)">{{g.name}}</option>
-    </select>
-</label>

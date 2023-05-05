@@ -5,9 +5,10 @@ import { AppComponent } from './app.component';
 import { GateComponent } from './gate/gate.component';
 import { GateViewComponent } from './gate-view/gate-view.component';
 import { OperationComponent } from './operation/operation.component';
-import { DefaultGateComponent } from './default-gate/default-gate.component';
+import { DefaultGateComponent } from './gate-select/default-gate/default-gate.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LinkComponent } from './link/link.component';
+import { GateSelectComponent } from './gate-select/gate-select.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { LinkComponent } from './link/link.component';
     GateViewComponent,
     OperationComponent,
     DefaultGateComponent,
-    LinkComponent
+    LinkComponent,
+    GateSelectComponent
   ],
   imports: [
     BrowserModule,

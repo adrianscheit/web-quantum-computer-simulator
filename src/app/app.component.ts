@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { gates, gatesMap, noGate } from './lib/gates';
+import { gates, gatesMap, noGate, x } from './lib/gates';
 import { Operation, Result, StepperData, GateName } from './domain';
 import { G } from './lib/g';
 import { Utils } from './utils/utils';
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     jsonError: string | undefined;
 
     currentOperationIndex: number | undefined;
-    defaultGateName: GateName = 'H';
+    defaultGate: G = x;
 
     waitAtResult = false;
     quickResult: Result[] | undefined;
@@ -220,9 +220,9 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number | undefined): void {
-        const newOperation: Operation = { gn: this.defaultGateName, qi: qubitIndex === undefined ? [] : [qubitIndex] };
+        const newOperation: Operation = { gn: this.defaultGate.name, qi: qubitIndex === undefined ? [] : [qubitIndex] };
         this.program.splice(index, 0, newOperation);
-        if (gatesMap.get(this.defaultGateName)!.colspan !== 1 || qubitIndex === undefined) {
+        if (this.defaultGate.colspan !== 1 || qubitIndex === undefined) {
             this.currentOperationIndex = index;
         } else {
             this.parseProgram();

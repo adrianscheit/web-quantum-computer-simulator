@@ -1,0 +1,9 @@
+<label>
+    Gate:
+    <select>
+        <option *ngFor="let g of gates" [value]="g.name" [selected]="gate?.name===g.name" (click)="gateChange.emit(g)">
+            {{g.name}} - {{g.desc}}
+        </option>
+    </select>
+</label>
+<app-gate-view *ngIf="gate" [gate]="gate"></app-gate-view>
