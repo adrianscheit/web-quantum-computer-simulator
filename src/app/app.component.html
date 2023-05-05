@@ -45,14 +45,18 @@
             </tr>
             <tr
                 *ngFor="let operation of operationsService.operations; let i=index"
-                style="background-color: {{gatesMap.get(operation.gn)?.color}};"
+                [style.background-color]="gatesMap.get(operation.gn)?.color"
+                class="cursor-pointer"
                 [class.invalid]="errorMap.has(i)"
                 (click)="editOperation(i)"
             >
                 <td>#{{i}}</td>
                 <td>{{operation.gn}}</td>
                 <td><span *ngFor="let qi of operation.qi">{{qi}},</span></td>
-                <td (click)="$event.stopPropagation()"><button type="button" (click)="addOperation(i+1,undefined)">+</button></td>
+                <td (click)="$event.stopPropagation()">
+                    <button type="button" (click)="operationsService.remove(i)">-</button>
+                    <button type="button" (click)="addOperation(i+1,undefined)">+</button>
+                </td>
                 <td>{{errorMap.get(i)}}</td>
             </tr>
         </tbody>

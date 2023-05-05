@@ -184,13 +184,12 @@ export class AppComponent implements OnInit {
     }
 
     deleteQubit(index: number): void {
-        for (let i = 0; i < this.operationsService.operations.length; ++i) {
-            for (let j = 0; j < this.operationsService.operations[i].qi.length; ++j) {
-                if (this.operationsService.operations[i].qi[j] === index) {
-                    this.operationsService.operations.splice(i--, 1);
-                    break;
-                } else if (this.operationsService.operations[i].qi[j] > index) {
-                    --(this.operationsService.operations[i].qi[j]);
+        for (const step of this.operationsService.operations) {
+            for (let j = 0; j < step.qi.length; ++j) {
+                if (step.qi[j] === index) {
+                    throw new Error('Deleting operations by deleting a qubit is forbidden!');
+                } else if (step.qi[j] > index) {
+                    --(step.qi[j]);
                 }
             }
         }
