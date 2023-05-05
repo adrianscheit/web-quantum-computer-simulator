@@ -7,7 +7,7 @@
             {{program.length}}
         </label>
         <div>
-            <app-gate-select [gate]="gate" (gateChange)="setGate($event)"></app-gate-select>
+            <app-gate-select [(gate)]="gate" (gateChange)="setGate($event)"></app-gate-select>
         </div>
         <label *ngFor="let i of qi; let ii=index">
             Input #{{ii}} is assigned to qubit #

@@ -1,7 +1,7 @@
 <label>
     Gate:
-    <select>
-        <option *ngFor="let g of gates" [value]="g.name" [selected]="gate?.name===g.name" (click)="gateChange.emit(g)">
+    <select (change)="change(eventTargetValue($event))">
+        <option *ngFor="let g of gates" [value]="g.name" [selected]="gate===g">
             {{g.name}} - {{g.desc}}
         </option>
     </select>

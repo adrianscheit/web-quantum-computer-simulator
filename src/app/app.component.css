@@ -1,6 +1,12 @@
 .flex {
     display: flex;
     flex-wrap: wrap;
+    gap: 16px;
+}
+
+.inline-flex-column {
+    display: inline-flex;
+    flex-direction: column;
 }
 
 .column {

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../../lib/g';
-import { noGate } from '../../lib/gates';
 
 @Component({
     selector: 'app-default-gate',

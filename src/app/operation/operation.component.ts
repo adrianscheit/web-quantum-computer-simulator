@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
-import { gates, gatesMap, noGate } from '../lib/gates';
+import { gates, gatesMap } from '../lib/gates';
 import { Operation } from '../domain';
 import { Utils } from '../utils/utils';
 
