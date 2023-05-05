@@ -68,5 +68,4 @@ export const gates: G[] = [
     ], 'Controlled SWAP'),
 ];
 /** quantum gate name -> G instance */
-export const gatesMap = new Map<GateName | undefined, G>(gates.map(g => [g.name, g]));
-export const noGate = new G(undefined, [new C(1)]);
+export const gatesMap = new Map<GateName, G>(gates.map(g => [g.name, g]));

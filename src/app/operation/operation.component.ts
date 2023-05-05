@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
 import { gates, gatesMap } from '../lib/gates';
-import { Operation } from '../domain';
-import { Utils } from '../utils/utils';
 import { OperationsService } from '../operations.service';
+import { Utils } from '../utils/utils';
 
 @Component({
     selector: 'app-operation',
@@ -29,7 +28,7 @@ export class OperationComponent {
     }
     @Output() exit = new EventEmitter<void>();
 
-    constructor(public operationsService: OperationsService) {}
+    constructor(public operationsService: OperationsService) { }
 
     private _index: number | undefined;
 
@@ -73,7 +72,7 @@ export class OperationComponent {
 
     close(): void {
         if (this.valid) {
-            this.operationsService.operations[this.index!].gn = this.gate!.name!;
+            this.operationsService.operations[this.index!].gn = this.gate!.name;
             this.operationsService.operations[this.index!].qi = this.qi;
             if (this.index !== this.newIndex) {
                 this.operationsService.move(this.index!, this.newIndex);

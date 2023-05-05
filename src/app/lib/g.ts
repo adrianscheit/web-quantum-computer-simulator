@@ -10,8 +10,8 @@ export class G {
     readonly widthAndHeight: number;
     readonly color: string;
 
-    constructor(public readonly name: GateName | undefined, m: C[], desc?: string, color?: string) {
-        this.desc = desc ? desc : name ? name : 'ID';
+    constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
+        this.desc = desc || name;
         this.matrix = m;
         this.widthAndHeight = Math.sqrt(m.length);
         this.colspan = Math.log2(this.widthAndHeight);

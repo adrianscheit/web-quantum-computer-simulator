@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { gates, gatesMap, noGate, x } from './lib/gates';
-import { Operation, Result, StepperData, GateName } from './domain';
+import { Operation, Result, StepperData } from './domain';
 import { G } from './lib/g';
-import { Utils } from './utils/utils';
+import { gates, gatesMap, x } from './lib/gates';
 import { OperationsService } from './operations.service';
+import { Utils } from './utils/utils';
 
 export interface GateGUI {
     o?: Operation;
@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
 
     qubitsQuantity = 10;
 
-    //program: Operation[] = [];
     programGUI: GateGUI[][] = [];
     programJson: string = '';
     errorMap: Map<number, string> = new Map<number, string>();
@@ -138,7 +137,7 @@ export class AppComponent implements OnInit {
         this.jsonError = undefined;
 
         // Update GUI:
-        this.programGUI.push(Array(this.qubitsQuantity + 1).fill({ oi: 0, color: noGate.color }));
+        this.programGUI.push(Array(this.qubitsQuantity + 1).fill({ oi: 0, color: '#ffff' }));
         const newProgramGUIRow = new Map<number, GateGUI>();
         for (let i = 0; i < this.operationsService.operations.length; ++i) {
             const step = this.operationsService.operations[i];
@@ -163,7 +162,7 @@ export class AppComponent implements OnInit {
                 row.push(rowDescription.get(i)!);
                 oi = Math.max(rowDescription.get(i)!.oi + 1, oi);
             } else {
-                row.push({ oi, color: noGate.color });
+                row.push({ oi, color: '#ffff' });
             }
         }
         this.programGUI.push(row);
@@ -199,7 +198,7 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number | undefined): void {
-        const newOperation: Operation = { gn: this.defaultGate.name!, qi: qubitIndex === undefined ? [] : [qubitIndex] };
+        const newOperation: Operation = { gn: this.defaultGate.name, qi: qubitIndex === undefined ? [] : [qubitIndex] };
         this.operationsService.add(index, newOperation);
         if (this.defaultGate.colspan !== 1 || qubitIndex === undefined) {
             this.editOperation(index);
