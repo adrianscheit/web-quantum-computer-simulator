@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Operation, Result, StepperData } from './domain';
+import { GateName, Operation, Result, StepperData } from './domain';
 import { G } from './lib/g';
 import { gates, gatesMap, x } from './lib/gates';
 import { OperationsService } from './operations.service';
@@ -108,11 +108,6 @@ export class AppComponent implements OnInit {
         this.quickResult = undefined;
         this.waitAtResult = false;
 
-        // Validation:
-        if (this.validatedOperationsService.errorMap.size > 0) {
-            return;
-        }
-
         // Update JSON:
         this.programJson = JSON.stringify(this.operationsService.operations);
         this.jsonError = undefined;
@@ -128,7 +123,12 @@ export class AppComponent implements OnInit {
                 }
             }
             for (let j = 0; j < step.qi.length; ++j) {
-                newProgramGUIRow.set(step.qi[j], { o: step, oi: i, ii: j, color: gatesMap.get(step.gn)!.color });
+                newProgramGUIRow.set(step.qi[j], {
+                    o: step,
+                    oi: i,
+                    ii: j,
+                    color: this.validatedOperationsService.errorMap.get(i) ? '#faa' : gatesMap.get(step.gn)!.color,
+                });
             }
         }
         this.addRowToProgramGUI(newProgramGUIRow);
@@ -151,6 +151,22 @@ export class AppComponent implements OnInit {
     }
 
     /// GUI's operations ----------------------------------------------------
+
+    addOperationForQubit(index: number, qubitIndex: number): void {
+        const newOperation: Operation = { gn: this.defaultGate.name, qi: [qubitIndex] };
+        this.operationsService.add(index, newOperation);
+        if (this.defaultGate.colspan !== 1) {
+            this.editOperation(index);
+        }
+    }
+
+    click2d(guiGate: GateGUI, j: number): void {
+        if (guiGate.o) {
+            this.editOperation(guiGate.oi);
+        } else {
+            this.addOperationForQubit(guiGate.oi, j);
+        }
+    }
 
     addQubitBefore(index: number): void {
         for (const step of this.operationsService.operations) {
@@ -178,27 +194,16 @@ export class AppComponent implements OnInit {
 
     /// Operation operations --------------------------------------------------------------
 
-    addOperation(index: number, qubitIndex: number | undefined): void {
-        const newOperation: Operation = { gn: this.defaultGate.name, qi: qubitIndex === undefined ? [] : [qubitIndex] };
+    addOperation(index: number): void {
+        const newOperation: Operation = { gn: '' as GateName, qi: [] };
         this.operationsService.add(index, newOperation);
-        if (this.defaultGate.colspan !== 1 || qubitIndex === undefined) {
-            this.editOperation(index);
-        } else {
-            this.operationsService.emitChange();
-        }
+        this.editOperation(index);
     }
 
     editOperation(index: number): void {
         this.operationIndex = index;
     }
 
-    click2d(guiGate: GateGUI, j: number): void {
-        if (guiGate.o) {
-            this.editOperation(guiGate.oi);
-        } else {
-            this.addOperation(guiGate.oi, j);
-        }
-    }
 
     exitOperation(): void {
         this.operationIndex = undefined;
