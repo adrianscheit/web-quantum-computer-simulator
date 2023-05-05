@@ -3,6 +3,7 @@ import { G } from '../lib/g';
 import { gates, gatesMap } from '../lib/gates';
 import { Operation } from '../domain';
 import { Utils } from '../utils/utils';
+import { OperationsService } from '../operations.service';
 
 @Component({
     selector: 'app-operation',
@@ -10,15 +11,14 @@ import { Utils } from '../utils/utils';
     styleUrls: ['./operation.component.css']
 })
 export class OperationComponent {
-    @Input() program: Operation[] = [];
     @Input() set index(index: number | undefined) {
         this._index = index;
         if (index !== undefined) {
             this.newIndex = index;
-            this.qi = [...this.program[index].qi];
+            this.qi = [...this.operationsService.operations[index].qi];
             this.deletedQi = [];
-            if (gatesMap.has(this.program[index].gn)) {
-                this.setGate(gatesMap.get(this.program[index].gn)!);
+            if (gatesMap.has(this.operationsService.operations[index].gn)) {
+                this.setGate(gatesMap.get(this.operationsService.operations[index].gn)!);
             } else {
                 this.gate = undefined;
             }
@@ -28,6 +28,8 @@ export class OperationComponent {
         return this._index;
     }
     @Output() exit = new EventEmitter<void>();
+
+    constructor(public operationsService: OperationsService) {}
 
     private _index: number | undefined;
 
@@ -61,23 +63,20 @@ export class OperationComponent {
     }
 
     del(): void {
-        this.program.splice(this.index!, 1);
+        this.operationsService.remove(this.index!);
         this.exit.emit();
     }
 
     private isValid(): boolean {
-        if (!Number.isInteger(this.newIndex) || this.newIndex < 0 || this.newIndex >= this.program.length) {
-            return false;
-        }
         return this.gate !== undefined && !this.gate.validateQubitIndexes(this.qi);
     }
 
     close(): void {
         if (this.valid) {
-            this.program[this.index!].gn = this.gate!.name;
-            this.program[this.index!].qi = this.qi;
+            this.operationsService.operations[this.index!].gn = this.gate!.name!;
+            this.operationsService.operations[this.index!].qi = this.qi;
             if (this.index !== this.newIndex) {
-                this.program.splice(this.newIndex, 0, ...this.program.splice(this.index!, 1));
+                this.operationsService.move(this.index!, this.newIndex);
             }
         }
         this.exit.emit();

@@ -15,7 +15,7 @@
 }
 
 .invalid {
-    background-color: #faa;
+    background-color: #faa !important;
 }
 
 .table-scroll {

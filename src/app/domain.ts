@@ -9,7 +9,7 @@ export interface Result {
 
 /** Single quantum operation definition */
 export interface Operation {
-    gn: GateName | undefined;
+    gn: GateName;
     qi: number[];
 }
 

@@ -4,6 +4,7 @@ import { gates, gatesMap, noGate, x } from './lib/gates';
 import { Operation, Result, StepperData, GateName } from './domain';
 import { G } from './lib/g';
 import { Utils } from './utils/utils';
+import { OperationsService } from './operations.service';
 
 export interface GateGUI {
     o?: Operation;
@@ -22,7 +23,7 @@ export class AppComponent implements OnInit {
 
     qubitsQuantity = 10;
 
-    program: Operation[] = [];
+    //program: Operation[] = [];
     programGUI: GateGUI[][] = [];
     programJson: string = '';
     errorMap: Map<number, string> = new Map<number, string>();
@@ -37,8 +38,12 @@ export class AppComponent implements OnInit {
     workers: Worker[] = [];
 
     readonly gates = gates;
+    readonly gatesMap = gatesMap;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private httpClient: HttpClient, public operationsService: OperationsService) {
+        operationsService.operationsChange.subscribe(() => {
+            this.parseProgram();
+        });
     }
 
     ngOnInit(): void {
@@ -93,7 +98,7 @@ export class AppComponent implements OnInit {
     parseProgramJson(): void {
         this.jsonError = undefined;
         try {
-            this.program = JSON.parse(this.programJson);
+            this.operationsService.set(JSON.parse(this.programJson));
             this.parseProgram();
         } catch (e) {
             this.jsonError = (e as any).message;
@@ -108,16 +113,9 @@ export class AppComponent implements OnInit {
         this.quickResult = undefined;
         this.waitAtResult = false;
 
-        // Remove ID operations:
-        for (let i = 0; i < this.program.length; ++i) {
-            if (!this.program[i] || !this.program[i].gn) {
-                this.program.splice(i--, 1);
-            }
-        }
-
         // Validation:
-        for (let i = 0; i < this.program.length; ++i) {
-            const step = this.program[i];
+        for (let i = 0; i < this.operationsService.operations.length; ++i) {
+            const step = this.operationsService.operations[i];
             const gate: G | undefined = gatesMap.get(step.gn);
 
             if (!gate) {
@@ -136,13 +134,13 @@ export class AppComponent implements OnInit {
         }
 
         // Update JSON:
-        this.programJson = JSON.stringify(this.program);
+        this.programJson = JSON.stringify(this.operationsService.operations);
         this.jsonError = undefined;
 
         // Update GUI:
         const newProgramGUIRow = new Map<number, GateGUI>();
-        for (let i = 0; i < this.program.length; ++i) {
-            const step = this.program[i];
+        for (let i = 0; i < this.operationsService.operations.length; ++i) {
+            const step = this.operationsService.operations[i];
             for (const qindex of step.qi) {
                 if (newProgramGUIRow.has(qindex)) {
                     this.addRowToProgramGUI(newProgramGUIRow);
@@ -154,12 +152,11 @@ export class AppComponent implements OnInit {
         }
         this.addRowToProgramGUI(newProgramGUIRow);
         this.addRowToProgramGUI(newProgramGUIRow);
-        // console.log(this.programJson, this.program, '=>', this.programGUI, this.qubitsQuantity);
     }
 
     addRowToProgramGUI(rowDescription: Map<number, GateGUI>): void {
         const row: GateGUI[] = [];
-        let oi = Math.min(this.program.length, ...[...rowDescription.values()].map(g => g.oi));
+        let oi = Math.min(this.operationsService.operations.length, ...[...rowDescription.values()].map(g => g.oi));
         for (let i = 0; i <= this.qubitsQuantity; ++i) {
             if (rowDescription.has(i)) {
                 row.push(rowDescription.get(i)!);
@@ -175,7 +172,7 @@ export class AppComponent implements OnInit {
     /// GUI's operations ----------------------------------------------------
 
     addQubitBefore(index: number): void {
-        for (const step of this.program) {
+        for (const step of this.operationsService.operations) {
             for (let j = 0; j < step.qi.length; ++j) {
                 if (step.qi[j] >= index) {
                     ++(step.qi[j]);
@@ -186,13 +183,13 @@ export class AppComponent implements OnInit {
     }
 
     deleteQubit(index: number): void {
-        for (let i = 0; i < this.program.length; ++i) {
-            for (let j = 0; j < this.program[i].qi.length; ++j) {
-                if (this.program[i].qi[j] === index) {
-                    this.program.splice(i--, 1);
+        for (let i = 0; i < this.operationsService.operations.length; ++i) {
+            for (let j = 0; j < this.operationsService.operations[i].qi.length; ++j) {
+                if (this.operationsService.operations[i].qi[j] === index) {
+                    this.operationsService.operations.splice(i--, 1);
                     break;
-                } else if (this.program[i].qi[j] > index) {
-                    --(this.program[i].qi[j]);
+                } else if (this.operationsService.operations[i].qi[j] > index) {
+                    --(this.operationsService.operations[i].qi[j]);
                 }
             }
         }
@@ -212,7 +209,7 @@ export class AppComponent implements OnInit {
         if (indexes.size) {
             const min = Math.min(...indexes.values());
             const max = Math.max(...indexes.values());
-            this.program.splice(min, max - min + 1);
+            this.operationsService.operations.splice(min, max - min + 1);
         }
         this.parseProgram();
     }
@@ -220,10 +217,10 @@ export class AppComponent implements OnInit {
     /// Operation operations --------------------------------------------------------------
 
     addOperation(index: number, qubitIndex: number | undefined): void {
-        const newOperation: Operation = { gn: this.defaultGate.name, qi: qubitIndex === undefined ? [] : [qubitIndex] };
-        this.program.splice(index, 0, newOperation);
+        const newOperation: Operation = { gn: this.defaultGate.name!, qi: qubitIndex === undefined ? [] : [qubitIndex] };
+        this.operationsService.add(index, newOperation);
         if (this.defaultGate.colspan !== 1 || qubitIndex === undefined) {
-            this.currentOperationIndex = index;
+            this.editOperation(index);
         } else {
             this.parseProgram();
         }
@@ -233,12 +230,7 @@ export class AppComponent implements OnInit {
         this.currentOperationIndex = index;
     }
 
-    deleteOperation(index: number): void {
-        this.program.splice(index, 1);
-        this.parseProgram();
-    }
-
-    changeOperation(guiGate: GateGUI, i: number, j: number): void {
+    click2d(guiGate: GateGUI, j: number): void {
         if (guiGate.o) {
             this.editOperation(guiGate.oi);
         } else {
@@ -248,7 +240,7 @@ export class AppComponent implements OnInit {
 
     exitOperation(): void {
         this.currentOperationIndex = undefined;
-        this.parseProgram();
+        this.operationsService.update();
     }
 
     /// Simulation -------------------------------------------------------------------
@@ -256,7 +248,7 @@ export class AppComponent implements OnInit {
     simulate(callback?: string): void {
         let stepperData: StepperData = {
             qubitsQuantity: this.qubitsQuantity,
-            operations: this.program,
+            operations: this.operationsService.operations,
             id: this.results.length,
             callback
         };
@@ -283,13 +275,6 @@ export class AppComponent implements OnInit {
     cancelSimulation(index: number): void {
         this.workers[index].terminate();
         this.results[index].canceled = true;
-    }
-
-    complement(): void {
-        for (let i = this.program.length - 1; i>=0; --i) {
-            this.program.push({gn: this.program[i].gn, qi: [...this.program[i].qi]});
-        }
-        this.parseProgram();
     }
 
 }

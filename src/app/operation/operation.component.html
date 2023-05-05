@@ -2,9 +2,9 @@
     <div class="dialog" (click)="$event.stopPropagation()">
         <label>
             Operation #
-            <input type="number" required step="1" min="0" [max]="program.length-1" [value]="index" (change)="setIndex(+eventTargetValue($event))" />
+            <input type="number" required step="1" min="0" [max]="operationsService.operations.length-1" [value]="index" (change)="setIndex(+eventTargetValue($event))" />
             of
-            {{program.length}}
+            {{operationsService.operations.length}}
         </label>
         <div>
             <app-gate-select [(gate)]="gate" (gateChange)="setGate($event)"></app-gate-select>

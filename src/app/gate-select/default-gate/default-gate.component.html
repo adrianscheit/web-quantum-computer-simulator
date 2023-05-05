@@ -1,2 +1,2 @@
 Gate used by default if new operation is added:
-<app-gate-select [(gate)]="gate"></app-gate-select>
+<app-gate-select [gate]="gate" (gateChange)="gateChange.emit($event)"></app-gate-select>

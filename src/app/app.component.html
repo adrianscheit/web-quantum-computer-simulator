@@ -22,9 +22,9 @@
         <li>Simple UI - hopefully clear and good UX</li>
         <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)</li>
         <li>
-            KUDO to this article, that helped a lot to implement this tool:
-            <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate"></app-link>
-            It is also very helpful in case if someone does not understand quantum computing.
+            <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate">
+                KUDO to this article, that helped a lot to implement this tool. It is also very helpful in case if someone does not understand quantum computing:
+            </app-link>
         </li>
     </ul>
 </section>
@@ -40,21 +40,20 @@
                 <th>Gate type</th>
                 <th>Connected Qubits</th>
             </tr>
-            <tr *ngFor="let operation of program; let i=index" [class.invalid]="errorMap.has(i)">
+            <tr>
+                <td colspan="3"><button type="button" (click)="addOperation(0,undefined)">+</button></td>
+            </tr>
+            <tr
+                *ngFor="let operation of operationsService.operations; let i=index"
+                style="background-color: {{gatesMap.get(operation.gn)?.color}};"
+                [class.invalid]="errorMap.has(i)"
+                (click)="editOperation(i)"
+            >
                 <td>#{{i}}</td>
                 <td>{{operation.gn}}</td>
                 <td><span *ngFor="let qi of operation.qi">{{qi}},</span></td>
-                <td>
-                    <button type="button" (click)="addOperation(i,undefined)">Add before</button>
-                    <button type="button" (click)="editOperation(i)">Edit</button>
-                    <button type="button" (click)="deleteOperation(i)">Delete</button>
-                </td>
+                <td (click)="$event.stopPropagation()"><button type="button" (click)="addOperation(i+1,undefined)">+</button></td>
                 <td>{{errorMap.get(i)}}</td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <button type="button" (click)="addOperation(program.length,undefined)">Add new operation</button>
-                </td>
             </tr>
         </tbody>
     </table>
@@ -73,7 +72,7 @@
         <table>
             <tbody>
                 <tr>
-                    <th>Step#</th>
+                    <th></th>
                     <th *ngFor="let i of getIndexes(qubitsQuantity)">
                         <div class="column">
                             <button type="button" type="button" (click)="addQubitBefore(i)">Add before</button>
@@ -83,14 +82,10 @@
                     </th>
                     <th>New qubit</th>
                 </tr>
-                <tr *ngFor="let step of programGUI; let i=index ">
-                    <td>#{{i}}</td>
+                <tr *ngFor="let step of programGUI">
+                    <td></td>
                     <td *ngFor="let guiGate of step; let j=index">
-                        <app-gate [gate]="guiGate" (click)="changeOperation(guiGate,i,j)"></app-gate>
-                    </td>
-                    <td>
-                        <button type="button" (click)="addStep(i)">Add step before</button>
-                        <button type="button" (click)="deleteStep(i) ">Delete step</button>
+                        <app-gate [gate]="guiGate" (click)="click2d(guiGate,j)"></app-gate>
                     </td>
                 </tr>
                 <tr *ngIf="quickResult">
@@ -104,7 +99,7 @@
             </tbody>
         </table>
     </div>
-    <button type="button" (click)="complement()">Complementary the program</button>
+    <button type="button" (click)="operationsService.complement()">Complementary the program</button>
     <button type="button" (click)="simulate()">Simulate</button>
 </section>
 
@@ -237,9 +232,9 @@
             that uses this software, please refer to this software and to its author, and please inform the auther about his fact using GitHub
         </p>
         <p>
-            <a href="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here.</a>
+            <app-link link="/3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here: </app-link>
         </p>
     </section>
 </section>
 
-<app-operation [program]="program" [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>
+<app-operation [index]="currentOperationIndex" (exit)="exitOperation()"></app-operation>
