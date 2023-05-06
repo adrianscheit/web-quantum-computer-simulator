@@ -8,8 +8,12 @@ import { Clipboard } from '@angular/cdk/clipboard';
     styleUrls: ['./sample-code.component.css']
 })
 export class SampleCodeComponent {
-    @Input() set code(code: Operation[]) {
-        this.stringifiedCode = JSON.stringify(code);
+    @Input() set code(code: Operation[] | string) {
+        if (typeof (code) === 'string') {
+            this.stringifiedCode = code;
+        } else {
+            this.stringifiedCode = JSON.stringify(code);
+        }
     }
 
     stringifiedCode: string = '';
