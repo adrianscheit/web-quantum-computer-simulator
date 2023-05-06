@@ -47,3 +47,7 @@ th, td {
 .table-scroll>table {
     width: auto;
 }
+
+.invalid {
+    background-color: #faa !important;
+}
