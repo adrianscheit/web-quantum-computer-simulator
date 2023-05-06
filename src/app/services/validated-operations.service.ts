@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OperationsService } from './operations.service';
-import { gatesMap } from './lib/gates';
-import { G } from './lib/g';
+import { gatesMap } from '../lib/gates';
+import { G } from '../lib/g';
 
 @Injectable({
     providedIn: 'root'

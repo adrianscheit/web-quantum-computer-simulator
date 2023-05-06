@@ -3,9 +3,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Gate2DView, GateName, Operation, Result, StepperData } from './domain';
 import { G } from './lib/g';
 import { gates, gatesMap, x } from './lib/gates';
-import { OperationsService } from './operations.service';
+import { OperationsService } from './services/operations.service';
 import { Utils } from './utils/utils';
-import { ValidatedOperationsService } from './validated-operations.service';
+import { ValidatedOperationsService } from './services/validated-operations.service';
 
 @Component({
     selector: 'app-root',
