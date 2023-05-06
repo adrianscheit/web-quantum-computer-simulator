@@ -45,18 +45,18 @@ export class AppComponent implements OnInit {
             this.programGUI.push(Array(this.validatedOperationsService.qubitsQuantity + 1).fill({ oi: 0, color: '#ffff' }));
             const newProgramGUIRow = new Map<number, Gate2DView>();
             for (let i = 0; i < this.operationsService.operations.length; ++i) {
-                const step = this.operationsService.operations[i];
-                for (const qindex of step.qi) {
+                const validatedOperation = this.validatedOperationsService.validatedOperations[i];
+                for (const qindex of validatedOperation.operation.qi) {
                     if (newProgramGUIRow.has(qindex)) {
                         this.addRowToProgramGUI(newProgramGUIRow);
                     }
                 }
-                for (let j = 0; j < step.qi.length; ++j) {
-                    newProgramGUIRow.set(step.qi[j], {
-                        o: step,
+                for (let j = 0; j < validatedOperation.operation.qi.length; ++j) {
+                    newProgramGUIRow.set(validatedOperation.operation.qi[j], {
+                        o: validatedOperation.operation,
                         oi: i,
                         ii: j,
-                        color: this.validatedOperationsService.errorMap.get(i) ? '#faa' : gatesMap.get(step.gn)!.color,
+                        color: validatedOperation.error || !validatedOperation.gate ? '#faa' : validatedOperation.gate.color,
                     });
                 }
             }

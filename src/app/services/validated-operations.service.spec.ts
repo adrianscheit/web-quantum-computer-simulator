@@ -15,6 +15,20 @@ describe('ValidatedOperationsService', () => {
 
     it('should calc on operations change', () => {
         operationsService.set([
+            { gn: 'X', qi: [1] },
+            { gn: 'CX', qi: [1, 2] },
+        ]);
+
+        expect(service.qubitsQuantity).toBe(3);
+        expect(service.usedQubit).toEqual([false, true, true]);
+        expect(service.validatedOperations).toEqual([
+            { operation: operationsService.operations[0] },
+            { operation: operationsService.operations[1] },
+        ]);
+    });
+
+    it('should calc on operations change - case with errors', () => {
+        operationsService.set([
             { gn: 'X', qi: [0] },
             { gn: 'X', qi: [] },
             { gn: 'X', qi: [0, 2] },
@@ -22,8 +36,10 @@ describe('ValidatedOperationsService', () => {
 
         expect(service.qubitsQuantity).toBe(3);
         expect(service.usedQubit).toEqual([true, false, true]);
-        expect(service.errorMap.get(0)).toBeFalsy();
-        expect(service.errorMap.get(1)).toBeTruthy();
-        expect(service.errorMap.get(2)).toBeTruthy();
+        expect(service.validatedOperations).toEqual([
+            { operation: operationsService.operations[0] },
+            { operation: operationsService.operations[1], error: 'Incorrect number of qubits assigned to this gate' },
+            { operation: operationsService.operations[2], error: 'Incorrect number of qubits assigned to this gate' },
+        ]);
     });
 });

@@ -51,17 +51,17 @@
                 <tr>
                     <td colspan="3"><button type="button" (click)="addOperation(0)">+</button></td>
                 </tr>
-                <tr *ngFor="let operation of operationsService.operations; let i=index"
-                    [style.background-color]="gatesMap.get(operation.gn)?.color" class="cursor-pointer"
-                    [class.invalid]="validatedOperationsService.errorMap.has(i)" (click)="editOperation(i)">
+                <tr *ngFor="let validatedOperation of validatedOperationsService.validatedOperations; let i=index"
+                    [style.background-color]="validatedOperation.gate?.color" class="cursor-pointer"
+                    [class.invalid]="validatedOperation.error" (click)="editOperation(i)">
                     <td>#{{i}}</td>
-                    <td>{{operation.gn}}</td>
-                    <td><span *ngFor="let qi of operation.qi">{{qi}},</span></td>
+                    <td>{{validatedOperation.operation.gn}}</td>
+                    <td><span *ngFor="let qi of validatedOperation.operation.qi">{{qi}},</span></td>
                     <td (click)="$event.stopPropagation()">
                         <button type="button" (click)="operationsService.remove(i)">-</button>
                         <button type="button" (click)="addOperation(i+1)">+</button>
                     </td>
-                    <td>{{validatedOperationsService.errorMap.get(i)}}</td>
+                    <td>{{validatedOperation.error}}</td>
                 </tr>
             </tbody>
         </table>
