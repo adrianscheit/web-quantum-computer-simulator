@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production && mv dist/qcs docs",
+    "build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint --fix",
     "e2e": "ng e2e",
-    "d": "git pull && npm update && npm test && npm run build && git add -A && git commit -m. && git push"
+    "d": "git pull && npm run lint && npm test && npm run build && git add -A && git commit -m. && git push"
   },
   "license": "UNLICENSED",
   "dependencies": {
