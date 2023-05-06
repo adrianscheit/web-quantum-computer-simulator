@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { Gate2DView } from '../domain';
+import { Gate2DView } from '../../domain';
 
 @Component({
     selector: 'app-gate',

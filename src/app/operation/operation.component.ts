@@ -21,6 +21,7 @@ export class OperationComponent {
             } else {
                 this.gate = undefined;
             }
+            this.valid = this.isValid();
         }
     }
     get index(): number | undefined {
