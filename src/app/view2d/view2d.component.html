@@ -1,0 +1,38 @@
+<p>
+    This representation shows what may be executed in parallel.
+    The program is executed from top to bottom where next columns are next qubits in the virtual computer.
+    Click into the table on an empty field to a add new operation/gate.
+    Click into the table on an existing operation/gate to edit it.
+</p>
+<app-default-gate [(gate)]="defaultGate"></app-default-gate>
+<div class="table-scroll">
+    <table>
+        <tbody>
+            <tr>
+                <th></th>
+                <th *ngFor="let used of validatedOperationsService.usedQubit; let i=index">
+                    <div class="column">
+                        <button type="button" type="button" (click)="addQubitBefore(i)">Add before</button>
+                        QuBit#{{i}}
+                        <button *ngIf="!used" type="button" (click)="deleteQubit(i)">Delete</button>
+                    </div>
+                </th>
+                <th>New qubit</th>
+            </tr>
+            <tr *ngFor="let step of programGUI">
+                <td></td>
+                <td *ngFor="let guiGate of step; let j=index">
+                    <app-gate [gate]="guiGate" (click)="click2d(guiGate,j)"></app-gate>
+                </td>
+            </tr>
+            <tr *ngIf="quickResult">
+                <th>Prop.:</th>
+                <th [colSpan]="validatedOperationsService.qubitsQuantity">Results:</th>
+            </tr>
+            <tr *ngFor="let r of quickResult">
+                <td>{{r.propability * 100 | number: '.0-1'}}%</td>
+                <td *ngFor="let i of r.values">{{i?1:0}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

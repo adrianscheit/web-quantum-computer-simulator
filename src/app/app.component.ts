@@ -33,35 +33,12 @@ export class AppComponent implements OnInit {
     constructor(private httpClient: HttpClient, readonly operationsService: OperationsService, readonly validatedOperationsService: ValidatedOperationsService) {
         operationsService.operationsChange.subscribe(() => {
             // Reset:
-            this.programGUI = [];
             this.quickResult = undefined;
             this.waitAtResult = false;
 
             // Update JSON:
             this.programJson = JSON.stringify(this.operationsService.operations);
             this.jsonError = undefined;
-
-            // Update GUI:
-            this.programGUI.push(Array(this.validatedOperationsService.qubitsQuantity + 1).fill({ oi: 0, color: '#ffff' }));
-            const newProgramGUIRow = new Map<number, Gate2DView>();
-            for (let i = 0; i < this.operationsService.operations.length; ++i) {
-                const validatedOperation = this.validatedOperationsService.validatedOperations[i];
-                for (const qindex of validatedOperation.operation.qi) {
-                    if (newProgramGUIRow.has(qindex)) {
-                        this.addRowToProgramGUI(newProgramGUIRow);
-                    }
-                }
-                for (let j = 0; j < validatedOperation.operation.qi.length; ++j) {
-                    newProgramGUIRow.set(validatedOperation.operation.qi[j], {
-                        o: validatedOperation.operation,
-                        oi: i,
-                        ii: j,
-                        color: validatedOperation.error || !validatedOperation.gate ? '#faa' : validatedOperation.gate.color,
-                    });
-                }
-            }
-            this.addRowToProgramGUI(newProgramGUIRow);
-            this.addRowToProgramGUI(newProgramGUIRow);
         });
     }
 
@@ -81,9 +58,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-    getIndexes(length: number): number[] {
-        return Array(length).fill(0).map((_, index) => index);
-    }
+    getIndexes = Utils.getIndexes;
 
     eventTargetValue = Utils.eventTargetValue;
 
@@ -124,70 +99,8 @@ export class AppComponent implements OnInit {
         }
     }
 
-    addRowToProgramGUI(rowDescription: Map<number, Gate2DView>): void {
-        const row: Gate2DView[] = [];
-        let oi = Math.min(this.operationsService.operations.length, ...[...rowDescription.values()].map(g => g.oi));
-        for (let i = 0; i <= this.validatedOperationsService.qubitsQuantity; ++i) {
-            if (rowDescription.has(i)) {
-                row.push(rowDescription.get(i)!);
-                oi = Math.max(rowDescription.get(i)!.oi + 1, oi);
-            } else {
-                row.push({ oi, color: '#ffff' });
-            }
-        }
-        this.programGUI.push(row);
-        rowDescription.clear();
-    }
 
-    /// GUI's operations ----------------------------------------------------
-
-    addOperationForQubit(index: number, qubitIndex: number): void {
-        const newOperation: Operation = { gn: this.defaultGate.name, qi: [qubitIndex] };
-        this.operationsService.add(index, newOperation);
-        if (this.defaultGate.colspan !== 1) {
-            this.editOperation(index);
-        }
-    }
-
-    click2d(guiGate: Gate2DView, j: number): void {
-        if (guiGate.o) {
-            this.editOperation(guiGate.oi);
-        } else {
-            this.addOperationForQubit(guiGate.oi, j);
-        }
-    }
-
-    addQubitBefore(index: number): void {
-        for (const step of this.operationsService.operations) {
-            for (let j = 0; j < step.qi.length; ++j) {
-                if (step.qi[j] >= index) {
-                    ++(step.qi[j]);
-                }
-            }
-        }
-        this.operationsService.emitChange();
-    }
-
-    deleteQubit(index: number): void {
-        for (const step of this.operationsService.operations) {
-            for (let j = 0; j < step.qi.length; ++j) {
-                if (step.qi[j] === index) {
-                    throw new Error('Deleting operations by deleting a qubit is forbidden!');
-                } else if (step.qi[j] > index) {
-                    --(step.qi[j]);
-                }
-            }
-        }
-        this.operationsService.emitChange();
-    }
-
-    /// Operation operations --------------------------------------------------------------
-
-    addOperation(index: number): void {
-        const newOperation: Operation = { gn: '' as GateName, qi: [] };
-        this.operationsService.add(index, newOperation);
-        this.editOperation(index);
-    }
+    // Operation operations --------------------------------------------------------------
 
     editOperation(index: number): void {
         this.operationIndex = index;
@@ -199,7 +112,7 @@ export class AppComponent implements OnInit {
         this.operationsService.emitChange();
     }
 
-    /// Simulation -------------------------------------------------------------------
+    // Simulation -------------------------------------------------------------------
 
     simulate(callback?: string): void {
         let stepperData: StepperData = {

@@ -10,6 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { LinkComponent } from './link/link.component';
 import { GateSelectComponent } from './gate-select/gate-select.component';
 import { SampleCodeComponent } from './sample-code/sample-code.component';
+import { View1dComponent } from './view1d/view1d.component';
+import { View2dComponent } from './view2d/view2d.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { SampleCodeComponent } from './sample-code/sample-code.component';
     DefaultGateComponent,
     LinkComponent,
     GateSelectComponent,
-    SampleCodeComponent
+    SampleCodeComponent,
+    View1dComponent,
+    View2dComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OperationsService } from './operations.service';
 import { ValidatedOperationsService } from './validated-operations.service';
+import { gatesMap, x } from '../lib/gates';
 
 describe('ValidatedOperationsService', () => {
     let service: ValidatedOperationsService;
@@ -22,8 +23,8 @@ describe('ValidatedOperationsService', () => {
         expect(service.qubitsQuantity).toBe(3);
         expect(service.usedQubit).toEqual([false, true, true]);
         expect(service.validatedOperations).toEqual([
-            { operation: operationsService.operations[0] },
-            { operation: operationsService.operations[1] },
+            { operation: operationsService.operations[0], gate: x, },
+            { operation: operationsService.operations[1], gate: gatesMap.get('CX'), },
         ]);
     });
 
@@ -37,9 +38,9 @@ describe('ValidatedOperationsService', () => {
         expect(service.qubitsQuantity).toBe(3);
         expect(service.usedQubit).toEqual([true, false, true]);
         expect(service.validatedOperations).toEqual([
-            { operation: operationsService.operations[0] },
-            { operation: operationsService.operations[1], error: 'Incorrect number of qubits assigned to this gate' },
-            { operation: operationsService.operations[2], error: 'Incorrect number of qubits assigned to this gate' },
+            { operation: operationsService.operations[0], gate: x, },
+            { operation: operationsService.operations[1], gate: x, error: 'Incorrect number of qubits assigned to this gate' },
+            { operation: operationsService.operations[2], gate: x, error: 'Incorrect number of qubits assigned to this gate' },
         ]);
     });
 });
