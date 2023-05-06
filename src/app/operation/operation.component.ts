@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
 import { gates, gatesMap } from '../lib/gates';
-import { OperationsService } from '../operations.service';
+import { OperationsService } from '../services/operations.service';
 import { Utils } from '../utils/utils';
 
 @Component({
