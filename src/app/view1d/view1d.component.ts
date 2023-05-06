@@ -1,8 +1,8 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { GateName } from '../domain';
 import { gatesMap } from '../lib/gates';
-import { ValidatedOperationsService } from '../services/validated-operations.service';
 import { OperationsService } from '../services/operations.service';
+import { ValidatedOperationsService } from '../services/validated-operations.service';
 
 @Component({
     selector: 'app-view1d',

@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Gate2DView, GateName, Operation, Result, StepperData } from './domain';
+import { Gate2DView, Result, StepperData } from './domain';
 import { G } from './lib/g';
 import { gates, gatesMap, x } from './lib/gates';
 import { OperationsService } from './services/operations.service';
-import { Utils } from './utils/utils';
 import { ValidatedOperationsService } from './services/validated-operations.service';
+import { Utils } from './utils/utils';
 
 @Component({
     selector: 'app-root',
