@@ -4,17 +4,19 @@ import { G } from '../lib/g';
 import { gatesMap } from '../lib/gates';
 import { OperationsService } from './operations.service';
 
-class ValidatedOperation {
+export class ValidatedOperation {
     gate: G | undefined;
     error: string | undefined;
     constructor(readonly operation: Operation) {
         this.gate = gatesMap.get(operation.gn);
+        this.error = ValidatedOperation.getError(this.gate, operation.qi);
+    }
 
-        if (!this.gate) {
-            this.error = 'Gate name is not recognized';
-        } else {
-            this.error = this.gate.validateQubitIndexes(operation.qi);
+    static getError(gate: G | undefined, qi: number[]): string | undefined {
+        if (!gate) {
+            return 'Gate is required';
         }
+        return gate.validateQubitIndexes(qi);
     }
 }
 

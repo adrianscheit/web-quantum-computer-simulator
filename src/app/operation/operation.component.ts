@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { G } from '../lib/g';
 import { gates, gatesMap } from '../lib/gates';
 import { OperationsService } from '../services/operations.service';
+import { ValidatedOperation } from '../services/validated-operations.service';
 import { Utils } from '../utils/utils';
 
 @Component({
@@ -21,7 +22,7 @@ export class OperationComponent {
             } else {
                 this.gate = undefined;
             }
-            this.valid = this.isValid();
+            this.validate();
         }
     }
     get index(): number | undefined {
@@ -38,11 +39,11 @@ export class OperationComponent {
     private deletedQi: number[] = [];
     gate: G | undefined;
     readonly gates: G[] = gates;
-    valid = true;
+    error: string | undefined;
 
     setIndex(newIndex: number): void {
         this.newIndex = newIndex;
-        this.valid = this.isValid();
+        this.validate();
     }
 
     setGate(newGate: G): void {
@@ -54,12 +55,12 @@ export class OperationComponent {
                 this.deletedQi.push(this.qi.pop()!);
             }
         }
-        this.valid = this.isValid();
+        this.validate();
     }
 
     setQubitIndex(i: number, newQi: number): void {
         this.qi[i] = newQi;
-        this.valid = this.isValid();
+        this.validate();
     }
 
     del(): void {
@@ -67,12 +68,12 @@ export class OperationComponent {
         this.exit.emit();
     }
 
-    private isValid(): boolean {
-        return this.gate !== undefined && !this.gate.validateQubitIndexes(this.qi);
+    private validate(): void {
+        this.error = ValidatedOperation.getError(this.gate, this.qi);
     }
 
     close(): void {
-        if (this.valid) {
+        if (!this.error) {
             this.operationsService.operations[this.index!].gn = this.gate!.name;
             this.operationsService.operations[this.index!].qi = this.qi;
             if (this.index !== this.newIndex) {
