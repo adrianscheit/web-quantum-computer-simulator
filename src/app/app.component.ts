@@ -1,18 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { GateName, Operation, Result, StepperData } from './domain';
+import { Gate2DView, GateName, Operation, Result, StepperData } from './domain';
 import { G } from './lib/g';
 import { gates, gatesMap, x } from './lib/gates';
 import { OperationsService } from './operations.service';
 import { Utils } from './utils/utils';
 import { ValidatedOperationsService } from './validated-operations.service';
-
-export interface GateGUI {
-    o?: Operation;
-    oi: number;
-    ii?: number;
-    color: string;
-}
 
 @Component({
     selector: 'app-root',
@@ -22,7 +15,7 @@ export interface GateGUI {
 export class AppComponent implements OnInit {
     selfLink = window.location.origin;
 
-    programGUI: GateGUI[][] = [];
+    programGUI: Gate2DView[][] = [];
     programJson: string = '';
     jsonError: string | undefined;
 
@@ -39,7 +32,36 @@ export class AppComponent implements OnInit {
 
     constructor(private httpClient: HttpClient, readonly operationsService: OperationsService, readonly validatedOperationsService: ValidatedOperationsService) {
         operationsService.operationsChange.subscribe(() => {
-            this.parseProgram();
+            // Reset:
+            this.programGUI = [];
+            this.quickResult = undefined;
+            this.waitAtResult = false;
+
+            // Update JSON:
+            this.programJson = JSON.stringify(this.operationsService.operations);
+            this.jsonError = undefined;
+
+            // Update GUI:
+            this.programGUI.push(Array(this.validatedOperationsService.qubitsQuantity + 1).fill({ oi: 0, color: '#ffff' }));
+            const newProgramGUIRow = new Map<number, Gate2DView>();
+            for (let i = 0; i < this.operationsService.operations.length; ++i) {
+                const step = this.operationsService.operations[i];
+                for (const qindex of step.qi) {
+                    if (newProgramGUIRow.has(qindex)) {
+                        this.addRowToProgramGUI(newProgramGUIRow);
+                    }
+                }
+                for (let j = 0; j < step.qi.length; ++j) {
+                    newProgramGUIRow.set(step.qi[j], {
+                        o: step,
+                        oi: i,
+                        ii: j,
+                        color: this.validatedOperationsService.errorMap.get(i) ? '#faa' : gatesMap.get(step.gn)!.color,
+                    });
+                }
+            }
+            this.addRowToProgramGUI(newProgramGUIRow);
+            this.addRowToProgramGUI(newProgramGUIRow);
         });
     }
 
@@ -102,41 +124,8 @@ export class AppComponent implements OnInit {
         }
     }
 
-    private parseProgram(): void {
-        // Reset:
-        this.programGUI = [];
-        this.quickResult = undefined;
-        this.waitAtResult = false;
-
-        // Update JSON:
-        this.programJson = JSON.stringify(this.operationsService.operations);
-        this.jsonError = undefined;
-
-        // Update GUI:
-        this.programGUI.push(Array(this.validatedOperationsService.qubitsQuantity + 1).fill({ oi: 0, color: '#ffff' }));
-        const newProgramGUIRow = new Map<number, GateGUI>();
-        for (let i = 0; i < this.operationsService.operations.length; ++i) {
-            const step = this.operationsService.operations[i];
-            for (const qindex of step.qi) {
-                if (newProgramGUIRow.has(qindex)) {
-                    this.addRowToProgramGUI(newProgramGUIRow);
-                }
-            }
-            for (let j = 0; j < step.qi.length; ++j) {
-                newProgramGUIRow.set(step.qi[j], {
-                    o: step,
-                    oi: i,
-                    ii: j,
-                    color: this.validatedOperationsService.errorMap.get(i) ? '#faa' : gatesMap.get(step.gn)!.color,
-                });
-            }
-        }
-        this.addRowToProgramGUI(newProgramGUIRow);
-        this.addRowToProgramGUI(newProgramGUIRow);
-    }
-
-    addRowToProgramGUI(rowDescription: Map<number, GateGUI>): void {
-        const row: GateGUI[] = [];
+    addRowToProgramGUI(rowDescription: Map<number, Gate2DView>): void {
+        const row: Gate2DView[] = [];
         let oi = Math.min(this.operationsService.operations.length, ...[...rowDescription.values()].map(g => g.oi));
         for (let i = 0; i <= this.validatedOperationsService.qubitsQuantity; ++i) {
             if (rowDescription.has(i)) {
@@ -160,7 +149,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-    click2d(guiGate: GateGUI, j: number): void {
+    click2d(guiGate: Gate2DView, j: number): void {
         if (guiGate.o) {
             this.editOperation(guiGate.oi);
         } else {

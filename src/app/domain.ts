@@ -28,3 +28,11 @@ export interface StepperData {
     results?: Result[];
     endTime?: Date;
 }
+
+/** Gate on a 2D program representation */
+export interface Gate2DView {
+    o?: Operation;
+    oi: number;
+    ii?: number;
+    color: string;
+}
