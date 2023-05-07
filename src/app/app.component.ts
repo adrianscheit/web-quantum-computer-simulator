@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Gate2DView, Result, StepperData } from './domain';
 import { G } from './lib/g';
-import { gates, gatesMap, x } from './lib/gates';
+import { gates, gatesMap, h } from './lib/gates';
 import { OperationsService } from './services/operations.service';
 import { ValidatedOperationsService } from './services/validated-operations.service';
 import { Utils } from './utils/utils';
@@ -14,21 +14,14 @@ import { Utils } from './utils/utils';
 })
 export class AppComponent implements OnInit {
     selfLink = window.location.origin;
-
-    programGUI: Gate2DView[][] = [];
     programJson: string = '';
     jsonError: string | undefined;
-
     operationIndex: number | undefined;
-    defaultGate: G = x;
-
     waitAtResult = false;
     quickResult: Result[] | undefined;
     results: StepperData[] = [];
     workers: Worker[] = [];
-
     readonly gates = gates;
-    readonly gatesMap = gatesMap;
 
     constructor(private httpClient: HttpClient, readonly operationsService: OperationsService, readonly validatedOperationsService: ValidatedOperationsService) {
         operationsService.operationsChange.subscribe(() => {
@@ -93,7 +86,7 @@ export class AppComponent implements OnInit {
             this.operationsService.set(JSON.parse(this.programJson));
             this.operationsService.emitChange();
         } catch (e: unknown) {
-            this.jsonError = (e as {message: string}).message;
+            this.jsonError = (e as { message: string }).message;
         }
     }
 
