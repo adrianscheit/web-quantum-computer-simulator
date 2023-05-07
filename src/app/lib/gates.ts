@@ -4,14 +4,15 @@ import { G } from './g';
 
 export const x = new G('X', [new C(), new C(1), new C(1), new C()], 'Pauli-X');
 export const y = new G('Y', [new C(), new C(0, -1), new C(0, 1), new C()], 'Pauli-Y');
-const z = new G('Z', [new C(1), new C(), new C(), new C(-1)], 'Pauli-Z');
+export const z = new G('Z', [new C(1), new C(), new C(), new C(-1)], 'Pauli-Z');
+export const h = new G('H', [new C(1), new C(1), new C(1), new C(-1)].map(c => c.muls(Math.SQRT1_2)), 'Hadamard');
 
 /** Predefined quantum gates */
 export const gates: G[] = [
     x,
     y,
     z,
-    new G('H', [new C(1), new C(1), new C(1), new C(-1)].map(c => c.muls(Math.SQRT1_2)), 'Hadamard'),
+    h,
     new G('SP', [new C(1), new C(), new C(), new C(0, 1)], 'Phase'),
     new G('T', [new C(1), new C(), new C(), new C(Math.SQRT1_2, Math.SQRT1_2)], 'PI/8'),
     new G('CX', [
