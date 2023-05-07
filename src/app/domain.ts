@@ -17,6 +17,7 @@ export interface Operation {
 export interface StepperData {
     /// Input:
     qubitsQuantity: number;
+    usedQubits: boolean[];
     operations?: Operation[];
     id: number;
     canceled?: true;

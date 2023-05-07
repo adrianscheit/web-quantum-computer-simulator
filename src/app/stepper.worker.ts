@@ -7,8 +7,6 @@ import { V } from './lib/v';
 
 
 addEventListener('message', ({ data }) => {
-    // console.log('Starting work: ', data);
-
     const stepperData: StepperData = data;
 
     const operations: Operation[] = stepperData.operations!;
@@ -43,6 +41,5 @@ addEventListener('message', ({ data }) => {
     stepperData.progress = 1;
     stepperData.endTime = new Date();
 
-    // console.log('End work: ', data);
     postMessage(stepperData);
 });

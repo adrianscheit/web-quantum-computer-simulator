@@ -10,11 +10,11 @@
         <tbody>
             <tr>
                 <th></th>
-                <th *ngFor="let used of validatedOperationsService.usedQubit; let i=index">
+                <th *ngFor="let usedQubit of validatedOperationsService.usedQubits; let i=index" [class.gray]="!usedQubit">
                     <div class="column">
                         <button type="button" type="button" (click)="addQubitBefore(i)">Add before</button>
-                        QuBit#{{i}}
-                        <button *ngIf="!used" type="button" (click)="deleteQubit(i)">Delete</button>
+                        Q#{{i}}
+                        <button *ngIf="!usedQubit" type="button" (click)="deleteQubit(i)">Delete</button>
                     </div>
                 </th>
                 <th>New qubit</th>
@@ -26,8 +26,8 @@
                 </td>
             </tr>
             <tr *ngIf="quickResult">
-                <th>Prop.:</th>
-                <th [colSpan]="validatedOperationsService.qubitsQuantity">Results:</th>
+                <th>Result [%]</th>
+                <th *ngFor="let usedQubit of validatedOperationsService.usedQubits; let i=index" [class.gray]="!usedQubit">Q#{{i}}</th>
             </tr>
             <tr *ngFor="let r of quickResult">
                 <td>{{r.propability * 100 | number: '.0-1'}}%</td>

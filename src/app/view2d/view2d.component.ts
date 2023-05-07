@@ -4,7 +4,6 @@ import { G } from '../lib/g';
 import { x } from '../lib/gates';
 import { OperationsService } from '../services/operations.service';
 import { ValidatedOperationsService } from '../services/validated-operations.service';
-import { Utils } from '../utils/utils';
 
 @Component({
     selector: 'app-view2d',
@@ -16,7 +15,6 @@ export class View2dComponent {
     @Output() operationIndex = new EventEmitter<number>();
     programGUI: Gate2DView[][] = [];
     defaultGate: G = x;
-    getIndexes = Utils.getIndexes;
 
     constructor(
         readonly operationsService: OperationsService,

@@ -58,8 +58,6 @@ export class AppComponent implements OnInit {
         }
     }
 
-    getIndexes = Utils.getIndexes;
-
     eventTargetValue = Utils.eventTargetValue;
 
     /// Cookies -------------------------------------------------------------------------------
@@ -94,8 +92,8 @@ export class AppComponent implements OnInit {
         try {
             this.operationsService.set(JSON.parse(this.programJson));
             this.operationsService.emitChange();
-        } catch (e) {
-            this.jsonError = (e as any).message;
+        } catch (e: unknown) {
+            this.jsonError = (e as {message: string}).message;
         }
     }
 
@@ -115,17 +113,20 @@ export class AppComponent implements OnInit {
     // Simulation -------------------------------------------------------------------
 
     simulate(callback?: string): void {
-        let stepperData: StepperData = {
+        const stepperData: StepperData = {
             qubitsQuantity: this.validatedOperationsService.qubitsQuantity,
+            usedQubits: this.validatedOperationsService.usedQubits,
             operations: this.operationsService.operations,
             id: this.results.length,
             callback
         };
+        this.results[stepperData.id] = stepperData;
         this.waitAtResult = true;
+
         const worker = new Worker(new URL('./stepper.worker', import.meta.url));
         this.workers[stepperData.id] = worker;
         worker.addEventListener('message', ({ data }) => {
-            stepperData = data;
+            const stepperData: StepperData = data;
             this.results[stepperData.id] = stepperData;
             if (stepperData.results) {
                 if (this.waitAtResult) {
