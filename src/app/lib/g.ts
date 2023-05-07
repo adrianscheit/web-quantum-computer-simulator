@@ -1,24 +1,22 @@
-import { GateName } from '../domain';
 import { environment } from '../../environments/environment';
+import { GateName } from '../domain';
 import { C } from './c';
 
 /** Quantum gate */
 export class G {
-    readonly matrix: C[];
     readonly desc: string;
     readonly colspan: number;
     readonly widthAndHeight: number;
     readonly color: string;
 
-    constructor(public readonly name: GateName, m: C[], desc?: string, color?: string) {
+    constructor(public readonly name: GateName, readonly matrix: C[], desc?: string, color?: string) {
         this.desc = desc || name;
-        this.matrix = m;
-        this.widthAndHeight = Math.sqrt(m.length);
+        this.widthAndHeight = Math.sqrt(matrix.length);
         this.colspan = Math.log2(this.widthAndHeight);
         if (this.colspan !== Math.round(this.colspan)) {
-            throw new Error(`The gate is invalid because the matrix size is: ${m.length}`);
+            throw new Error(`The gate is invalid because the matrix widthAndHeight is: ${this.widthAndHeight}`);
         }
-        const colors = ['#ddd','#afd','#dfa','#dfd'];
+        const colors = ['#ddd', '#afd', '#dfa', '#dfd'];
         this.color = color ? color : colors[this.colspan] ? colors[this.colspan] : '#faa';
     }
 

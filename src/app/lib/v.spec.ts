@@ -17,7 +17,7 @@ export const vectorsEquals = (a: C[], b: C[], maxError: number = 0.01): boolean 
 
 describe('Vector tests', () => {
     const v1 = new V([new C(1), new C()]);
-    const v2 = new V([new C(1), new C(), new C(), new C(1), ]);
+    const v2 = new V([new C(1), new C(), new C(), new C(1),]);
     const v3 = new V([new C(), new C(1)]);
 
     it('calc the size the right way', () => {
