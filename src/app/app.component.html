@@ -101,7 +101,7 @@
                     <tbody>
                         <tr>
                             <th>Prop.</th>
-                            <th *ngFor="let i of getIndexes(result.qubitsQuantity)">Q#{{i}}</th>
+                            <th *ngFor="let usedQubit of result.usedQubits; let i=index" [class.gray]="!usedQubit">Q#{{i}}</th>
                         </tr>
                         <tr *ngFor="let r of result.results">
                             <td>{{r.propability * 100 | number:'.0-1'}}%</td>

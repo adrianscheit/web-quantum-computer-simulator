@@ -22,7 +22,7 @@ describe('ValidatedOperationsService', () => {
         ]);
 
         expect(service.qubitsQuantity).toBe(3);
-        expect(service.usedQubit).toEqual([false, true, true]);
+        expect(service.usedQubits).toEqual([false, true, true]);
         expect(service.validatedOperations).toEqual([
             { operation: operationsService.operations[0], gate: x, },
             { operation: operationsService.operations[1], gate: gatesMap.get('CX'), },
@@ -37,7 +37,7 @@ describe('ValidatedOperationsService', () => {
         ]);
 
         expect(service.qubitsQuantity).toBe(3);
-        expect(service.usedQubit).toEqual([true, false, true]);
+        expect(service.usedQubits).toEqual([true, false, true]);
         expect(service.validatedOperations).toEqual([
             { operation: operationsService.operations[0], gate: x, },
             { operation: operationsService.operations[1], error: 'Gate is required' },

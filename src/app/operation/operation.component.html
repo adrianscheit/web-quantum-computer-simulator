@@ -3,17 +3,17 @@
         <label>
             Operation #
             <input type="number" required step="1" min="0" [max]="operationsService.operations.length-1" [value]="index"
-                (change)="setIndex(+eventTargetValue($event))" />
+                (input)="setIndex(+eventTargetValue($event))" />
             of
             {{operationsService.operations.length}}
         </label>
         <div>
-            <app-gate-select [(gate)]="gate" (gateChange)="setGate($event)"></app-gate-select>
+            <app-gate-select [gate]="gate" (gateChange)="setGate($event)"></app-gate-select>
         </div>
         <label *ngFor="let i of qi; let ii=index">
             Input #{{ii}} is assigned to qubit #
             <input type="number" [class.invalid]="error" required step="1" min="0" max="31" [value]="i"
-                (change)="setQubitIndex(ii, +eventTargetValue($event))" />
+                (input)="setQubitIndex(ii, +eventTargetValue($event))" />
         </label>
         <p *ngIf="error" class="invalid">This operation will not be saved if it is invalid. {{error}}</p>
         <button type="button" [disabled]="error" (click)="close()">OK / Close</button>

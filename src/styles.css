@@ -51,3 +51,7 @@ th, td {
 .invalid {
     background-color: #faa !important;
 }
+
+.gray {
+    color: gray;
+}

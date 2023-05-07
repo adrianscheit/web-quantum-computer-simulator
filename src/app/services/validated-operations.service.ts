@@ -26,7 +26,7 @@ export class ValidatedOperation {
 export class ValidatedOperationsService {
     validatedOperations: ValidatedOperation[] = [];
     qubitsQuantity = 0;
-    usedQubit: boolean[] = [];
+    usedQubits: boolean[] = [];
 
     constructor(readonly operationsService: OperationsService) {
         operationsService.operationsChange.subscribe(() => {
@@ -38,7 +38,7 @@ export class ValidatedOperationsService {
     private calcStats() {
         const allQubitIndexes = new Set<number>(this.operationsService.operations.flatMap((operation) => operation.qi));
         this.qubitsQuantity = Math.max(-1, ...allQubitIndexes) + 1;
-        this.usedQubit = Array<boolean>(this.qubitsQuantity).fill(false);
-        allQubitIndexes.forEach((qubitIndex) => this.usedQubit[qubitIndex] = true);
+        this.usedQubits = Array<boolean>(this.qubitsQuantity).fill(false);
+        allQubitIndexes.forEach((qubitIndex) => this.usedQubits[qubitIndex] = true);
     }
 }
