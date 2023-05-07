@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Gate2DView, Result, StepperData } from './domain';
-import { G } from './lib/g';
-import { gates, gatesMap, h } from './lib/gates';
+import { Result, StepperData } from './domain';
+import { gates } from './lib/gates';
 import { OperationsService } from './services/operations.service';
 import { ValidatedOperationsService } from './services/validated-operations.service';
 import { Utils } from './utils/utils';
