@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Gate2DView, Operation, Result } from '../domain';
 import { G } from '../lib/g';
-import { x } from '../lib/gates';
+import { h } from '../lib/gates';
 import { OperationsService } from '../services/operations.service';
 import { ValidatedOperationsService } from '../services/validated-operations.service';
 
@@ -14,7 +14,7 @@ export class View2dComponent {
     @Input() quickResult: Result[] | undefined;
     @Output() operationIndex = new EventEmitter<number>();
     programGUI: Gate2DView[][] = [];
-    defaultGate: G = x;
+    defaultGate: G = h;
 
     constructor(
         readonly operationsService: OperationsService,
