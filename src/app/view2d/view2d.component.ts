@@ -90,8 +90,8 @@ export class View2dComponent {
         let oi = Math.min(this.operationsService.operations.length, ...[...rowDescription.values()].map(g => g.oi));
         for (let i = 0; i <= this.validatedOperationsService.qubitsQuantity; ++i) {
             if (rowDescription.has(i)) {
-                row.push(rowDescription.get(i)!);
-                oi = Math.max(rowDescription.get(i)!.oi + 1, oi);
+                row.push(rowDescription.get(i));
+                oi = Math.max(rowDescription.get(i).oi + 1, oi);
             } else {
                 row.push({ oi, color: '#ffff' });
             }
