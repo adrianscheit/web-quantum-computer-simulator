@@ -31,7 +31,7 @@
             </tr>
             <tr *ngFor="let r of quickResult">
                 <td>{{r.propability * 100 | number: '.0-1'}}%</td>
-                <td *ngFor="let i of r.values">{{i?1:0}}</td>
+                <td *ngFor="let i of r.values">{{i===undefined ? '' : i ? 1 : 0}}</td>
             </tr>
         </tbody>
     </table>
