@@ -4,7 +4,7 @@ export type GateName = 'X' | 'Y' | 'Z' | 'H' | 'SP' | 'T' | 'CX' | 'CY' | 'CZ' |
 /** One possible result */
 export interface Result {
     propability: number;
-    values: boolean[];
+    values: (boolean | undefined)[];
 }
 
 /** Single quantum operation definition */

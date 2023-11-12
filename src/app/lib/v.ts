@@ -69,10 +69,28 @@ export class V {
         return resultState;
     }
 
-    calcResults(minPropability = 0.004): Result[] {
-        return this.state
-            .map((c: C, i: number) => ({ propability: c.absSqer(), values: this.getQubitsValues(i) } as Result))
+    calcResults(minPropability = 0.02): Result[] {
+        const allResults: Result[] = this.state
+            .map((c: C, i: number) => ({ propability: c.absSqer(), values: this.getQubitsValues(i) }))
+            .filter((result: Result) => result.propability);
+        if (allResults.length > 1) {
+            const constantResults: (boolean | undefined)[] = [...allResults[0].values];
+            for (let i = 0; i < constantResults.length; ++i) {
+                for (let j = 1; j < allResults.length; ++j) {
+                    if (allResults[j].values[i] !== constantResults[i]) {
+                        constantResults[i] = undefined;
+                        break;
+                    }
+                }
+            }
+            if (constantResults.filter((qubit: boolean | undefined) => qubit !== undefined).length) {
+                allResults.unshift({ propability: 1, values: constantResults });
+            }
+
+        }
+        const result = allResults
             .filter((result: Result) => result.propability > minPropability)
             .sort((a: Result, b: Result) => b.propability - a.propability);
+        return result;
     }
 }
