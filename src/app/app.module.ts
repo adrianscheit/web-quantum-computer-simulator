@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DefaultGateComponent } from './gate-select/default-gate/default-gate.component';
 import { GateSelectComponent } from './gate-select/gate-select.component';
@@ -13,8 +13,7 @@ import { View1dComponent } from './view1d/view1d.component';
 import { GateComponent } from './view2d/gate/gate.component';
 import { View2dComponent } from './view2d/view2d.component';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         GateComponent,
         GateViewComponent,
@@ -26,11 +25,5 @@ import { View2dComponent } from './view2d/view2d.component';
         View1dComponent,
         View2dComponent,
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule
-    ],
-    providers: [],
-    bootstrap: [AppComponent]
-})
+    bootstrap: [AppComponent], imports: [BrowserModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
