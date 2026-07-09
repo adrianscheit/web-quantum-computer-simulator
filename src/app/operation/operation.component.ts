@@ -8,7 +8,8 @@ import { Utils } from '../utils/utils';
 @Component({
     selector: 'app-operation',
     templateUrl: './operation.component.html',
-    styleUrls: ['./operation.component.css']
+    styleUrls: ['./operation.component.css'],
+    standalone: false
 })
 export class OperationComponent {
     @Input() set index(index: number | undefined) {

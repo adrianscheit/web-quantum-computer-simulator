@@ -4,7 +4,8 @@ import { Gate2DView } from '../../domain';
 @Component({
     selector: 'app-gate',
     templateUrl: './gate.component.html',
-    styleUrls: ['./gate.component.css']
+    styleUrls: ['./gate.component.css'],
+    standalone: false
 })
 export class GateComponent {
     @Input() gate: Gate2DView = { oi: 0, color: '#faa' };

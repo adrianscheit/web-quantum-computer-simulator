@@ -5,7 +5,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 @Component({
     selector: 'app-sample-code',
     templateUrl: './sample-code.component.html',
-    styleUrls: ['./sample-code.component.css']
+    styleUrls: ['./sample-code.component.css'],
+    standalone: false
 })
 export class SampleCodeComponent {
     @Input() set code(code: Operation[] | string) {

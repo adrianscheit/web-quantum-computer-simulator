@@ -5,7 +5,8 @@ import { x } from '../lib/gates';
 @Component({
     selector: 'app-gate-view',
     templateUrl: './gate-view.component.html',
-    styleUrls: ['./gate-view.component.css']
+    styleUrls: ['./gate-view.component.css'],
+    standalone: false
 })
 export class GateViewComponent {
     @Input() gate: G = x;

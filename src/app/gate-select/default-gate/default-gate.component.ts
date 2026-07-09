@@ -4,7 +4,8 @@ import { G } from '../../lib/g';
 @Component({
     selector: 'app-default-gate',
     templateUrl: './default-gate.component.html',
-    styleUrls: ['./default-gate.component.css']
+    styleUrls: ['./default-gate.component.css'],
+    standalone: false
 })
 export class DefaultGateComponent {
     @Input() gate: G | undefined;

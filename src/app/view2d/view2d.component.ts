@@ -8,7 +8,8 @@ import { ValidatedOperationsService } from '../services/validated-operations.ser
 @Component({
     selector: 'app-view2d',
     templateUrl: './view2d.component.html',
-    styleUrls: ['./view2d.component.css']
+    styleUrls: ['./view2d.component.css'],
+    standalone: false
 })
 export class View2dComponent {
     @Input() quickResult: Result[] | undefined;

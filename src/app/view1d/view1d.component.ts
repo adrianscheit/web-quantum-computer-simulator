@@ -7,7 +7,8 @@ import { ValidatedOperationsService } from '../services/validated-operations.ser
 @Component({
     selector: 'app-view1d',
     templateUrl: './view1d.component.html',
-    styleUrls: ['./view1d.component.css']
+    styleUrls: ['./view1d.component.css'],
+    standalone: false
 })
 export class View1dComponent {
     @Output() operationIndex = new EventEmitter<number>();

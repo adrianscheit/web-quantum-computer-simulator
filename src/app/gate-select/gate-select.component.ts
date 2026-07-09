@@ -7,7 +7,8 @@ import { GateName } from '../domain';
 @Component({
     selector: 'app-gate-select',
     templateUrl: './gate-select.component.html',
-    styleUrls: ['./gate-select.component.css']
+    styleUrls: ['./gate-select.component.css'],
+    standalone: false
 })
 export class GateSelectComponent {
     @Input() gate: G | undefined;
