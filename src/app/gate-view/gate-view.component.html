@@ -1,6 +1,8 @@
 <h4>{{gate.name}}</h4>
 <p>{{gate.desc}} operates on {{gate.colspan}} qubits</p>
 <div class="grid" [style.background-color]="gate.color"
-    style.grid-template-columns="repeat({{gate.widthAndHeight}},auto)">
-    <div *ngFor="let c of gate.matrix">{{c}}</div>
+  style.grid-template-columns="repeat({{gate.widthAndHeight}},auto)">
+  @for (c of gate.matrix; track c) {
+    <div>{{c}}</div>
+  }
 </div>

@@ -1,187 +1,207 @@
 <div [hidden]="cookies">
-    This page does not use any cookies now. To save your program in your browser for your further visits, you have to
-    accept cookies:
-    <button type="button" (click)="cookies=true">Agree</button>
+  This page does not use any cookies now. To save your program in your browser for your further visits, you have to
+  accept cookies:
+  <button type="button" (click)="cookies=true">Agree</button>
 </div>
 <div [hidden]="!cookies">
-    You agreed in the past, that this page is using cookies! If you want to revoke it:
-    <button type="button" (click)="cookies=false">Revoke permisson and delete all cookies</button>
+  You agreed in the past, that this page is using cookies! If you want to revoke it:
+  <button type="button" (click)="cookies=false">Revoke permisson and delete all cookies</button>
 </div>
 <section>
-    <h1>Online quantum computer simulator in your browser!</h1>
-    <ul>
-        <li>Online quantum computer simulator implementation, free for use for everyone.</li>
-        <li>Initially all qubits are |0></li>
-        <li>The computer scale-up automatically as you add new operations</li>
-        <li>
-            For simulation time issue, try to keep the quantity of qubits low (more then 16 qubits requires some
-            noticeable amount of time to simulate, and every qubit more makes the simulation about twice that slow).
-            For time optimalization it is good to delete empty qubits before starting a simulation.
-        </li>
-        <li>Your program is not send to the server - it is running in your web-browser</li>
-        <li>Simple UI - hopefully clear and good UX</li>
-        <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU
-            usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)
-        </li>
-        <li>
-            <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate">
-                KUDO to this article, that helped a lot to implement this tool. It is also very helpful in case if
-                someone does not understand quantum computing:
-            </app-link>
-        </li>
-        <li>
-            <app-link link="https://www.youtube.com/watch?v=F_Riqjdh2oM&ab_channel=MicrosoftResearch">
-                KUDO to this lecture, as it helped me to learn quantum computing:
-            </app-link>
-        </li>
-    </ul>
+  <h1>Online quantum computer simulator in your browser!</h1>
+  <ul>
+    <li>Online quantum computer simulator implementation, free for use for everyone.</li>
+    <li>Initially all qubits are |0></li>
+    <li>The computer scale-up automatically as you add new operations</li>
+    <li>
+      For simulation time issue, try to keep the quantity of qubits low (more then 16 qubits requires some
+      noticeable amount of time to simulate, and every qubit more makes the simulation about twice that slow).
+      For time optimalization it is good to delete empty qubits before starting a simulation.
+    </li>
+    <li>Your program is not send to the server - it is running in your web-browser</li>
+    <li>Simple UI - hopefully clear and good UX</li>
+    <li>This application is mobile friendly (regarding the UI and simple simulations, because regarding the CPU
+      usage during a bigger simulation it is far away to be mobile-friendly, because it will drain your battery)
+    </li>
+    <li>
+      <app-link link="https://en.wikipedia.org/wiki/Quantum_logic_gate">
+        KUDO to this article, that helped a lot to implement this tool. It is also very helpful in case if
+        someone does not understand quantum computing:
+      </app-link>
+    </li>
+    <li>
+      <app-link link="https://www.youtube.com/watch?v=F_Riqjdh2oM&ab_channel=MicrosoftResearch">
+        KUDO to this lecture, as it helped me to learn quantum computing:
+      </app-link>
+    </li>
+  </ul>
 </section>
 
 <section>
-    <h2>Program in list of quantum operations</h2>
-    <app-view1d (operationIndex)="editOperation($event)"></app-view1d>
-    <button type="button" (click)="operationsService.complement()">Complementary the program</button>
-    <button type="button" (click)="simulate()">Simulate</button>
+  <h2>Program in list of quantum operations</h2>
+  <app-view1d (operationIndex)="editOperation($event)"></app-view1d>
+  <button type="button" (click)="operationsService.complement()">Complementary the program</button>
+  <button type="button" (click)="simulate()">Simulate</button>
 </section>
 
 <section>
-    <h2>Program in 2D gates table representation</h2>
-    <app-view2d [quickResult]="quickResult" (operationIndex)="editOperation($event)"></app-view2d>
-    <button type="button" (click)="operationsService.complement()">Complementary the program</button>
-    <button type="button" (click)="simulate()">Simulate</button>
+  <h2>Program in 2D gates table representation</h2>
+  <app-view2d [quickResult]="quickResult" (operationIndex)="editOperation($event)"></app-view2d>
+  <button type="button" (click)="operationsService.complement()">Complementary the program</button>
+  <button type="button" (click)="simulate()">Simulate</button>
 </section>
 
 <section>
-    <label>
-        <h2>Program represents the operations in JSON</h2>
-        <textarea (input)="setProgramJson(eventTargetValue($event))" [value]="programJson"
-            [class.invalid]="jsonError"></textarea>
-    </label>
-    <button type="button" (click)="simulate()">Simulate</button>
-    <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
-    <ul>
-        <li><app-sample-code [code]="[{gn:'H',qi:[0]},{gn:'CX',qi:[0,1]}]">Produce 2 entangled qubits:</app-sample-code>
-        </li>
-        <li><app-sample-code
-                [code]="[{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
-                Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-                traditional communication channel):
-            </app-sample-code></li>
-        <li><app-sample-code
-                [code]="[{'gn':'X','qi':[0]},{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
-                Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
-                traditional communication channel):
-            </app-sample-code></li>
-    </ul>
+  <label>
+    <h2>Program represents the operations in JSON</h2>
+    <textarea (input)="setProgramJson(eventTargetValue($event))" [value]="programJson"
+    [class.invalid]="jsonError"></textarea>
+  </label>
+  <button type="button" (click)="simulate()">Simulate</button>
+  <p>You can copy&paste the JSON code to save&restore your programs. You can also try examples:</p>
+  <ul>
+    <li><app-sample-code [code]="[{gn:'H',qi:[0]},{gn:'CX',qi:[0,1]}]">Produce 2 entangled qubits:</app-sample-code>
+  </li>
+  <li><app-sample-code
+    [code]="[{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+    Teleport |0> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+    traditional communication channel):
+  </app-sample-code></li>
+  <li><app-sample-code
+    [code]="[{'gn':'X','qi':[0]},{'gn':'H','qi':[1]},{'gn':'CX','qi':[1,2]},{'gn':'CX','qi':[0,1]},{'gn':'H','qi':[0]},{'gn':'CX','qi':[1,2]},{'gn':'CZ','qi':[0,2]}]">
+    Teleport |1> from Q#0 to Q#2 (in reality the last two conditional operations are being sent through a
+    traditional communication channel):
+  </app-sample-code></li>
+</ul>
 </section>
 
 <section>
-    <h2>Results</h2>
-    <div class="flex">
-        <section *ngFor="let result of results; let i=index">
-            <h3>
-                Sumulation #{{result.id+1}}
-                <button type="button" *ngIf="!result.canceled && !result.results"
-                    (click)="cancelSimulation(i)">Cancel</button>
-                <span *ngIf="result.canceled">(canceled)</span>
-            </h3>
-            <ul>
-                <li>Simulation started: {{result.startTime?.toLocaleTimeString()}}</li>
-                <li>Number of qubits: {{result.qubitsQuantity}}</li>
-                <li>Number of operations: {{result.operationsQuantity}}</li>
-                <li [hidden]="result.results">Progress: {{result.progress! * 100 | number:'.1-2'}}%</li>
-                <li *ngIf="result.results">End time: {{result.endTime!.toLocaleTimeString()}}; simulation time:
-                    {{result.endTime!.getTime()-result.startTime!.getTime()}}ms</li>
-                <li *ngIf="result.callback">The result will be send to:
-                    {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
-            </ul>
-            <div *ngIf="result.results">
-                Results:
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>Prop.</th>
-                            <th *ngFor="let usedQubit of result.usedQubits; let i=index" [class.gray]="!usedQubit">Q#{{i}}</th>
-                        </tr>
-                        <tr *ngFor="let r of result.results">
-                            <td>{{r.propability * 100 | number:'.0-1'}}%</td>
-                            <td *ngFor="let qv of r.values">{{qv===undefined ? '' : qv?1:0}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+  <h2>Results</h2>
+  <div class="flex">
+    @for (result of results; track result; let i = $index) {
+      <section>
+        <h3>
+          Sumulation #{{result.id+1}}
+          @if (!result.canceled && !result.results) {
+            <button type="button"
+            (click)="cancelSimulation(i)">Cancel</button>
+          }
+          @if (result.canceled) {
+            <span>(canceled)</span>
+          }
+        </h3>
+        <ul>
+          <li>Simulation started: {{result.startTime?.toLocaleTimeString()}}</li>
+          <li>Number of qubits: {{result.qubitsQuantity}}</li>
+          <li>Number of operations: {{result.operationsQuantity}}</li>
+          <li [hidden]="result.results">Progress: {{result.progress! * 100 | number:'.1-2'}}%</li>
+          @if (result.results) {
+            <li>End time: {{result.endTime!.toLocaleTimeString()}}; simulation time:
+            {{result.endTime!.getTime()-result.startTime!.getTime()}}ms</li>
+          }
+          @if (result.callback) {
+            <li>The result will be send to:
+            {{result.callback}}&lt;RESULT_AS_URI_ENCODED_JSON&gt;</li>
+          }
+        </ul>
+        @if (result.results) {
+          <div>
+            Results:
+            <table>
+              <tbody>
+                <tr>
+                  <th>Prop.</th>
+                  @for (usedQubit of result.usedQubits; track usedQubit; let i = $index) {
+                    <th [class.gray]="!usedQubit">Q#{{i}}</th>
+                  }
+                </tr>
+                @for (r of result.results; track r) {
+                  <tr>
+                    <td>{{r.propability * 100 | number:'.0-1'}}%</td>
+                    @for (qv of r.values; track qv) {
+                      <td>{{qv===undefined ? '' : qv?1:0}}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
+  </div>
 </section>
 
 <section>
-    <h2>All available gates:</h2>
-    <div class="flex">
-        <app-gate-view *ngFor="let gate of gates" class="inline-flex-column" [gate]="gate"></app-gate-view>
-    </div>
+  <h2>All available gates:</h2>
+  <div class="flex">
+    @for (gate of gates; track gate) {
+      <app-gate-view class="inline-flex-column" [gate]="gate"></app-gate-view>
+    }
+  </div>
 </section>
 
 <section>
-    <h2>API</h2>
-    <p>
+  <h2>API</h2>
+  <p>
         <app-sample-code code="{{selfLink}}#{{programJson}}#http://localhost:8080/?results=">
             To run the calculations automatically, for example by a programs generator, you can use the API.
             Simply open the browser with a program in JSON, as a parameter in the link:
         </app-sample-code>
     </p>
     Parameters are hash character ("#") separated and they are like:
-    <ul>
-        <li>Program in JSON - list of operations/applied gates (required)</li>
-        <li>
-            Callback address to be called with the results at the end, encoded as JSON with URI encoding around.
-            Remember that your local server would allow the origin, otherwise there would be a CORS violation exception.
-            (optional)
-        </li>
-    </ul>
+  <ul>
+    <li>Program in JSON - list of operations/applied gates (required)</li>
+    <li>
+      Callback address to be called with the results at the end, encoded as JSON with URI encoding around.
+      Remember that your local server would allow the origin, otherwise there would be a CORS violation exception.
+      (optional)
+    </li>
+  </ul>
 </section>
 
 <section>
-    <h2>Legal</h2>
-    <section>
-        <h3>Cookies policy</h3>
-        <p>
-            This site uses cookies only when the user accepts it.
-            This site uses cookies only to save the user program for the further usages.
-            There is one property in local storage used in case the user consent to cookies: program
-            - that contains the JSON representation of the user program.
-        </p>
+  <h2>Legal</h2>
+  <section>
+    <h3>Cookies policy</h3>
+    <p>
+      This site uses cookies only when the user accepts it.
+      This site uses cookies only to save the user program for the further usages.
+      There is one property in local storage used in case the user consent to cookies: program
+      - that contains the JSON representation of the user program.
+    </p>
+  </section>
+  <section>
+    <h3>Private policy</h3>
+    <p>
+      This site may use one optional cookie, but it does not save any sensitive user data nor identifies the user.
+      The only optional cookie is only to save the current users operations/gates sequence for a future usage.
+      All calculations and data are performed and processed in a user web-browser.
+    </p>
+    <p>
+      Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data due to
+      privacy legal issues.
+    </p>
+  </section>
+  <section>
+    <h3>Conditions & licence</h3>
+    <p>
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+      The software (nor its author) does not take responsibility for anything, including correctness of
+      calculations results.
+      The software (nor its author) does not take any responsibility for external links.
+      The software is free to use, but currently does not provide any more specific license, so rules for "no
+      license" are valid.
+      <p>
+        Usage of this software for scientific purposes is fully allowed and appreciated, but for any scientific
+        thesis
+        that uses this software, please refer to this software and to its author, and please inform the auther about
+        it using GitHub
+      </p>
+      <p>
+        <app-link link="3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here: </app-link>
+      </p>
     </section>
-    <section>
-        <h3>Private policy</h3>
-        <p>
-            This site may use one optional cookie, but it does not save any sensitive user data nor identifies the user.
-            The only optional cookie is only to save the current users operations/gates sequence for a future usage.
-            All calculations and data are performed and processed in a user web-browser.
-        </p>
-        <p>
-            Constructive feedback and bug reporting are very welcome, but please do not send any sensitive data due to
-            privacy legal issues.
-        </p>
-    </section>
-    <section>
-        <h3>Conditions & licence</h3>
-        <p>
-            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
-            The software (nor its author) does not take responsibility for anything, including correctness of
-            calculations results.
-            The software (nor its author) does not take any responsibility for external links.
-            The software is free to use, but currently does not provide any more specific license, so rules for "no
-            license" are valid.
-        <p>
-            Usage of this software for scientific purposes is fully allowed and appreciated, but for any scientific
-            thesis
-            that uses this software, please refer to this software and to its author, and please inform the auther about
-            it using GitHub
-        </p>
-        <p>
-            <app-link link="3rdpartylicenses.txt">The software uses 3rd party dependencies. To see its licences click here: </app-link>
-        </p>
-    </section>
-</section>
+  </section>
 
-<app-operation [index]="operationIndex" (exit)="exitOperation()"></app-operation>
+  <app-operation [index]="operationIndex" (exit)="exitOperation()"></app-operation>

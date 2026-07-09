@@ -1,10 +1,14 @@
 <label>
-    Gate:
-    <select (change)="change(eventTargetValue($event))">
-        <option disabled [selected]="!gate"></option>
-        <option *ngFor="let g of gates" [value]="g.name" [selected]="gate===g">
-            {{g.name}} - {{g.desc}}
-        </option>
-    </select>
+  Gate:
+  <select (change)="change(eventTargetValue($event))">
+    <option disabled [selected]="!gate"></option>
+    @for (g of gates; track g) {
+      <option [value]="g.name" [selected]="gate===g">
+        {{g.name}} - {{g.desc}}
+      </option>
+    }
+  </select>
 </label>
-<app-gate-view *ngIf="gate" [gate]="gate"></app-gate-view>
+@if (gate) {
+  <app-gate-view [gate]="gate"></app-gate-view>
+}
